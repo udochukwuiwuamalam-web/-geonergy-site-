@@ -231,7 +231,15 @@
 
   const STORE_KEY = 'geonergy.admin.catalogue.v1';
   const SESSION_KEY = 'geonergy.admin.open';
-  const PUBLIC_URL = 'assets/products.json';
+
+  // This tool is not deployed to the website, so it is normally opened
+  // straight from disk. A file:// page cannot fetch a sibling file, so
+  // we try the relative path first (works when served locally) and then
+  // fall back to the live site, which sends permissive CORS headers.
+  const PUBLIC_URLS = [
+    'assets/products.json',
+    'https://udochukwuiwuamalam-web.github.io/-geonergy-site-/assets/products.json'
+  ];
 
   const $ = id => document.getElementById(id);
   let items = [];
@@ -272,25 +280,46 @@
     } catch (err) { return false; }
   }
 
-  async function loadPublic(announce) {
-    try {
-      const res = await fetch(PUBLIC_URL, { cache: 'no-cache' });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      const incoming = Array.isArray(data.products) ? data.products : [];
-      // Keep prices already held locally for ids that match.
-      const priceById = {};
-      items.forEach(p => { if (p.price != null) priceById[p.id] = p.price; });
-      items = incoming.map(p => {
-        const copy = Object.assign({}, p);
-        if (priceById[p.id] != null) copy.price = priceById[p.id];
-        return copy;
-      });
-      save(); render();
-      if (announce) toast('Loaded ' + items.length + ' systems from the live catalogue.');
-    } catch (err) {
-      if (announce) toast('Could not read the live catalogue.');
+  async function fetchCatalogue() {
+    for (const url of PUBLIC_URLS) {
+      try {
+        const res = await fetch(url, { cache: 'no-cache' });
+        if (!res.ok) continue;
+        const data = await res.json();
+        if (Array.isArray(data.products)) return data.products;
+      } catch (err) { /* try the next source */ }
     }
+    return null;
+  }
+
+  async function loadPublic(announce) {
+    const incoming = await fetchCatalogue();
+    if (!incoming) {
+      if (announce) toast('Could not reach the catalogue. Import a backup instead.');
+      else showEmptyHelp();
+      return;
+    }
+    // Keep prices already held locally for ids that match.
+    const priceById = {};
+    items.forEach(p => { if (p.price != null) priceById[p.id] = p.price; });
+    items = incoming.map(p => {
+      const copy = Object.assign({}, p);
+      if (priceById[p.id] != null) copy.price = priceById[p.id];
+      return copy;
+    });
+    save(); render();
+    if (announce) toast('Loaded ' + items.length + ' systems from the live catalogue.');
+  }
+
+  function showEmptyHelp() {
+    $('rows').innerHTML =
+      '<tr><td colspan="6" style="padding:2rem;text-align:center;color:var(--muted-on-white);line-height:1.7">' +
+      '<strong style="color:var(--text-on-white)">Nothing loaded yet.</strong><br>' +
+      'This happens the first time you open the file directly and the site is not reachable.<br>' +
+      'Use <em>Import backup</em> if you have one, or serve the folder locally with ' +
+      '<code>python3 -m http.server 8000</code> and open ' +
+      '<code>http://localhost:8000/admin.html</code>.' +
+      '</td></tr>';
   }
 
   // ---- Render -----------------------------------------------------

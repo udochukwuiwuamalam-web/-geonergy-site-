@@ -1,0 +1,78 @@
+name: Deploy site to GitHub Pages
+
+# Publishes the public site. admin.html is deliberately NOT deployed:
+# it is the private pricing tool and is meant to be opened locally.
+# The guard steps below fail the build rather than publish it by accident.
+
+on:
+  push:
+    branches:
+      - main
+      - claude/plugin-marketplace-ecc-w0p32j
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Assemble the public site
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          cp index.html calculator.html store.html _site/
+          cp -r assets _site/
+          touch _site/.nojekyll
+          # admin.html is intentionally not copied above.
+
+      - name: Refuse to publish the admin tool
+        run: |
+          set -euo pipefail
+          if [ -e _site/admin.html ]; then
+            echo "::error::admin.html reached the deploy artifact. Refusing to publish."
+            exit 1
+          fi
+          if grep -rl "geonergy.admin.catalogue" _site 2>/dev/null; then
+            echo "::error::Admin storage key found in the public artifact. Refusing to publish."
+            exit 1
+          fi
+          echo "Admin tool is absent from the artifact, as intended."
+
+      - name: Refuse to publish prices
+        run: |
+          set -euo pipefail
+          if grep -Eq '"(price|cost)"[[:space:]]*:' _site/assets/products.json; then
+            echo "::error::A price field is present in the public catalogue. Refusing to publish."
+            exit 1
+          fi
+          echo "Public catalogue carries no price fields, as intended."
+
+      - name: List what will be published
+        run: find _site -type f | sort
+
+      - name: Upload the artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
