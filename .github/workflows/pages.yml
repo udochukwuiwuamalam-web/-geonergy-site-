@@ -31,7 +31,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p _site
-          cp index.html calculator.html store.html _site/
+          cp index.html calculator.html store.html inverter.html _site/
           cp -r assets _site/
           touch _site/.nojekyll
           # admin.html is intentionally not copied above.

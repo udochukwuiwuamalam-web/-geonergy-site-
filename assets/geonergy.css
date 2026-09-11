@@ -141,3 +141,64 @@
     .live-dot { animation: none; }
     html { scroll-behavior: auto; }
   }
+
+  /* Inverter reference — used by inverter.html */
+  .ec-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: var(--space-4); }
+  .ec-tab {
+    font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em;
+    padding: 0.55rem 1.2rem; border-radius: 999px; border: 1px solid var(--border-on-navy);
+    color: var(--muted-on-navy); background: transparent; cursor: pointer; transition: all 0.15s ease;
+  }
+  .ec-tab:hover { color: var(--text-on-navy); border-color: var(--muted-on-navy); }
+  .ec-tab.active { background: var(--accent-on-navy); border-color: var(--accent-on-navy); color: var(--navy); font-weight: 600; }
+
+  .ec-model-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: var(--space-3); }
+  .ec-model-tab {
+    font-family: var(--font-body); font-size: 0.8rem; font-weight: 500;
+    padding: 0.45rem 0.9rem; border-radius: var(--radius-sm); border: 1px solid var(--border-on-navy);
+    color: var(--muted-on-navy); background: var(--navy-2); cursor: pointer; transition: all 0.15s ease;
+  }
+  .ec-model-tab:hover { color: var(--text-on-navy); }
+  .ec-model-tab.active { border-color: var(--accent-on-navy); color: var(--text-on-navy); font-weight: 600; }
+  .ec-model-category { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-on-navy); margin-bottom: var(--space-3); }
+
+  .ec-collapsible { margin-bottom: var(--space-4); border: 1px solid var(--border-on-navy); border-radius: var(--radius-sm); overflow: hidden; }
+  .ec-collapse-toggle {
+    width: 100%; display: flex; justify-content: space-between; align-items: center;
+    padding: var(--space-2) var(--space-3); background: var(--navy-2); color: var(--text-on-navy);
+    font-weight: 500; font-size: 0.9375rem; cursor: pointer; border: none; font-family: var(--font-body);
+  }
+  .ec-collapse-icon { font-family: var(--font-mono); color: var(--accent-on-navy); }
+  .ec-collapse-body { padding: var(--space-3); }
+  .ec-collapse-body.collapsed { display: none; }
+
+  .ec-spec-group { margin-bottom: var(--space-3); }
+  .ec-spec-group:last-child { margin-bottom: 0; }
+  .ec-spec-group-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-on-navy); margin-bottom: var(--space-1); }
+  .ec-spec-list { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: var(--space-2); }
+  .ec-spec-row { display: flex; justify-content: space-between; gap: var(--space-3); padding: 0.4rem 0; border-bottom: 1px solid var(--border-on-navy); font-size: 0.875rem; }
+  .ec-spec-label { color: var(--muted-on-navy); }
+  .ec-spec-value { color: var(--text-on-navy); font-weight: 500; text-align: right; }
+
+  .ec-subsection { margin-bottom: var(--space-4); }
+  .ec-subsection-title { font-family: var(--font-display); font-weight: 600; color: var(--text-on-navy); font-size: 1.05rem; margin-bottom: var(--space-2); }
+  .ec-source { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted-on-navy); margin-bottom: var(--space-2); }
+  .ec-warning {
+    font-size: 0.9rem; color: var(--text-on-navy); background: var(--navy-2);
+    border: 1px solid var(--border-on-navy); border-left: 3px solid var(--accent-on-navy);
+    border-radius: var(--radius-sm); padding: var(--space-2) var(--space-3); margin-bottom: var(--space-3);
+  }
+  .ec-search {
+    width: 100%; font-family: var(--font-body); font-size: 0.9375rem;
+    padding: 0.7rem 1rem; margin-bottom: var(--space-4);
+    background: var(--navy-2); border: 1px solid var(--border-on-navy); border-radius: var(--radius-sm);
+    color: var(--text-on-navy);
+  }
+  .ec-search::placeholder { color: var(--muted-on-navy); }
+  .ec-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .ec-item { background: var(--navy-2); border: 1px solid var(--border-on-navy); border-radius: var(--radius-sm); padding: var(--space-3); }
+  .ec-item-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.3rem; }
+  .ec-code { font-family: var(--font-mono); font-weight: 600; color: var(--accent-on-navy); font-size: 0.9rem; }
+  .ec-meaning { font-weight: 500; color: var(--text-on-navy); font-size: 0.9375rem; }
+  .ec-action { color: var(--muted-on-navy); font-size: 0.875rem; }
+  .ec-empty { color: var(--muted-on-navy); font-size: 0.9375rem; padding: var(--space-3) 0; }
