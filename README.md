@@ -1,30 +1,100 @@
 # Geonergy
 
-Marketing site for Geonergy, solar and battery systems paired with AI monitoring, built for Nigeria's power realities.
+Marketing site and customer tools for Geonergy: solar and battery systems built for Nigeria's power realities.
 
-## Structure
+## Pages
 
-The site is a single self-contained page. All CSS and JavaScript are inlined in `index.html`, with fonts pulled from Google Fonts. There is no build step and no dependencies to install.
-
-| File | Purpose |
+| File | What it is |
 | --- | --- |
-| `index.html` | The entire site |
+| `index.html` | Main site, including the Your Solar Savings estimator |
+| `calculator.html` | Solar production calculator driven by live weather |
+| `store.html` | Customer-facing systems catalogue, 1.5 kVA to 215 kVA |
+| `admin.html` | Private tool for managing the catalogue and prices |
+| `assets/geonergy.css` | Shared design tokens, nav, buttons and footer |
+| `assets/products.json` | Public catalogue. Contains no prices, by design |
 
-Sections: hero, solution, error codes reference, how it works, why Nigeria, contact.
+There is no build step and no dependencies. Every page is plain HTML, CSS and JavaScript,
+with no charting or framework libraries, which keeps the pages light on mobile data.
 
 ## Running it locally
-
-Open `index.html` directly in a browser, or serve the folder:
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Then visit http://localhost:8000.
+Then open http://localhost:8000. Use a server rather than opening the files directly,
+because `store.html` and `admin.html` fetch `assets/products.json`, and browsers block
+that over `file://`.
+
+## Before you go live
+
+Two values are placeholders and must be changed.
+
+1. **WhatsApp number.** In `store.html`, set `WHATSAPP_NUMBER` to Geonergy's real number in
+   international form, digits only. `0803 123 4567` becomes `2348031234567`. Until this is
+   set, the buttons open WhatsApp with no recipient.
+2. **Admin passcode.** In `admin.html`, change `PASSCODE` from its default.
+
+## How pricing stays private
+
+This is a static site with no server, so it is worth being precise about what protects what.
+
+The passcode on `admin.html` is a deterrent against a casual visitor. It sits in JavaScript
+that anyone can read, so it is not authentication and should not be treated as such.
+
+What actually keeps prices private is that **prices are never published**. They are held in
+your browser's local storage on your own device. `assets/products.json`, the only catalogue
+the website serves, has no price field in it at all. Prices are absent rather than hidden,
+so there is nothing for a customer to uncover.
+
+**Publishing a catalogue update:**
+
+1. Open `admin.html` and make your changes.
+2. Click **Publish catalogue**. It downloads a `products.json` with every price stripped,
+   and refuses to download at all if a price somehow survives the strip.
+3. Upload that file to `assets/products.json` and commit it.
+
+**Back up regularly.** Click **Save private backup** to download a file that does contain
+prices. Keep it off the website. Clearing your browser data wipes the prices otherwise.
+
+## Product images
+
+The store shows a kVA placeholder tile for any system with no photo. To add real photos,
+put them in `assets/products/` and set the image path on each system in the admin tool.
+Resize to roughly 1200px wide and save as JPEG or WebP before uploading, so the page stays
+fast on mobile data.
+
+## When you outgrow the static setup
+
+A small backend is needed if you want real staff logins, more than one person editing, or
+catalogue changes that appear on the site without publishing a file. Any host offering a
+database and authentication would do. The change is contained: `store.html` reads its
+catalogue from a single `CATALOGUE_URL`, and `admin.html` reads and writes through its
+`save`, `load` and `publish` functions. Those are the only places that would need to point
+at an API instead of a file.
+
+## Where the numbers come from
+
+The savings estimator applies a per-size offset to your electricity and generator spend,
+varied across the year to reflect Nigerian solar yield, which drops through the rains and
+is dulled by harmattan haze. The five-year total assumes tariffs and fuel rise 8% a year.
+
+The production calculator uses Open-Meteo for hourly irradiance, cloud cover and
+temperature. It needs no API key, which is what makes it workable on a static host. If that
+call fails, the page falls back to a clear-sky model computed from the sun's position and
+says so on screen rather than passing an estimate off as live data.
+
+Both are estimates and both say so. Real output depends on roof orientation, shade, dust
+and the actual load in the building.
 
 ## Deploying
 
-Any static host works, since the output is one file. GitHub Pages, Netlify, Vercel, and Cloudflare Pages all serve this repository as-is with no build command.
+Any static host works. GitHub Pages, Netlify, Vercel and Cloudflare Pages all serve this
+repository as-is with no build command.
+
+Note that `admin.html` deploys along with everything else and is reachable by anyone who
+knows the URL. It is marked `noindex`, but if you would rather it were not published at
+all, exclude it from your host's deploy and open the file locally instead.
 
 ## Contact
 

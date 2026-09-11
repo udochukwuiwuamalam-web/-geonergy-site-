@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Geonergy Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/geonergy.css">
+<style>
+  :root { --green: #0E7C4A; --amber-bg: #FFF6E5; --amber-line: #E8B45C; --danger: #B3261E; }
+  body { background: var(--off-white); }
+  .admin-bar { background: var(--navy); color: var(--text-on-navy); padding: var(--space-3) 0; }
+  .admin-bar .container { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  .admin-brand { display: flex; align-items: center; gap: 0.7rem; }
+  .admin-brand img { height: 24px; }
+  .admin-tag { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.14em; padding: 0.2rem 0.45rem; border: 1px solid var(--border-on-navy); border-radius: var(--radius-sm); color: var(--muted-on-navy); }
+  .admin-bar-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+  .abtn { font-size: 0.8rem; font-weight: 600; padding: 0.55rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; transition: all 0.15s ease; }
+  .abtn-primary { background: var(--green); color: #fff; }
+  .abtn-primary:hover { background: #0B6B3F; }
+  .abtn-ghost { background: transparent; border-color: var(--border-on-navy); color: var(--text-on-navy); }
+  .abtn-ghost:hover { border-color: var(--muted-on-navy); }
+  .abtn-light { background: var(--white); border-color: var(--border-on-white); color: var(--text-on-white); }
+  .abtn-light:hover { border-color: var(--muted-on-white); }
+
+  .admin-main { padding: var(--space-4) 0 var(--space-7); }
+
+  .warn-box { background: var(--amber-bg); border: 1px solid var(--amber-line); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-4); font-size: 0.87rem; line-height: 1.6; }
+  .warn-box h2 { font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; margin-bottom: 0.4rem; }
+  .warn-box code { font-family: var(--font-mono); font-size: 0.85em; background: rgba(0,0,0,0.06); padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+  .gate { max-width: 380px; margin: var(--space-7) auto; background: var(--white); border: 1px solid var(--border-on-white); border-radius: var(--radius-md); padding: var(--space-4); }
+  .gate h1 { font-size: 1.4rem; margin-bottom: 0.4rem; }
+  .gate p { font-size: 0.85rem; color: var(--muted-on-white); margin-bottom: var(--space-3); line-height: 1.6; }
+  .gate label { font-size: 0.78rem; font-weight: 600; display: block; margin-bottom: 0.35rem; }
+  .gate input { width: 100%; padding: 0.75rem 0.85rem; border: 1px solid var(--border-on-white); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 1rem; margin-bottom: 0.7rem; }
+  .gate input:focus { outline: 2px solid var(--green); outline-offset: -1px; }
+  .gate .abtn { width: 100%; }
+  .gate-error { color: var(--danger); font-size: 0.8rem; margin-top: 0.6rem; }
+
+  .toolbar { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; margin-bottom: var(--space-3); }
+  .toolbar input[type="search"] { flex: 1; min-width: 180px; padding: 0.6rem 0.8rem; border: 1px solid var(--border-on-white); border-radius: var(--radius-sm); font-size: 0.9rem; background: var(--white); }
+  .count-pill { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted-on-white); }
+
+  .admin-table-wrap { overflow-x: auto; background: var(--white); border: 1px solid var(--border-on-white); border-radius: var(--radius-md); }
+  table.admin-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; min-width: 620px; }
+  .admin-table th, .admin-table td { text-align: left; padding: 0.7rem 0.85rem; border-bottom: 1px solid var(--border-on-white); vertical-align: middle; }
+  .admin-table th { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-on-white); background: var(--off-white); }
+  .admin-table tr:last-child td { border-bottom: none; }
+  .admin-table td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .price-set { color: var(--green); font-weight: 600; }
+  .price-unset { color: var(--muted-on-white); font-style: italic; }
+  .thumb { width: 48px; height: 36px; object-fit: cover; border-radius: 3px; display: block; background: var(--navy-2); }
+  .thumb-ph { width: 48px; height: 36px; border-radius: 3px; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.6rem; }
+  .row-actions { display: flex; gap: 0.35rem; white-space: nowrap; }
+  .row-actions button { font-size: 0.75rem; padding: 0.35rem 0.55rem; border-radius: 4px; border: 1px solid var(--border-on-white); background: var(--white); color: var(--muted-on-white); }
+  .row-actions button:hover { color: var(--text-on-white); border-color: var(--muted-on-white); }
+  .row-actions button.del:hover { color: var(--danger); border-color: var(--danger); }
+
+  dialog.edit { border: none; border-radius: var(--radius-md); padding: 0; max-width: 620px; width: calc(100% - 2rem); background: var(--white); }
+  dialog.edit::backdrop { background: rgba(11,29,58,0.55); }
+  .edit-head { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-on-white); display: flex; justify-content: space-between; align-items: center; }
+  .edit-head h2 { font-size: 1.15rem; }
+  .edit-body { padding: var(--space-3) var(--space-4); max-height: 66vh; overflow-y: auto; }
+  .edit-foot { padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border-on-white); background: var(--off-white); display: flex; justify-content: flex-end; gap: 0.6rem; }
+  .f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  @media (max-width: 560px) { .f-row { grid-template-columns: 1fr; } }
+  .f { margin-bottom: 0.85rem; }
+  .f label { display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 0.35rem; }
+  .f input, .f textarea { width: 100%; padding: 0.6rem 0.7rem; border: 1px solid var(--border-on-white); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.9rem; }
+  .f textarea { resize: vertical; min-height: 72px; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.5; }
+  .f input:focus, .f textarea:focus { outline: 2px solid var(--green); outline-offset: -1px; }
+  .f small { display: block; font-size: 0.73rem; color: var(--muted-on-white); margin-top: 0.3rem; line-height: 1.45; }
+  .f-price input { border-color: var(--amber-line); background: var(--amber-bg); font-family: var(--font-mono); font-weight: 600; }
+  .f-check { display: flex; align-items: center; gap: 0.5rem; }
+  .f-check input { width: auto; }
+
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--navy); color: #fff; padding: 0.7rem 1.1rem; border-radius: var(--radius-sm); font-size: 0.85rem; z-index: 50; box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <h1>Geonergy Admin</h1>
+  <p>This tool runs entirely in this browser. It is for Geonergy staff only.</p>
+  <label for="gatePass">Passcode</label>
+  <input type="password" id="gatePass" autocomplete="current-password" placeholder="Passcode">
+  <button class="abtn abtn-primary" id="gateGo">Open dashboard</button>
+  <p class="gate-error" id="gateError" hidden>That passcode is not right.</p>
+</div>
+
+<div id="app" hidden>
+
+  <div class="admin-bar">
+    <div class="container">
+      <div class="admin-brand">
+        <img src="assets/logo-light.png" alt="Geonergy">
+        <span class="admin-tag">ADMIN</span>
+      </div>
+      <div class="admin-bar-actions">
+        <button class="abtn abtn-ghost" id="btnLoadPublic">Load live catalogue</button>
+        <button class="abtn abtn-ghost" id="btnImport">Import backup</button>
+        <button class="abtn abtn-ghost" id="btnBackup">Save private backup</button>
+        <button class="abtn abtn-primary" id="btnPublish">Publish catalogue</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="admin-main">
+    <div class="container">
+
+      <div class="warn-box">
+        <h2>Read this once, before you put real prices in.</h2>
+        <p>This dashboard has no server behind it, so the passcode is a latch on a door,
+        not a lock. Anyone who opens this page's source can read past it.
+        What actually keeps your prices private is different, and stronger:
+        <strong>prices are never published.</strong> They are saved only in this browser,
+        on this device. <code>Publish catalogue</code> writes a <code>products.json</code>
+        with every price stripped out, and that stripped file is the only thing
+        customers ever download.</p>
+        <p style="margin-top:0.6rem">Two things follow from that. Use
+        <code>Save private backup</code> regularly, because clearing your browser data
+        wipes the prices. And if you want real logins, several staff accounts, or edits
+        that show on the site without publishing a file, that needs a small backend.
+        The README explains that upgrade.</p>
+      </div>
+
+      <div class="toolbar">
+        <input type="search" id="search" placeholder="Search systems…" aria-label="Search systems">
+        <span class="count-pill" id="countPill"></span>
+        <button class="abtn abtn-light" id="btnAdd">+ Add system</button>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th scope="col">Image</th>
+              <th scope="col">System</th>
+              <th scope="col">kVA</th>
+              <th scope="col">Price (private)</th>
+              <th scope="col">Shown</th>
+              <th scope="col"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<dialog class="edit" id="editDlg">
+  <div class="edit-head">
+    <h2 id="editTitle">Edit system</h2>
+    <button type="button" class="abtn abtn-light" id="editCancelX" aria-label="Close">&times;</button>
+  </div>
+  <div class="edit-body">
+    <div class="f-row">
+      <div class="f"><label for="fName">Name</label><input id="fName" required></div>
+      <div class="f"><label for="fKva">Size in kVA</label><input id="fKva" type="number" step="0.1" min="0.1" required></div>
+    </div>
+    <div class="f"><label for="fTagline">One-line description</label><input id="fTagline"></div>
+
+    <div class="f f-price">
+      <label for="fPrice">Price in Naira — private, never published</label>
+      <input id="fPrice" type="number" min="0" step="1000" placeholder="e.g. 1850000">
+      <small>Stays on this device. Stripped out of the published catalogue. Leave empty if you quote per site.</small>
+    </div>
+
+    <div class="f">
+      <label for="fImage">Image path</label>
+      <input id="fImage" placeholder="assets/products/6kva.jpg">
+      <small>Put the photo in <code>assets/products/</code> and write the path here. Leave empty to show the kVA placeholder tile.</small>
+    </div>
+
+    <div class="f">
+      <label for="fPowers">What it can power — one per line</label>
+      <textarea id="fPowers"></textarea>
+    </div>
+
+    <div class="f">
+      <label for="fSpecs">Specification — one per line, as Label: value</label>
+      <textarea id="fSpecs"></textarea>
+    </div>
+
+    <div class="f">
+      <label for="fInstall">Installation notes</label>
+      <textarea id="fInstall" style="min-height:56px"></textarea>
+    </div>
+
+    <div class="f f-check">
+      <input type="checkbox" id="fFeatured">
+      <label for="fFeatured" style="margin:0">Mark as popular in the store</label>
+    </div>
+  </div>
+  <div class="edit-foot">
+    <button type="button" class="abtn abtn-light" id="editCancel">Cancel</button>
+    <button type="button" class="abtn abtn-primary" id="editSave">Save</button>
+  </div>
+</dialog>
+
+<input type="file" id="fileInput" accept="application/json" hidden>
+
+<script>
+(() => {
+  'use strict';
+
+  // =================================================================
+  // GEONERGY ADMIN
+  //
+  // An honest description of what this is:
+  //
+  //   This is a static site. There is no server, so there is no real
+  //   authentication available here. PASSCODE below is a deterrent
+  //   against a casual visitor and nothing more - it sits in source
+  //   that anyone can read.
+  //
+  //   Privacy of prices does NOT rest on that passcode. It rests on
+  //   prices never leaving this device: the catalogue published to the
+  //   website is generated with every price removed. That property
+  //   holds whether or not somebody gets past the gate.
+  //
+  //   Change PASSCODE before use. For real auth, see the README.
+  // =================================================================
+  const PASSCODE = 'geonergy2026';
+
+  const STORE_KEY = 'geonergy.admin.catalogue.v1';
+  const SESSION_KEY = 'geonergy.admin.open';
+  const PUBLIC_URL = 'assets/products.json';
+
+  const $ = id => document.getElementById(id);
+  let items = [];
+  let editingId = null;
+
+  const naira = new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 });
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+  }
+
+  function toast(msg) {
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2800);
+  }
+
+  // ---- Storage ----------------------------------------------------
+  function save() {
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify({ updated: new Date().toISOString(), products: items }));
+    } catch (err) {
+      toast('Could not save. Browser storage may be full or blocked.');
+    }
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      items = Array.isArray(data.products) ? data.products : [];
+      return true;
+    } catch (err) { return false; }
+  }
+
+  async function loadPublic(announce) {
+    try {
+      const res = await fetch(PUBLIC_URL, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const incoming = Array.isArray(data.products) ? data.products : [];
+      // Keep prices already held locally for ids that match.
+      const priceById = {};
+      items.forEach(p => { if (p.price != null) priceById[p.id] = p.price; });
+      items = incoming.map(p => {
+        const copy = Object.assign({}, p);
+        if (priceById[p.id] != null) copy.price = priceById[p.id];
+        return copy;
+      });
+      save(); render();
+      if (announce) toast('Loaded ' + items.length + ' systems from the live catalogue.');
+    } catch (err) {
+      if (announce) toast('Could not read the live catalogue.');
+    }
+  }
+
+  // ---- Render -----------------------------------------------------
+  function thumb(p) {
+    if (p.image) return '<img class="thumb" src="' + esc(p.image) + '" alt="">';
+    return '<div class="thumb-ph">' + esc(p.kva) + '</div>';
+  }
+
+  function render() {
+    const q = ($('search').value || '').trim().toLowerCase();
+    const list = items
+      .filter(p => !q || (p.name || '').toLowerCase().indexOf(q) >= 0 || String(p.kva).indexOf(q) >= 0)
+      .sort((a, b) => a.kva - b.kva);
+
+    $('rows').innerHTML = list.map(p => '' +
+      '<tr>' +
+        '<td>' + thumb(p) + '</td>' +
+        '<td><strong>' + esc(p.name) + '</strong><br><span style="color:var(--muted-on-white);font-size:0.8rem">' + esc(p.tagline || '') + '</span></td>' +
+        '<td class="num">' + esc(p.kva) + '</td>' +
+        '<td class="num">' + (p.price != null && p.price !== ''
+            ? '<span class="price-set">' + naira.format(Number(p.price)) + '</span>'
+            : '<span class="price-unset">not set</span>') + '</td>' +
+        '<td>' + (p.featured ? 'Popular' : 'Listed') + '</td>' +
+        '<td><div class="row-actions">' +
+          '<button data-edit="' + esc(p.id) + '">Edit</button>' +
+          '<button class="del" data-del="' + esc(p.id) + '">Delete</button>' +
+        '</div></td>' +
+      '</tr>').join('');
+
+    const withPrice = items.filter(p => p.price != null && p.price !== '').length;
+    $('countPill').textContent = items.length + ' systems · ' + withPrice + ' priced';
+  }
+
+  // ---- Edit -------------------------------------------------------
+  function openEdit(id) {
+    editingId = id;
+    const p = id ? items.find(x => x.id === id) : null;
+    $('editTitle').textContent = p ? 'Edit system' : 'Add system';
+    $('fName').value = p ? (p.name || '') : '';
+    $('fKva').value = p ? p.kva : '';
+    $('fTagline').value = p ? (p.tagline || '') : '';
+    $('fPrice').value = p && p.price != null ? p.price : '';
+    $('fImage').value = p ? (p.image || '') : '';
+    $('fPowers').value = p ? (p.powers || []).join('\n') : '';
+    $('fSpecs').value = p ? Object.keys(p.specs || {}).map(k => k + ': ' + p.specs[k]).join('\n') : '';
+    $('fInstall').value = p ? (p.install || '') : '';
+    $('fFeatured').checked = !!(p && p.featured);
+    $('editDlg').showModal();
+  }
+
+  function slugFor(kva) {
+    const base = 'sys-' + String(kva).replace('.', '-');
+    let id = base, n = 2;
+    while (items.some(p => p.id === id && p.id !== editingId)) { id = base + '-' + n; n++; }
+    return id;
+  }
+
+  function saveEdit() {
+    const name = $('fName').value.trim();
+    const kva = parseFloat($('fKva').value);
+    if (!name) { toast('Give the system a name.'); return; }
+    if (!isFinite(kva) || kva <= 0) { toast('Enter the size in kVA.'); return; }
+
+    const specs = {};
+    $('fSpecs').value.split('\n').forEach(line => {
+      const i = line.indexOf(':');
+      if (i > 0) specs[line.slice(0, i).trim()] = line.slice(i + 1).trim();
+    });
+
+    const priceRaw = $('fPrice').value.trim();
+    const rec = {
+      id: editingId || slugFor(kva),
+      kva: kva,
+      name: name,
+      tagline: $('fTagline').value.trim(),
+      image: $('fImage').value.trim(),
+      powers: $('fPowers').value.split('\n').map(s => s.trim()).filter(Boolean),
+      specs: specs,
+      install: $('fInstall').value.trim(),
+      featured: $('fFeatured').checked,
+      price: priceRaw === '' ? null : Number(priceRaw)
+    };
+
+    const wasEditing = !!editingId;
+    if (wasEditing) {
+      const i = items.findIndex(p => p.id === editingId);
+      items[i] = rec;
+    } else {
+      items.push(rec);
+    }
+    save(); render();
+    $('editDlg').close();
+    toast(wasEditing ? 'Saved.' : 'Added.');
+    editingId = null;
+  }
+
+  // ---- Export -----------------------------------------------------
+  function download(filename, text) {
+    const blob = new Blob([text], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function publish() {
+    // Strip every price before the file is allowed to leave this device.
+    const clean = items
+      .slice()
+      .sort((a, b) => a.kva - b.kva)
+      .map(p => {
+        const c = Object.assign({}, p);
+        delete c.price;
+        delete c.cost;
+        return c;
+      });
+    const payload = {
+      _comment: 'PUBLIC catalogue. Generated by admin.html with all prices removed. Safe to upload.',
+      updated: new Date().toISOString().slice(0, 10),
+      products: clean
+    };
+    const text = JSON.stringify(payload, null, 2);
+    if (/"price"|"cost"/.test(text)) {          // belt and braces
+      toast('Stopped: a price survived the strip. Nothing was downloaded.');
+      return;
+    }
+    download('products.json', text);
+    toast('Downloaded products.json with no prices. Upload it to assets/.');
+  }
+
+  function backup() {
+    const payload = {
+      _comment: 'PRIVATE backup. CONTAINS PRICES. Do not upload this to the website.',
+      updated: new Date().toISOString(),
+      products: items
+    };
+    const stamp = new Date().toISOString().slice(0, 10);
+    download('geonergy-private-backup-' + stamp + '.json', JSON.stringify(payload, null, 2));
+    toast('Private backup saved. Keep it off the website.');
+  }
+
+  function importBackup(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(String(reader.result));
+        if (!Array.isArray(data.products)) throw new Error('no products array');
+        items = data.products;
+        save(); render();
+        toast('Imported ' + items.length + ' systems.');
+      } catch (err) {
+        toast('That file could not be read as a catalogue.');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ---- Gate -------------------------------------------------------
+  function unlock() {
+    $('gate').hidden = true;
+    $('app').hidden = false;
+    if (!load()) loadPublic(false);
+    else render();
+  }
+
+  function initGate() {
+    if (sessionStorage.getItem(SESSION_KEY) === '1') { unlock(); return; }
+    $('gateGo').addEventListener('click', () => {
+      if ($('gatePass').value === PASSCODE) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        unlock();
+      } else {
+        $('gateError').hidden = false;
+      }
+    });
+    $('gatePass').addEventListener('keydown', e => { if (e.key === 'Enter') $('gateGo').click(); });
+  }
+
+  // ---- Wiring -----------------------------------------------------
+  function init() {
+    initGate();
+
+    $('btnAdd').addEventListener('click', () => openEdit(null));
+    $('btnPublish').addEventListener('click', publish);
+    $('btnBackup').addEventListener('click', backup);
+    $('btnLoadPublic').addEventListener('click', () => {
+      if (confirm('Replace the list here with what is live on the site?\n\nPrices you have already entered are kept for systems that match.')) {
+        loadPublic(true);
+      }
+    });
+    $('btnImport').addEventListener('click', () => $('fileInput').click());
+    $('fileInput').addEventListener('change', e => {
+      if (e.target.files && e.target.files[0]) importBackup(e.target.files[0]);
+      e.target.value = '';
+    });
+
+    $('search').addEventListener('input', render);
+
+    $('rows').addEventListener('click', e => {
+      const ed = e.target.closest('[data-edit]');
+      const del = e.target.closest('[data-del]');
+      if (ed) openEdit(ed.dataset.edit);
+      if (del) {
+        const p = items.find(x => x.id === del.dataset.del);
+        if (p && confirm('Delete "' + p.name + '"? This cannot be undone.')) {
+          items = items.filter(x => x.id !== del.dataset.del);
+          save(); render(); toast('Deleted.');
+        }
+      }
+    });
+
+    $('editSave').addEventListener('click', saveEdit);
+    $('editCancel').addEventListener('click', () => { $('editDlg').close(); editingId = null; });
+    $('editCancelX').addEventListener('click', () => { $('editDlg').close(); editingId = null; });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+</body>
+</html>
