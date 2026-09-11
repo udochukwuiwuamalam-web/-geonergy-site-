@@ -4,11 +4,12 @@ name: Deploy site to GitHub Pages
 # it is the private pricing tool and is meant to be opened locally.
 # The guard steps below fail the build rather than publish it by accident.
 
+# Pages only accepts deployments from the default branch, so building on a
+# feature branch produced red runs that could never publish.
 on:
   push:
     branches:
       - main
-      - claude/plugin-marketplace-ecc-w0p32j
   workflow_dispatch:
 
 permissions:
