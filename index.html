@@ -336,16 +336,14 @@
     color: var(--text-on-navy); transition: background 0.18s ease, border-color 0.18s ease;
   }
   .trust-logo:hover { background: rgba(237,241,246,0.13); border-color: var(--muted-on-navy); }
-  .trust-logo span { white-space: nowrap; line-height: 1; }
-
-  /* Each wordmark gets its own treatment so the row reads as six marks,
-     not one font repeated six times. */
-  .tl-deye     { font-family: var(--font-body); font-weight: 600; font-size: 1.1rem; letter-spacing: 0.16em; }
-  .tl-growatt  { font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.02em; }
-  .tl-sunsynk  { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; letter-spacing: 0.08em; }
-  .tl-felicity { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; letter-spacing: 0.01em; }
-  .tl-jinko    { font-family: var(--font-body); font-weight: 600; font-size: 1rem; font-style: italic; }
-  .tl-canadian { font-family: var(--font-body); font-weight: 500; font-size: 0.92rem; letter-spacing: 0.04em; }
+  /* Logos ship as transparent PNGs already recoloured to the on-navy tone,
+     so the row reads as one set rather than seven competing brand colours. */
+  .trust-logo img {
+    max-width: 118px; max-height: 27px; width: auto; height: auto;
+    object-fit: contain; display: block;
+    opacity: 0.88; transition: opacity 0.18s ease;
+  }
+  .trust-logo:hover img { opacity: 1; }
 
   .trust-note {
     margin-top: var(--space-3); font-size: 0.78rem;
@@ -354,7 +352,11 @@
 
   @media (max-width: 600px) {
     .trust-logos { gap: 10px; }
-    .trust-logo { min-width: 0; flex: 1 1 calc(50% - 10px); height: 54px; padding: 0 0.6rem; }
+    /* Two per row. The cap stops a lone last tile stretching full width. */
+    .trust-logo {
+      min-width: 0; flex: 1 1 calc(50% - 10px); max-width: calc(50% - 5px);
+      height: 54px; padding: 0 0.6rem;
+    }
   }
 
   .compat-brands { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
@@ -593,12 +595,13 @@
     <div class="container trust-inner reveal">
       <h2 class="trust-title">Trusted for Quality and Performance</h2>
       <ul class="trust-logos">
-        <li class="trust-logo"><span class="tl-deye">DEYE</span></li>
-        <li class="trust-logo"><span class="tl-growatt">GROWATT</span></li>
-        <li class="trust-logo"><span class="tl-sunsynk">SUNSYNK</span></li>
-        <li class="trust-logo"><span class="tl-felicity">Felicity</span></li>
-        <li class="trust-logo"><span class="tl-jinko">JinkoSolar</span></li>
-        <li class="trust-logo"><span class="tl-canadian">Canadian&nbsp;Solar</span></li>
+        <li class="trust-logo"><img src="assets/logos/growatt.png" alt="Growatt" width="280" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/must.png" alt="MUST Solar Power System" width="157" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/sako.png" alt="SAKO" width="185" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/itel.png" alt="itel" width="135" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/haisic.png" alt="Haisic" width="267" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/firman.png" alt="Firman" width="300" height="42" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/jinko.png" alt="JinkoSolar" width="202" height="68" loading="lazy" decoding="async"></li>
       </ul>
       <p class="trust-note">Equipment brands Geonergy installs and services.</p>
     </div>
