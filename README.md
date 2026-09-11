@@ -89,12 +89,33 @@ and the actual load in the building.
 
 ## Deploying
 
-Any static host works. GitHub Pages, Netlify, Vercel and Cloudflare Pages all serve this
-repository as-is with no build command.
+`.github/workflows/pages.yml` publishes the site to GitHub Pages. It deploys `index.html`,
+`calculator.html`, `store.html` and `assets/`, and **deliberately leaves out `admin.html`**,
+so the pricing tool is never served from the live site. Two guard steps fail the build
+rather than publish by accident: one if the admin tool reaches the artifact, one if a price
+field appears in the public catalogue.
 
-Note that `admin.html` deploys along with everything else and is reachable by anyone who
-knows the URL. It is marked `noindex`, but if you would rather it were not published at
-all, exclude it from your host's deploy and open the file locally instead.
+**Enabling it, once:** go to
+[Settings → Pages](https://github.com/udochukwuiwuamalam-web/-geonergy-site-/settings/pages)
+and set **Source** to **GitHub Actions**. That switch cannot be flipped through the API, so
+it has to be done in the browser. Then re-run the workflow from the Actions tab, or push any
+commit. The site appears at
+`https://udochukwuiwuamalam-web.github.io/-geonergy-site-/`.
+
+### Using the admin tool once the site is live
+
+Because it is not deployed, open `admin.html` from your own copy of the repository. It
+tries the local catalogue first and falls back to fetching the live site's catalogue, so
+opening the file directly normally works. If it cannot reach either, serve the folder and
+use `http://localhost:8000/admin.html`.
+
+### One thing to be clear about
+
+This repository is **public**, so `admin.html` and its passcode are readable by anyone who
+browses the repository, even though the page is not part of the deployed site. That is
+survivable because the passcode is not what protects your prices, and no price is ever
+committed here. If you want the admin tool out of public view entirely, delete it from the
+repository and keep a copy on your own machine. Nothing else depends on it.
 
 ## Contact
 
