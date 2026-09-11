@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Systems — Geonergy</title>
+<meta name="description" content="Geonergy solar and battery systems from 1.5 kVA to 215 kVA. See what each one powers, then get a price on WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/geonergy.css">
+<style>
+  :root { --green: #0E7C4A; --green-soft: #E7F6EE; }
+  .store-hero { background: var(--navy); color: var(--text-on-navy); padding: var(--space-6) 0 var(--space-5); }
+  .store-hero h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); margin-bottom: var(--space-2); max-width: 16ch; }
+  .store-hero p { color: var(--muted-on-navy); font-size: 1.05rem; max-width: 58ch; }
+
+  .store-body { background: var(--off-white); padding: var(--space-5) 0 var(--space-7); }
+
+  .filter-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: var(--space-4); }
+  .filter-chip {
+    padding: 0.5rem 0.9rem; border-radius: 999px; font-family: var(--font-mono); font-size: 0.8rem;
+    border: 1px solid var(--border-on-white); background: var(--white); color: var(--muted-on-white);
+    cursor: pointer; transition: all 0.15s ease;
+  }
+  .filter-chip:hover { border-color: var(--muted-on-white); color: var(--text-on-white); }
+  .filter-chip.active { background: var(--navy); border-color: var(--navy); color: var(--white); font-weight: 600; }
+  .filter-chip:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: var(--space-3); }
+  .product-card {
+    background: var(--white); border: 1px solid var(--border-on-white); border-radius: var(--radius-md);
+    overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .product-card:hover { box-shadow: 0 10px 30px rgba(11,29,58,0.10); transform: translateY(-2px); }
+  .product-media { position: relative; aspect-ratio: 4 / 3; background: var(--navy-2); overflow: hidden; }
+  .product-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .product-placeholder {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.2rem;
+    background: linear-gradient(140deg, var(--navy) 0%, var(--navy-3) 100%); color: var(--text-on-navy);
+  }
+  .ph-kva { font-family: var(--font-display); font-size: 2.6rem; font-weight: 600; line-height: 1; }
+  .ph-unit { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.18em; opacity: 0.7; }
+  .badge-featured {
+    position: absolute; top: 0.7rem; left: 0.7rem; z-index: 2;
+    background: var(--white); color: var(--navy); font-family: var(--font-mono);
+    font-size: 0.62rem; letter-spacing: 0.1em; padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-weight: 600;
+  }
+
+  .product-body { padding: var(--space-3); display: flex; flex-direction: column; flex: 1; }
+  .product-name { font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .product-tagline { font-size: 0.88rem; color: var(--muted-on-white); margin-bottom: var(--space-2); }
+  .powers-list { margin: 0 0 var(--space-2); padding: 0; }
+  .powers-list li { font-size: 0.83rem; color: var(--text-on-white); padding-left: 1.1rem; position: relative; margin-bottom: 0.3rem; }
+  .powers-list li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .product-actions { margin-top: auto; display: flex; gap: 0.5rem; padding-top: var(--space-2); }
+  .btn-wa {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+    background: var(--green); color: var(--white); font-weight: 600; font-size: 0.85rem;
+    padding: 0.7rem 0.8rem; border-radius: var(--radius-sm); text-align: center; transition: background 0.15s ease;
+  }
+  .btn-wa:hover { background: #0B6B3F; }
+  .btn-detail {
+    flex: none; padding: 0.7rem 0.85rem; border-radius: var(--radius-sm); font-size: 0.85rem;
+    border: 1px solid var(--border-on-white); color: var(--muted-on-white); background: var(--white); font-weight: 500;
+  }
+  .btn-detail:hover { border-color: var(--muted-on-white); color: var(--text-on-white); }
+
+  dialog.sheet {
+    border: none; border-radius: var(--radius-md); padding: 0; max-width: 560px; width: calc(100% - 2rem);
+    color: var(--text-on-white); background: var(--white); box-shadow: 0 24px 60px rgba(11,29,58,0.3);
+  }
+  dialog.sheet::backdrop { background: rgba(11,29,58,0.55); }
+  .sheet-head { padding: var(--space-4) var(--space-4) var(--space-2); border-bottom: 1px solid var(--border-on-white); position: relative; }
+  .sheet-close { position: absolute; top: var(--space-3); right: var(--space-3); font-size: 1.4rem; line-height: 1; color: var(--muted-on-white); padding: 0.2rem 0.4rem; }
+  .sheet-close:hover { color: var(--text-on-white); }
+  .sheet-body { padding: var(--space-3) var(--space-4) var(--space-4); max-height: 62vh; overflow-y: auto; }
+  .sheet-section-title { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-on-white); margin: var(--space-3) 0 0.6rem; }
+  .sheet-section-title:first-child { margin-top: 0; }
+  .spec-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+  .spec-table th, .spec-table td { text-align: left; padding: 0.5rem 0; border-bottom: 1px solid var(--border-on-white); vertical-align: top; }
+  .spec-table th { font-weight: 500; color: var(--muted-on-white); width: 42%; }
+  .install-note { font-size: 0.87rem; line-height: 1.6; color: var(--text-on-white); background: var(--green-soft); padding: var(--space-2); border-radius: var(--radius-sm); }
+  .sheet-foot { padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border-on-white); background: var(--off-white); }
+  .sheet-foot .btn-wa { width: 100%; }
+  .no-price-note { font-size: 0.75rem; color: var(--muted-on-white); text-align: center; margin-top: 0.6rem; }
+
+  .store-empty { padding: var(--space-5); text-align: center; color: var(--muted-on-white); }
+  .store-cta { margin-top: var(--space-5); padding: var(--space-4); background: var(--white); border: 1px solid var(--border-on-white); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  .store-cta p { font-family: var(--font-display); font-size: clamp(1.05rem, 2.4vw, 1.4rem); margin: 0; }
+</style>
+<link rel="stylesheet" href="assets/dock.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="container">
+    <a href="index.html"><img src="assets/logo-dark.png" alt="Geonergy" class="nav-logo-img"></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html#savings">Savings</a>
+      <a href="calculator.html">Calculator</a>
+      <a href="store.html">Systems</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="index.html#contact" class="nav-cta">Get in Touch</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<section class="store-hero">
+  <div class="container">
+    <span class="eyebrow">Solar Systems</span>
+    <h1>Find the system that fits your home.</h1>
+    <p>Every system below is a complete install: panels, inverter, battery and the work to
+       put it in. Pick the size that matches what you run, and message us for a price.</p>
+  </div>
+</section>
+
+<main class="store-body">
+  <div class="container">
+    <div class="filter-bar" id="filterBar" role="group" aria-label="Filter by system size"></div>
+    <div class="product-grid" id="productGrid"></div>
+    <p class="store-empty" id="storeEmpty" hidden>Nothing in that size yet. Try another.</p>
+
+    <div class="store-cta">
+      <p>Not sure which size you need?</p>
+      <a href="calculator.html" class="btn btn-primary">Work it out with the calculator</a>
+    </div>
+  </div>
+</main>
+
+<dialog class="sheet" id="sheet">
+  <div class="sheet-head">
+    <button class="sheet-close" id="sheetClose" aria-label="Close">&times;</button>
+    <h2 class="product-name" id="sheetName"></h2>
+    <p class="product-tagline" id="sheetTagline"></p>
+  </div>
+  <div class="sheet-body">
+    <h3 class="sheet-section-title">What it runs</h3>
+    <ul class="powers-list" id="sheetPowers"></ul>
+    <h3 class="sheet-section-title">Specification</h3>
+    <table class="spec-table"><tbody id="sheetSpecs"></tbody></table>
+    <h3 class="sheet-section-title">Installation</h3>
+    <p class="install-note" id="sheetInstall"></p>
+  </div>
+  <div class="sheet-foot">
+    <a class="btn-wa" id="sheetWa" href="#" target="_blank" rel="noopener">Get Price on WhatsApp</a>
+    <p class="no-price-note">We quote per site, because the roof and the run of cable change the number.</p>
+  </div>
+</dialog>
+
+<footer class="footer">
+  <div class="container">
+    <div>
+      <img src="assets/logo-light.png" alt="Geonergy" class="footer-logo-img">
+      <div class="footer-tagline">Intelligent solar for Nigeria.</div>
+    </div>
+    <div class="footer-copy">&copy; <span id="yr"></span> Geonergy</div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  // =================================================================
+  // SET THIS BEFORE GOING LIVE
+  // Geonergy's WhatsApp number in full international form, digits
+  // only: country code, then the number without the leading zero.
+  // Nigeria is 234, so 0803 123 4567 becomes '2348031234567'.
+  // Until this is a real number the buttons open WhatsApp with no
+  // recipient, so change it first.
+  // =================================================================
+  const WHATSAPP_NUMBER = '2348000000000';
+
+  // This page NEVER receives prices. assets/products.json is the public
+  // catalogue and has no price field in it at all - prices live only in
+  // admin.html, on Geonergy's own device. See the README for how
+  // publishing an updated catalogue works.
+  const CATALOGUE_URL = 'assets/products.json';
+
+  const $ = id => document.getElementById(id);
+  let products = [];
+  let activeFilter = 'all';
+
+  function waLink(p) {
+    const lines = [
+      'Hello Geonergy, I saw the ' + p.name + ' (' + p.kva + ' kVA) on your website.',
+      'Please can I get a price for it?'
+    ];
+    return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(lines.join('\n'));
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+  }
+
+  function media(p) {
+    if (p.image) {
+      return '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async">';
+    }
+    return '<div class="product-placeholder" aria-hidden="true">' +
+           '<span class="ph-kva">' + esc(p.kva) + '</span>' +
+           '<span class="ph-unit">KVA</span></div>';
+  }
+
+  function card(p) {
+    const powers = (p.powers || []).slice(0, 4).map(t => '<li>' + esc(t) + '</li>').join('');
+    return '' +
+      '<article class="product-card">' +
+        '<div class="product-media">' +
+          (p.featured ? '<span class="badge-featured">POPULAR</span>' : '') +
+          media(p) +
+        '</div>' +
+        '<div class="product-body">' +
+          '<h2 class="product-name">' + esc(p.name) + '</h2>' +
+          '<p class="product-tagline">' + esc(p.tagline) + '</p>' +
+          '<ul class="powers-list">' + powers + '</ul>' +
+          '<div class="product-actions">' +
+            '<a class="btn-wa" href="' + waLink(p) + '" target="_blank" rel="noopener">Get Price on WhatsApp</a>' +
+            '<button type="button" class="btn-detail" data-id="' + esc(p.id) + '">Details</button>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+  }
+
+  function render() {
+    const list = activeFilter === 'all'
+      ? products
+      : products.filter(p => String(p.kva) === activeFilter);
+    $('productGrid').innerHTML = list.map(card).join('');
+    $('storeEmpty').hidden = list.length > 0;
+  }
+
+  function buildFilters() {
+    const sizes = products.map(p => p.kva).sort((a, b) => a - b);
+    const chips = ['<button type="button" class="filter-chip active" data-kva="all">All sizes</button>']
+      .concat(sizes.map(k => '<button type="button" class="filter-chip" data-kva="' + k + '">' + k + ' kVA</button>'));
+    $('filterBar').innerHTML = chips.join('');
+  }
+
+  function openSheet(id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    $('sheetName').textContent = p.name;
+    $('sheetTagline').textContent = p.tagline || '';
+    $('sheetPowers').innerHTML = (p.powers || []).map(t => '<li>' + esc(t) + '</li>').join('');
+    $('sheetSpecs').innerHTML = Object.keys(p.specs || {})
+      .map(k => '<tr><th scope="row">' + esc(k) + '</th><td>' + esc(p.specs[k]) + '</td></tr>').join('');
+    $('sheetInstall').textContent = p.install || '';
+    $('sheetWa').setAttribute('href', waLink(p));
+    const dlg = $('sheet');
+    if (typeof dlg.showModal === 'function') dlg.showModal();
+    else dlg.setAttribute('open', '');
+  }
+
+  async function load() {
+    try {
+      const res = await fetch(CATALOGUE_URL, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      products = Array.isArray(data.products) ? data.products : [];
+    } catch (err) {
+      products = [];
+      $('storeEmpty').textContent = 'Could not load the systems list. Please refresh, or message us on WhatsApp.';
+    }
+    // Defensive: strip anything price-shaped that should never reach a customer.
+    products.forEach(p => { delete p.price; delete p.cost; });
+    products.sort((a, b) => a.kva - b.kva);
+    buildFilters();
+    render();
+  }
+
+  function init() {
+    $('yr').textContent = String(new Date().getFullYear());
+
+    $('filterBar').addEventListener('click', e => {
+      const chip = e.target.closest('.filter-chip');
+      if (!chip) return;
+      $('filterBar').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.kva;
+      render();
+    });
+
+    $('productGrid').addEventListener('click', e => {
+      const btn = e.target.closest('.btn-detail');
+      if (btn) openSheet(btn.dataset.id);
+    });
+
+    $('sheetClose').addEventListener('click', () => $('sheet').close());
+    $('sheet').addEventListener('click', e => { if (e.target === $('sheet')) $('sheet').close(); });
+
+    const toggle = $('navToggle'), links = $('navLinks');
+    if (toggle && links) toggle.addEventListener('click', () => links.classList.toggle('open'));
+
+    load();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+<nav class="dock" aria-label="Quick navigation">
+  <a class="dock-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V9.5"/></svg><span class="dock-label">Home</span></a>
+  <a class="dock-item" href="store.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="dock-label">Store</span></a>
+  <a class="dock-item" href="calculator.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4.5 13.5H11l-1 8.5L19.5 10H13V2Z"/></svg><span class="dock-label">Watts</span></a>
+  <a class="dock-item" href="inverter.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/></svg><span class="dock-label">Inverter</span></a>
+</nav>
+
+</body>
+</html>

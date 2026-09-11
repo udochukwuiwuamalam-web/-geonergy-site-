@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Production Calculator — Geonergy</title>
+<meta name="description" content="See how much power your solar panels can make today, using live weather for your location.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/geonergy.css">
+<style>
+  .calc-main { background: var(--navy); color: var(--text-on-navy); min-height: 70vh; padding: var(--space-6) 0 var(--space-7); --green: #3DD68C; --green-dim: rgba(61,214,140,0.22); }
+  .calc-head { max-width: 640px; margin-bottom: var(--space-5); }
+  .calc-head h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); margin-bottom: var(--space-2); }
+  .calc-head p { color: var(--muted-on-navy); font-size: 1.05rem; }
+
+  .calc-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: var(--space-5); align-items: start; }
+  @media (max-width: 900px) { .calc-grid { grid-template-columns: 1fr; gap: var(--space-4); } }
+
+  .calc-card { background: var(--navy-2); border: 1px solid var(--border-on-navy); border-radius: var(--radius-md); padding: var(--space-4); }
+  .calc-field { margin-bottom: var(--space-4); }
+  .calc-field:last-child { margin-bottom: 0; }
+  .calc-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 0.6rem; }
+  .calc-hint { font-size: 0.75rem; color: var(--muted-on-navy); margin-top: 0.45rem; line-height: 1.5; }
+
+  .stepper { display: flex; align-items: stretch; border: 1px solid var(--border-on-navy); border-radius: var(--radius-sm); overflow: hidden; background: var(--navy); }
+  .stepper button {
+    width: 52px; flex: none; color: var(--text-on-navy); font-size: 1.35rem; line-height: 1;
+    background: transparent; transition: background 0.15s ease;
+  }
+  .stepper button:hover:not(:disabled) { background: var(--navy-3); }
+  .stepper button:disabled { opacity: 0.3; cursor: not-allowed; }
+  .stepper button:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+  .stepper input {
+    flex: 1; min-width: 0; text-align: center; background: transparent; border: none; outline: none;
+    color: var(--text-on-navy); font-family: var(--font-mono); font-size: 1.3rem; font-weight: 600;
+    padding: 0.85rem 0.25rem; -moz-appearance: textfield;
+  }
+  .stepper input::-webkit-outer-spin-button, .stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .calc-select {
+    width: 100%; padding: 0.85rem 0.9rem; border-radius: var(--radius-sm);
+    background: var(--navy); border: 1px solid var(--border-on-navy); color: var(--text-on-navy);
+    font-family: var(--font-mono); font-size: 1rem; cursor: pointer;
+  }
+  .calc-select:focus-visible { outline: 2px solid var(--green); outline-offset: -1px; }
+  .calc-select option { background: var(--navy-2); color: var(--text-on-navy); }
+
+  .loc-row { display: flex; gap: 0.5rem; align-items: stretch; }
+  .loc-row .calc-select { flex: 1; }
+  .loc-btn {
+    flex: none; padding: 0 0.9rem; border-radius: var(--radius-sm); white-space: nowrap;
+    border: 1px solid var(--green); color: var(--green); background: transparent;
+    font-size: 0.8rem; font-weight: 600; transition: all 0.15s ease;
+  }
+  .loc-btn:hover { background: var(--green-dim); }
+  .loc-btn:disabled { opacity: 0.5; cursor: wait; }
+
+  .calc-status { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--muted-on-navy); margin-bottom: var(--space-3); font-family: var(--font-mono); }
+  .calc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex: none; }
+  .calc-dot.warn { background: var(--accent-on-navy); }
+
+  .hero-figure { margin: 0 0 var(--space-3); padding: var(--space-4); border-radius: var(--radius-md); background: var(--green-dim); border: 1px solid var(--green); }
+  .hero-figure-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-on-navy); opacity: 0.85; }
+  .hero-figure-value { font-family: var(--font-display); font-size: clamp(2.4rem, 8vw, 3.6rem); font-weight: 600; line-height: 1.05; margin-top: 0.35rem; font-variant-numeric: tabular-nums; }
+  .hero-figure-unit { font-family: var(--font-body); font-size: 0.42em; font-weight: 500; opacity: 0.7; margin-left: 0.25rem; }
+  .hero-figure-sub { font-size: 0.85rem; color: var(--text-on-navy); opacity: 0.8; margin-top: 0.4rem; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); margin-bottom: var(--space-4); }
+  @media (max-width: 560px) { .stat-row { grid-template-columns: 1fr; } }
+  .stat { padding: var(--space-3); border: 1px solid var(--border-on-navy); border-radius: var(--radius-md); background: var(--navy-2); }
+  .stat-label { display: block; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-on-navy); margin-bottom: 0.35rem; }
+  .stat-value { display: block; font-family: var(--font-display); font-size: 1.75rem; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat-unit { font-family: var(--font-body); font-size: 0.5em; font-weight: 500; opacity: 0.65; margin-left: 0.2rem; }
+
+  .chart-figure { margin: 0; }
+  .chart-title { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; font-size: 0.85rem; font-weight: 600; margin-bottom: var(--space-2); }
+  .chart-unit { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; color: var(--muted-on-navy); text-transform: uppercase; }
+  .chart-wrap { position: relative; }
+  .prod-chart { display: block; width: 100%; height: 240px; overflow: visible; }
+  @media (max-width: 600px) { .prod-chart { height: 200px; } }
+  .pc-grid-line { stroke: var(--border-on-navy); stroke-width: 1; }
+  .pc-area { fill: url(#pcFade); }
+  .pc-line { fill: none; stroke: var(--green); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .pc-now { stroke: var(--white); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.6; }
+  .pc-dot { fill: var(--green); stroke: var(--navy); stroke-width: 2; }
+  .pc-axis-label { fill: var(--muted-on-navy); font-family: var(--font-mono); font-size: 11px; }
+  .pc-tip {
+    position: absolute; z-index: 3; pointer-events: none; transform: translate(-50%, -115%);
+    background: var(--white); color: var(--navy); padding: 0.45rem 0.65rem; border-radius: var(--radius-sm);
+    font-family: var(--font-mono); font-size: 0.75rem; white-space: nowrap; box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  }
+  .pc-tip strong { display: block; font-size: 0.68rem; font-weight: 500; opacity: 0.65; }
+
+  .calc-note { margin-top: var(--space-4); font-size: 0.82rem; line-height: 1.65; color: var(--muted-on-navy); border-left: 2px solid var(--border-on-navy); padding-left: var(--space-2); }
+  .calc-note strong { color: var(--text-on-navy); }
+  .calc-cta { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--border-on-navy); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  .calc-cta p { font-family: var(--font-display); font-size: clamp(1.1rem, 2.6vw, 1.5rem); margin: 0; }
+  .calc-main .btn-primary { background: var(--white); color: var(--navy); }
+  .calc-main .btn-primary:hover { background: var(--off-white); }
+</style>
+<link rel="stylesheet" href="assets/dock.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="container">
+    <a href="index.html"><img src="assets/logo-dark.png" alt="Geonergy" class="nav-logo-img"></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html#savings">Savings</a>
+      <a href="calculator.html">Calculator</a>
+      <a href="store.html">Systems</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="index.html#contact" class="nav-cta">Get in Touch</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="calc-main">
+  <div class="container">
+
+    <div class="calc-head">
+      <span class="eyebrow">Production Calculator</span>
+      <h1>How much power will your panels make?</h1>
+      <p>Tell us your panels and where you are. We check today's weather and work out the rest.</p>
+    </div>
+
+    <div class="calc-grid">
+
+      <div class="calc-card">
+        <div class="calc-field">
+          <label class="calc-label" for="pcPanels">How many panels?</label>
+          <div class="stepper">
+            <button type="button" id="pcPanelsDown" aria-label="One fewer panel">&minus;</button>
+            <input type="number" id="pcPanels" value="12" min="1" max="200" step="1"
+                   inputmode="numeric" aria-label="Number of panels">
+            <button type="button" id="pcPanelsUp" aria-label="One more panel">+</button>
+          </div>
+          <p class="calc-hint">Count the panels on the roof, or the number you're planning to buy.</p>
+        </div>
+
+        <div class="calc-field">
+          <label class="calc-label" for="pcWatts">How big is each panel?</label>
+          <select class="calc-select" id="pcWatts">
+            <option value="300">300 W</option>
+            <option value="350">350 W</option>
+            <option value="400">400 W</option>
+            <option value="450">450 W</option>
+            <option value="500" selected>500 W</option>
+            <option value="550">550 W</option>
+            <option value="600">600 W</option>
+          </select>
+          <p class="calc-hint">It's printed on the sticker at the back of the panel.</p>
+        </div>
+
+        <div class="calc-field">
+          <label class="calc-label" for="pcCity">Where are you?</label>
+          <div class="loc-row">
+            <select class="calc-select" id="pcCity"></select>
+            <button type="button" class="loc-btn" id="pcGps">Use my location</button>
+          </div>
+          <p class="calc-hint" id="pcLocHint">Pick the closest town, or let your phone find you.</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="calc-status">
+          <span class="calc-dot" id="pcDot"></span>
+          <span id="pcStatus">Loading today's weather&hellip;</span>
+        </div>
+
+        <figure class="hero-figure">
+          <span class="hero-figure-label">Making right now</span>
+          <div class="hero-figure-value"><span id="pcNow">0.0</span><span class="hero-figure-unit">kW</span></div>
+          <p class="hero-figure-sub" id="pcNowSub">Checking the sky&hellip;</p>
+        </figure>
+
+        <div class="stat-row">
+          <div class="stat">
+            <span class="stat-label">Your panels</span>
+            <span class="stat-value"><span id="pcCapacity">6.0</span><span class="stat-unit">kW</span></span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Today</span>
+            <span class="stat-value"><span id="pcToday">0</span><span class="stat-unit">units</span></span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Tomorrow</span>
+            <span class="stat-value"><span id="pcTomorrow">0</span><span class="stat-unit">units</span></span>
+          </div>
+        </div>
+
+        <figure class="chart-figure">
+          <figcaption class="chart-title">
+            Power through the day
+            <span class="chart-unit">Kilowatts</span>
+          </figcaption>
+          <div class="chart-wrap">
+            <svg class="prod-chart" id="pcChart" viewBox="0 0 720 240" preserveAspectRatio="xMidYMid meet"
+                 role="img" aria-labelledby="pcChartDesc">
+              <desc id="pcChartDesc">Estimated solar power through today.</desc>
+            </svg>
+            <div class="pc-tip" id="pcTip" hidden></div>
+          </div>
+        </figure>
+
+        <p class="calc-note">
+          <strong>A "unit" is what the disco calls a kWh.</strong> These numbers are an
+          estimate built from the weather forecast for your area. Real output also depends
+          on which way your roof faces, its angle, shade from trees or a water tank, and
+          how clean the panels are. Dust during harmattan can cut output noticeably until
+          the panels are washed.
+        </p>
+
+        <div class="calc-cta">
+          <p>Want this sized properly for your home?</p>
+          <a href="index.html#contact" class="btn btn-primary">Talk to Geonergy</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div>
+      <img src="assets/logo-light.png" alt="Geonergy" class="footer-logo-img">
+      <div class="footer-tagline">Intelligent solar for Nigeria.</div>
+    </div>
+    <div class="footer-copy">&copy; <span id="yr"></span> Geonergy</div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  // -----------------------------------------------------------------
+  // SOLAR PRODUCTION CALCULATOR
+  //
+  // Live weather comes from Open-Meteo, which needs no API key and no
+  // account - important for a static site with no backend.
+  // If that call fails (offline, blocked, API down) we fall back to a
+  // clear-sky model computed from the sun's position, and say so in
+  // the status line rather than passing the estimate off as live data.
+  // -----------------------------------------------------------------
+
+  const CITIES = [
+    ['Lagos', 6.5244, 3.3792], ['Abuja', 9.0765, 7.3986], ['Kano', 12.0022, 8.5920],
+    ['Port Harcourt', 4.8156, 7.0498], ['Ibadan', 7.3775, 3.9470], ['Kaduna', 10.5105, 7.4165],
+    ['Benin City', 6.3350, 5.6037], ['Enugu', 6.4413, 7.4988], ['Jos', 9.8965, 8.8583],
+    ['Maiduguri', 11.8311, 13.1510], ['Calabar', 4.9517, 8.3220], ['Ilorin', 8.4966, 4.5426],
+    ['Owerri', 5.4836, 7.0333], ['Uyo', 5.0377, 7.9128], ['Abeokuta', 7.1475, 3.3619],
+    ['Warri', 5.5160, 5.7500], ['Sokoto', 13.0059, 5.2476], ['Yola', 9.2035, 12.4954]
+  ];
+
+  // System losses before temperature: wiring, inverter, soiling, mismatch.
+  const BASE_PERFORMANCE = 0.86;
+  const TEMP_COEFF = -0.0038;        // per degree C above 25 at the cell
+  const NOCT_RISE = 25;              // cell above air at 800 W/m2
+
+  const state = {
+    panels: 12, watts: 500,
+    lat: 6.5244, lon: 3.3792, place: 'Lagos',
+    today: [], tomorrow: [],
+    todayKwh: 0, tomorrowKwh: 0, nowKw: 0,
+    live: false, cloud: null
+  };
+
+  const $ = id => document.getElementById(id);
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+  // ---- Sun position (simplified NOAA) -----------------------------
+  function clearSkyGHI(date, lat, lon) {
+    const start = new Date(date.getFullYear(), 0, 0);
+    const dayOfYear = Math.floor((date - start) / 86400000);
+    const decl = 23.45 * Math.sin(2 * Math.PI * (284 + dayOfYear) / 365) * Math.PI / 180;
+    const utcHours = date.getUTCHours() + date.getUTCMinutes() / 60;
+    const solarTime = utcHours + lon / 15;
+    const hourAngle = (solarTime - 12) * 15 * Math.PI / 180;
+    const latRad = lat * Math.PI / 180;
+    const sinAlt = Math.sin(latRad) * Math.sin(decl) +
+                   Math.cos(latRad) * Math.cos(decl) * Math.cos(hourAngle);
+    if (sinAlt <= 0.02) return 0;
+    return Math.max(0, 1098 * sinAlt * Math.exp(-0.057 / sinAlt));
+  }
+
+  const capacityKw = () => state.panels * state.watts / 1000;
+
+  function ghiToKw(ghi, airTempC) {
+    if (!(ghi > 0)) return 0;
+    const cellT = (airTempC == null ? 30 : airTempC) + (ghi / 800) * NOCT_RISE;
+    const tempFactor = 1 + TEMP_COEFF * (cellT - 25);
+    return capacityKw() * (ghi / 1000) * BASE_PERFORMANCE * Math.max(0.6, tempFactor);
+  }
+
+  // ---- Weather ----------------------------------------------------
+  async function loadWeather() {
+    const url = 'https://api.open-meteo.com/v1/forecast'
+      + '?latitude=' + state.lat.toFixed(4) + '&longitude=' + state.lon.toFixed(4)
+      + '&hourly=shortwave_radiation,cloud_cover,temperature_2m'
+      + '&forecast_days=2&timezone=auto';
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 9000);
+    try {
+      const res = await fetch(url, { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const h = data && data.hourly;
+      if (!h || !Array.isArray(h.time) || !Array.isArray(h.shortwave_radiation)) {
+        throw new Error('unexpected response shape');
+      }
+      return { live: true, time: h.time, ghi: h.shortwave_radiation,
+               cloud: h.cloud_cover || [], temp: h.temperature_2m || [] };
+    } catch (err) {
+      clearTimeout(timer);
+      return { live: false };
+    }
+  }
+
+  function pad2(n) { return n < 10 ? '0' + n : String(n); }
+
+  function buildFromLive(w) {
+    const now = new Date();
+    const todayStr = now.getFullYear() + '-' + pad2(now.getMonth() + 1) + '-' + pad2(now.getDate());
+    const today = [], tomorrow = [];
+    w.time.forEach((iso, i) => {
+      const ghi = Number(w.ghi[i]) || 0;
+      const temp = w.temp.length ? Number(w.temp[i]) : null;
+      const row = { hour: Number(iso.slice(11, 13)), ghi: ghi, temp: temp, kw: 0 };
+      (iso.slice(0, 10) === todayStr ? today : tomorrow).push(row);
+    });
+    if (!today.length) {                      // feed's local day differs; split in half
+      const mid = Math.floor(w.time.length / 2);
+      w.time.forEach((iso, i) => {
+        const row = { hour: Number(iso.slice(11, 13)),
+                      ghi: Number(w.ghi[i]) || 0,
+                      temp: w.temp.length ? Number(w.temp[i]) : null, kw: 0 };
+        (i < mid ? today : tomorrow).push(row);
+      });
+    }
+    const nowRowIdx = today.findIndex(r => r.hour === now.getHours());
+    if (nowRowIdx >= 0 && w.cloud.length > nowRowIdx) state.cloud = Number(w.cloud[nowRowIdx]);
+    return { today: today, tomorrow: tomorrow };
+  }
+
+  function buildFromModel() {
+    const mk = dayOffset => {
+      const out = [];
+      const base = new Date();
+      base.setDate(base.getDate() + dayOffset);
+      for (let h = 0; h < 24; h++) {
+        const d = new Date(base.getFullYear(), base.getMonth(), base.getDate(), h, 30);
+        // 0.72 of clear-sky: a deliberately conservative "typical" sky.
+        // Better to under-promise here than to quote a number the roof
+        // never hits, and this path only runs when live data is missing.
+        const ghi = clearSkyGHI(d, state.lat, state.lon) * 0.72;
+        out.push({ hour: h, ghi: ghi, temp: null, kw: 0 });
+      }
+      return out;
+    };
+    state.cloud = null;
+    return { today: mk(0), tomorrow: mk(1) };
+  }
+
+  // Recompute kW from stored irradiance. Called whenever panel count or
+  // wattage changes, so changing the system size never needs a refetch.
+  function applyCapacity() {
+    state.today.forEach(r => { r.kw = ghiToKw(r.ghi, r.temp); });
+    state.tomorrow.forEach(r => { r.kw = ghiToKw(r.ghi, r.temp); });
+    state.todayKwh = state.today.reduce((a, r) => a + r.kw, 0);      // 1 sample/hour = kWh
+    state.tomorrowKwh = state.tomorrow.reduce((a, r) => a + r.kw, 0);
+    const nowRow = state.today.find(r => r.hour === new Date().getHours());
+    state.nowKw = nowRow ? nowRow.kw : 0;
+  }
+
+  function describeSky() {
+    if (!state.live) return 'Estimated from the sun’s position for your area.';
+    if (state.cloud == null) return 'Using the live forecast for your area.';
+    if (state.cloud < 20) return 'Clear skies over ' + state.place + ' right now.';
+    if (state.cloud < 55) return 'Some cloud over ' + state.place + ' right now.';
+    if (state.cloud < 80) return 'Cloudy over ' + state.place + ' right now.';
+    return 'Heavy cloud over ' + state.place + ' right now.';
+  }
+
+  // ---- Chart ------------------------------------------------------
+  function renderChart() {
+    const svg = $('pcChart');
+    const wrap = svg.parentElement;
+    const W = Math.max(280, Math.round(wrap.clientWidth));
+    const H = svg.clientHeight || 240;
+    const padL = 8, padR = 8, padTop = 18, padBottom = 26;
+    const plotW = W - padL - padR, plotH = H - padTop - padBottom;
+    const rows = state.today;
+    if (rows.length < 2) return;
+
+    const peak = Math.max.apply(null, rows.map(r => r.kw).concat([0.001]));
+    const x = i => padL + (i / (rows.length - 1)) * plotW;
+    const y = kw => padTop + plotH - (kw / peak) * plotH;
+
+    let line = '', area = 'M ' + x(0).toFixed(1) + ' ' + (padTop + plotH).toFixed(1);
+    rows.forEach((r, i) => {
+      const px = x(i).toFixed(1), py = y(r.kw).toFixed(1);
+      line += (i === 0 ? 'M ' : ' L ') + px + ' ' + py;
+      area += ' L ' + px + ' ' + py;
+    });
+    area += ' L ' + x(rows.length - 1).toFixed(1) + ' ' + (padTop + plotH).toFixed(1) + ' Z';
+
+    const parts = [
+      '<defs><linearGradient id="pcFade" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="#3DD68C" stop-opacity="0.38"/>' +
+      '<stop offset="100%" stop-color="#3DD68C" stop-opacity="0.02"/></linearGradient></defs>',
+      '<line class="pc-grid-line" x1="' + padL + '" y1="' + (padTop + plotH) + '" x2="' + (W - padR) + '" y2="' + (padTop + plotH) + '"></line>',
+      '<path class="pc-area" d="' + area + '"></path>',
+      '<path class="pc-line" d="' + line + '"></path>'
+    ];
+
+    const nowIdx = rows.findIndex(r => r.hour === new Date().getHours());
+    if (nowIdx >= 0) {
+      parts.push('<line class="pc-now" x1="' + x(nowIdx).toFixed(1) + '" y1="' + padTop +
+                 '" x2="' + x(nowIdx).toFixed(1) + '" y2="' + (padTop + plotH).toFixed(1) + '"></line>');
+      if (rows[nowIdx].kw > 0) {
+        parts.push('<circle class="pc-dot" cx="' + x(nowIdx).toFixed(1) + '" cy="' +
+                   y(rows[nowIdx].kw).toFixed(1) + '" r="4.5"></circle>');
+      }
+    }
+
+    const every = W < 480 ? 6 : 3;
+    rows.forEach((r, i) => {
+      if (r.hour % every === 0) {
+        const label = r.hour === 0 ? '12a' : r.hour === 12 ? '12p'
+                    : (r.hour % 12) + (r.hour < 12 ? 'a' : 'p');
+        parts.push('<text class="pc-axis-label" text-anchor="middle" x="' + x(i).toFixed(1) +
+                   '" y="' + (padTop + plotH + 16).toFixed(1) + '">' + label + '</text>');
+      }
+    });
+
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.innerHTML = '<desc id="pcChartDesc">Estimated solar power through today, peaking near ' +
+                    peak.toFixed(1) + ' kilowatts.</desc>' + parts.join('');
+  }
+
+  function bindChartHover() {
+    const svg = $('pcChart'), tip = $('pcTip'), wrap = svg.parentElement;
+    function at(evt) {
+      const rows = state.today;
+      if (rows.length < 2) return;
+      const rect = svg.getBoundingClientRect();
+      const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+      const frac = clamp((clientX - rect.left) / rect.width, 0, 1);
+      const r = rows[Math.round(frac * (rows.length - 1))];
+      const label = r.hour === 0 ? '12 midnight' : r.hour === 12 ? '12 noon'
+                  : (r.hour % 12 || 12) + (r.hour < 12 ? 'am' : 'pm');
+      tip.hidden = false;
+      tip.innerHTML = '<strong>' + label + '</strong>' + r.kw.toFixed(1) + ' kW';
+      const wr = wrap.getBoundingClientRect();
+      tip.style.left = (rect.left - wr.left + frac * rect.width) + 'px';
+      tip.style.top = (rect.top - wr.top + 18) + 'px';
+    }
+    svg.addEventListener('mousemove', at);
+    svg.addEventListener('touchmove', at, { passive: true });
+    svg.addEventListener('mouseleave', () => { tip.hidden = true; });
+    svg.addEventListener('touchend', () => { tip.hidden = true; });
+  }
+
+  // ---- Paint ------------------------------------------------------
+  function paint() {
+    $('pcCapacity').textContent = capacityKw().toFixed(1);
+    $('pcNow').textContent = state.nowKw.toFixed(1);
+    $('pcToday').textContent = String(Math.round(state.todayKwh));
+    $('pcTomorrow').textContent = String(Math.round(state.tomorrowKwh));
+    $('pcNowSub').textContent = describeSky();
+    $('pcDot').classList.toggle('warn', !state.live);
+    $('pcStatus').textContent = state.live
+      ? 'Live weather for ' + state.place
+      : 'Estimated for ' + state.place + ' (live weather unavailable)';
+    renderChart();
+  }
+
+  async function refetch() {
+    const w = await loadWeather();
+    state.live = !!w.live;
+    const built = w.live ? buildFromLive(w) : buildFromModel();
+    state.today = built.today;
+    state.tomorrow = built.tomorrow;
+    applyCapacity();
+    paint();
+  }
+
+  function resize() { applyCapacity(); paint(); }
+
+  // ---- Wiring -----------------------------------------------------
+  function init() {
+    $('yr').textContent = String(new Date().getFullYear());
+
+    const sel = $('pcCity');
+    CITIES.forEach((c, i) => {
+      const o = document.createElement('option');
+      o.value = String(i); o.textContent = c[0];
+      sel.appendChild(o);
+    });
+    sel.value = '0';
+
+    const panels = $('pcPanels');
+    function sync() {
+      const n = clamp(parseInt(panels.value, 10) || 1, 1, 200);
+      panels.value = String(n);
+      state.panels = n;
+      $('pcPanelsDown').disabled = n <= 1;
+      $('pcPanelsUp').disabled = n >= 200;
+    }
+    $('pcPanelsUp').addEventListener('click', () => {
+      panels.value = String((parseInt(panels.value, 10) || 0) + 1); sync(); resize();
+    });
+    $('pcPanelsDown').addEventListener('click', () => {
+      panels.value = String((parseInt(panels.value, 10) || 2) - 1); sync(); resize();
+    });
+    panels.addEventListener('input', () => { sync(); resize(); });
+
+    $('pcWatts').addEventListener('change', e => {
+      state.watts = Number(e.target.value); resize();
+    });
+
+    sel.addEventListener('change', e => {
+      const c = CITIES[Number(e.target.value)];
+      state.place = c[0]; state.lat = c[1]; state.lon = c[2];
+      $('pcStatus').textContent = 'Checking the weather in ' + c[0] + '…';
+      refetch();
+    });
+
+    $('pcGps').addEventListener('click', () => {
+      const btn = $('pcGps');
+      if (!navigator.geolocation) {
+        $('pcLocHint').textContent = 'This browser can’t share your location. Pick the closest town instead.';
+        return;
+      }
+      btn.disabled = true; btn.textContent = 'Finding…';
+      navigator.geolocation.getCurrentPosition(pos => {
+        state.lat = pos.coords.latitude;
+        state.lon = pos.coords.longitude;
+        let best = CITIES[0], bestD = Infinity;
+        CITIES.forEach(c => {
+          const d = Math.hypot(c[1] - state.lat, c[2] - state.lon);
+          if (d < bestD) { bestD = d; best = c; }
+        });
+        state.place = bestD < 0.75 ? best[0] : 'your location';
+        sel.value = String(CITIES.indexOf(best));
+        $('pcLocHint').textContent = 'Using your phone’s location.';
+        btn.disabled = false; btn.textContent = 'Use my location';
+        refetch();
+      }, () => {
+        $('pcLocHint').textContent = 'Couldn’t get your location. Pick the closest town instead.';
+        btn.disabled = false; btn.textContent = 'Use my location';
+      }, { timeout: 10000, maximumAge: 600000 });
+    });
+
+    const toggle = $('navToggle'), links = $('navLinks');
+    if (toggle && links) toggle.addEventListener('click', () => links.classList.toggle('open'));
+
+    let rt;
+    window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(renderChart, 150); });
+
+    sync();
+    bindChartHover();
+    refetch();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+<nav class="dock" aria-label="Quick navigation">
+  <a class="dock-item" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V9.5"/></svg><span class="dock-label">Home</span></a>
+  <a class="dock-item" href="store.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="dock-label">Store</span></a>
+  <a class="dock-item" href="calculator.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4.5 13.5H11l-1 8.5L19.5 10H13V2Z"/></svg><span class="dock-label">Watts</span></a>
+  <a class="dock-item" href="inverter.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/></svg><span class="dock-label">Inverter</span></a>
+</nav>
+
+</body>
+</html>

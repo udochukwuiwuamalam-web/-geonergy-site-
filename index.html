@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geonergy — Intelligent Solar Energy for Nigeria</title>
+<meta name="description" content="Geonergy designs, sizes and installs solar and battery systems built for Nigeria's power realities. Estimate your savings and find the right system size.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B1D3A;
+    --navy-2: #15305A;
+    --navy-3: #1E3E6E;
+    --white: #FFFFFF;
+    --off-white: #F5F6F8;
+    --accent-on-navy: #7FA6E6;
+    --accent-on-white: #2C5590;
+    --text-on-navy: #EDF1F6;
+    --muted-on-navy: #93A3BE;
+    --text-on-white: #0B1D3A;
+    --muted-on-white: #5B6B84;
+    --border-on-navy: rgba(237,241,246,0.16);
+    --border-on-white: rgba(11,29,58,0.13);
+
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+
+    --space-1: 0.5rem;
+    --space-2: 1rem;
+    --space-3: 1.5rem;
+    --space-4: 2rem;
+    --space-5: 3rem;
+    --space-6: 4.5rem;
+    --space-7: 6rem;
+    --space-8: 7.5rem;
+
+    --radius-sm: 4px;
+    --radius-md: 10px;
+    --container-w: 1180px;
+  }
+
+  * , *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--white);
+    color: var(--text-on-white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; background: none; border: none; }
+  ul { list-style: none; }
+  section[id] { scroll-margin-top: 84px; }
+
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent-on-white); outline-offset: 3px; }
+
+  .container { max-width: var(--container-w); margin: 0 auto; padding: 0 var(--space-4); }
+  section { padding: var(--space-8) 0; }
+  @media (max-width: 720px) {
+    section { padding: var(--space-6) 0; }
+    .container { padding: 0 var(--space-3); }
+  }
+
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.15; }
+  h1 { font-size: clamp(2.15rem, 5vw, 3.75rem); }
+  h2 { font-size: clamp(1.65rem, 3.4vw, 2.35rem); }
+  h3 { font-size: 1.15rem; }
+  p { font-size: 1.0625rem; }
+
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 500; color: var(--accent-on-white);
+    display: block; margin-bottom: var(--space-2);
+  }
+  .section-dark .eyebrow, .hero .eyebrow { color: var(--accent-on-navy); }
+
+  .section-header { max-width: 620px; margin-bottom: var(--space-5); }
+  .section-body { color: var(--muted-on-white); font-size: 1.0625rem; max-width: 62ch; }
+  .section-body + .section-body { margin-top: var(--space-2); }
+  .section-dark .section-body { color: var(--muted-on-navy); }
+
+  .section-light { background: var(--white); color: var(--text-on-white); }
+  .section-dark { background: var(--navy); color: var(--text-on-navy); }
+
+  /* Buttons — invert per background */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.85rem 1.5rem; border-radius: var(--radius-sm);
+    font-weight: 600; font-size: 0.9375rem; border: 1px solid transparent;
+    transition: all 0.2s ease;
+  }
+  .btn-primary { background: var(--navy); color: var(--white); }
+  .btn-primary:hover { background: var(--navy-3); }
+  .section-dark .btn-primary, .hero .btn-primary { background: var(--white); color: var(--navy); }
+  .section-dark .btn-primary:hover, .hero .btn-primary:hover { background: var(--off-white); }
+
+  .btn-secondary { border-color: var(--border-on-white); color: var(--text-on-white); }
+  .btn-secondary:hover { border-color: var(--muted-on-white); }
+  .section-dark .btn-secondary, .hero .btn-secondary { border-color: var(--border-on-navy); color: var(--text-on-navy); }
+  .section-dark .btn-secondary:hover, .hero .btn-secondary:hover { border-color: var(--muted-on-navy); }
+
+  /* Nav */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255,255,255,0.92); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-on-white);
+  }
+  .nav .container { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2) var(--space-4); position: relative; }
+  .nav-logo-img { height: 30px; width: auto; display: block; }
+  .nav-links { display: flex; gap: var(--space-4); align-items: center; }
+  .nav-links a { font-size: 0.9rem; color: var(--muted-on-white); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text-on-white); }
+  .nav-right { display: flex; align-items: center; gap: var(--space-3); }
+  .nav-cta { background: var(--navy); color: var(--white); font-weight: 600; font-size: 0.85rem; padding: 0.6rem 1.15rem; border-radius: var(--radius-sm); }
+  .nav-cta:hover { background: var(--navy-3); }
+  .nav-toggle { display: none; color: var(--text-on-white); font-size: 1.4rem; padding: 0.2rem; }
+
+  @media (max-width: 780px) {
+    .nav-links {
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: var(--white); flex-direction: column; align-items: flex-start;
+      padding: var(--space-3) var(--space-4); gap: var(--space-3);
+      border-bottom: 1px solid var(--border-on-white);
+      display: none;
+    }
+    .nav-links.open { display: flex; }
+    .nav-toggle { display: block; }
+  }
+
+  /* ---------------------------------------------------------------
+     Hero — full-bleed photograph, centred copy, oversized wordmark
+     --------------------------------------------------------------- */
+  .hero {
+    position: relative; overflow: hidden; isolation: isolate;
+    background: var(--navy); color: var(--text-on-navy);
+    min-height: min(88vh, 760px);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: var(--space-8) 0 calc(var(--space-8) + 3vw);
+    text-align: center;
+  }
+  .hero-bg { position: absolute; inset: 0; z-index: -2; }
+  .hero-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero-bg::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(11,29,58,0.58) 0%, rgba(11,29,58,0.34) 40%, rgba(11,29,58,0.88) 100%),
+      radial-gradient(ellipse at 50% 44%, rgba(11,29,58,0) 0%, rgba(11,29,58,0.46) 82%);
+  }
+
+  .hero-inner { position: relative; z-index: 2; max-width: 860px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-on-navy);
+    background: rgba(237,241,246,0.10); border: 1px solid var(--border-on-navy);
+    padding: 0.42rem 0.95rem; border-radius: 999px; margin-bottom: var(--space-3);
+    backdrop-filter: blur(6px);
+  }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #3DD68C; }
+  .hero h1 {
+    font-size: clamp(2.3rem, 6.4vw, 4.4rem); line-height: 1.06;
+    margin-bottom: var(--space-3); text-wrap: balance;
+    text-shadow: 0 2px 30px rgba(11,29,58,0.45);
+  }
+  .hero-sub {
+    color: var(--text-on-navy); opacity: 0.86; font-size: clamp(1rem, 1.6vw, 1.15rem);
+    max-width: 54ch; margin: 0 auto var(--space-4);
+  }
+  .hero-ctas { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
+
+  .btn-pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 0.8rem 1.6rem; border-radius: 999px; font-weight: 600; font-size: 0.9rem;
+    border: 1px solid var(--border-on-navy); color: var(--text-on-navy);
+    background: rgba(237,241,246,0.08); backdrop-filter: blur(6px);
+    transition: all 0.2s ease;
+  }
+  .btn-pill:hover { background: rgba(237,241,246,0.16); border-color: var(--muted-on-navy); }
+  .btn-pill-solid { background: var(--white); color: var(--navy); border-color: var(--white); }
+  .btn-pill-solid:hover { background: var(--off-white); border-color: var(--off-white); }
+
+  /* Oversized brand wordmark, clipped by the section's bottom edge */
+  .hero-wordmark {
+    position: absolute; left: 50%; bottom: -0.16em; transform: translateX(-50%);
+    z-index: 1; pointer-events: none; user-select: none; white-space: nowrap;
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(4rem, 20vw, 15rem); line-height: 0.8;
+    color: rgba(237,241,246,0.13);
+  }
+  @media (max-width: 720px) {
+    .hero { min-height: 78vh; padding-bottom: calc(var(--space-7) + 8vw); }
+    .hero h1 { text-wrap: pretty; }
+    .hero h1 br { display: none; }
+  }
+
+  /* ---------------------------------------------------------------
+     Your Solar Savings
+     Single-series chart: green #3DD68C on navy = 8.95:1 contrast.
+     --------------------------------------------------------------- */
+  .savings-section { --green: #3DD68C; --green-dim: rgba(61,214,140,0.22); }
+  .sv-layout { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: var(--space-5); align-items: start; }
+  @media (max-width: 900px) { .sv-layout { grid-template-columns: 1fr; gap: var(--space-4); } }
+
+  .sv-field { margin-bottom: var(--space-3); }
+  .sv-label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-on-navy); margin-bottom: 0.5rem; }
+  .sv-optional { font-weight: 400; color: var(--muted-on-navy); font-size: 0.75rem; margin-left: 0.35rem; }
+  .sv-input-wrap { display: flex; align-items: center; background: var(--navy-2); border: 1px solid var(--border-on-navy); border-radius: var(--radius-sm); transition: border-color 0.15s ease; }
+  .sv-input-wrap:focus-within { border-color: var(--green); }
+  .sv-prefix { padding: 0 0.35rem 0 0.85rem; color: var(--muted-on-navy); font-family: var(--font-mono); font-size: 1rem; }
+  .sv-input {
+    flex: 1; min-width: 0; background: transparent; border: none; outline: none;
+    color: var(--text-on-navy); font-family: var(--font-mono); font-size: 1.05rem;
+    padding: 0.8rem 0.85rem 0.8rem 0; width: 100%;
+  }
+  .sv-help { font-size: 0.75rem; color: var(--muted-on-navy); margin-top: 0.4rem; line-height: 1.5; }
+
+  .sv-sizes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+  .sv-size {
+    display: flex; flex-direction: column; gap: 0.2rem; text-align: left;
+    padding: 0.7rem 0.6rem; border-radius: var(--radius-sm); cursor: pointer;
+    border: 1px solid var(--border-on-navy); background: var(--navy-2);
+    color: var(--muted-on-navy); transition: all 0.15s ease; min-height: 58px;
+  }
+  .sv-size:hover { border-color: var(--muted-on-navy); }
+  .sv-size:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .sv-size.active { border-color: var(--green); background: var(--green-dim); color: var(--text-on-navy); }
+  .sv-size-kva { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: var(--text-on-navy); }
+  .sv-size-note { font-size: 0.68rem; line-height: 1.3; }
+
+  .sv-totals { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-bottom: var(--space-4); }
+  @media (max-width: 480px) { .sv-totals { grid-template-columns: 1fr; } }
+  .sv-total { padding: var(--space-3); border: 1px solid var(--border-on-navy); border-radius: var(--radius-md); background: var(--navy-2); }
+  .sv-total-hero { border-color: var(--green); background: var(--green-dim); }
+  .sv-total-label { display: block; font-size: 0.72rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted-on-navy); margin-bottom: 0.4rem; font-family: var(--font-mono); }
+  .sv-total-hero .sv-total-label { color: var(--text-on-navy); }
+  .sv-total-value { display: block; font-family: var(--font-display); font-size: clamp(1.6rem, 4.5vw, 2.35rem); font-weight: 600; color: var(--text-on-navy); line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+  .sv-chart-figure { margin: 0; }
+  .sv-chart-title { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; font-size: 0.8rem; font-weight: 600; color: var(--text-on-navy); margin-bottom: var(--space-2); }
+  .sv-chart-unit { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; color: var(--muted-on-navy); text-transform: uppercase; }
+  .sv-chart-wrap { position: relative; }
+  .sv-chart { display: block; width: 100%; height: 260px; overflow: visible; }
+  @media (max-width: 600px) { .sv-chart { height: 210px; } }
+  .sv-grid-line { stroke: var(--border-on-navy); stroke-width: 1; }
+  .sv-axis-label { fill: var(--muted-on-navy); font-family: var(--font-mono); font-size: 11px; }
+  .sv-bar { fill: var(--green); transition: opacity 0.15s ease; }
+  .sv-bar-hit { fill: transparent; cursor: pointer; }
+  .sv-chart.has-hover .sv-bar { opacity: 0.42; }
+  .sv-chart.has-hover .sv-bar.is-active { opacity: 1; }
+  .sv-bar-label { fill: var(--text-on-navy); font-family: var(--font-mono); font-size: 11px; text-anchor: middle; font-weight: 600; }
+  .sv-tip {
+    position: absolute; z-index: 3; pointer-events: none; transform: translate(-50%, -100%);
+    background: var(--white); color: var(--navy); padding: 0.45rem 0.65rem; border-radius: var(--radius-sm);
+    font-family: var(--font-mono); font-size: 0.75rem; white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.28);
+  }
+  .sv-tip strong { display: block; font-size: 0.68rem; font-weight: 500; opacity: 0.65; }
+
+  .sv-table { width: 100%; border-collapse: collapse; margin-top: var(--space-3); font-size: 0.85rem; display: none; }
+  .sv-table.open { display: table; }
+  .sv-table caption { text-align: left; font-size: 0.72rem; color: var(--muted-on-navy); padding-bottom: 0.5rem; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--font-mono); }
+  .sv-table th, .sv-table td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid var(--border-on-navy); color: var(--text-on-navy); }
+  .sv-table th { color: var(--muted-on-navy); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .sv-table td:last-child { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .sv-table-toggle { margin-top: var(--space-2); font-size: 0.75rem; color: var(--muted-on-navy); text-decoration: underline; text-underline-offset: 3px; padding: 0.3rem 0; }
+  .sv-table-toggle:hover { color: var(--text-on-navy); }
+
+  .sv-note { margin-top: var(--space-3); font-size: 0.82rem; line-height: 1.65; color: var(--muted-on-navy); border-left: 2px solid var(--border-on-navy); padding-left: var(--space-2); }
+  .sv-note strong { color: var(--text-on-navy); font-weight: 600; }
+
+  .sv-cta { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--border-on-navy); display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); flex-wrap: wrap; }
+  .sv-cta-text { font-family: var(--font-display); font-size: clamp(1.15rem, 2.6vw, 1.6rem); color: var(--text-on-navy); margin: 0; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(127,166,230,0.45); }
+    50% { opacity: 0.55; box-shadow: 0 0 0 4px rgba(127,166,230,0); }
+  }
+
+  /* Feature grid (solution) */
+  .feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-top: var(--space-5); }
+  @media (max-width: 720px) { .feature-grid { grid-template-columns: 1fr; } }
+  .feature-card { background: var(--navy-2); border: 1px solid var(--border-on-navy); border-radius: var(--radius-md); padding: var(--space-4); }
+  .feature-tag { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent-on-navy); letter-spacing: 0.1em; margin-bottom: var(--space-2); display: block; }
+  .feature-card h3 { margin-bottom: var(--space-1); color: var(--text-on-navy); }
+  .feature-card p { color: var(--muted-on-navy); font-size: 0.9375rem; }
+  .feature-card:nth-child(1) { transition-delay: 0s; }
+  .feature-card:nth-child(2) { transition-delay: 0.08s; }
+  .feature-card:nth-child(3) { transition-delay: 0.16s; }
+  .feature-card:nth-child(4) { transition-delay: 0.24s; }
+
+  /* Steps (how it works) */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-top: var(--space-5); }
+  @media (max-width: 780px) { .steps { grid-template-columns: 1fr; } }
+  .step { padding-top: var(--space-3); border-top: 2px solid var(--accent-on-white); }
+  .step-num { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-on-white); letter-spacing: 0.1em; margin-bottom: var(--space-2); display: block; }
+  .step h3 { margin-bottom: var(--space-1); }
+  .step p { color: var(--muted-on-white); font-size: 0.9375rem; }
+  .step:nth-child(1) { transition-delay: 0s; }
+  .step:nth-child(2) { transition-delay: 0.08s; }
+  .step:nth-child(3) { transition-delay: 0.16s; }
+
+  /* Why Nigeria */
+  /* Compatible hardware strip */
+  .compat-strip { padding: var(--space-5) 0; border-top: 1px solid var(--border-on-white); border-bottom: 1px solid var(--border-on-white); }
+  .compat-inner { text-align: center; }
+  .compat-strip .eyebrow { text-align: center; }
+  .compat-text { color: var(--muted-on-white); font-size: 1rem; max-width: 44ch; margin: 0 auto var(--space-3); }
+  .compat-brands { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
+  .compat-brand { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em; padding: 0.5rem 1.1rem; border: 1px solid var(--border-on-white); border-radius: 999px; color: var(--text-on-white); }
+
+  .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); align-items: start; margin-top: var(--space-5); }
+  @media (max-width: 780px) { .why-grid { grid-template-columns: 1fr; gap: var(--space-3); } }
+
+  /* Error code lookup */
+  .conditions-list { display: flex; flex-direction: column; }
+  .condition-item { display: flex; gap: var(--space-2); padding: var(--space-2) 0; border-bottom: 1px solid var(--border-on-navy); font-size: 0.9375rem; color: var(--muted-on-navy); }
+  .condition-item .marker { font-family: var(--font-mono); color: var(--accent-on-navy); font-size: 0.85rem; flex-shrink: 0; }
+
+  /* Founder */
+  .founder-section { background: var(--off-white); color: var(--text-on-white); }
+  .founder-quote { font-family: var(--font-display); font-style: italic; font-size: clamp(1.2rem, 2.4vw, 1.65rem); font-weight: 500; line-height: 1.45; max-width: 54ch; border-left: 3px solid var(--navy); padding-left: var(--space-4); }
+  .founder-attribution { margin-top: var(--space-3); padding-left: calc(var(--space-4) + 3px); font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted-on-white); letter-spacing: 0.04em; }
+
+  /* Contact */
+  .contact-section { text-align: center; position: relative; overflow: hidden; }
+  .contact-section::before {
+    content: ''; position: absolute; bottom: -30%; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(127,166,230,0.16), transparent 70%);
+    pointer-events: none;
+  }
+  .contact-section .container { position: relative; z-index: 1; }
+  .contact-section h2 { max-width: 22ch; margin: 0 auto var(--space-2); }
+  .contact-section .section-body { margin: 0 auto var(--space-4); text-align: center; }
+
+  /* Footer */
+  .footer { background: var(--navy); border-top: 1px solid var(--border-on-navy); padding: var(--space-5) 0; }
+  .footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2); }
+  .footer-logo-img { height: 26px; width: auto; display: block; }
+  .footer-tagline { font-size: 0.8125rem; color: var(--muted-on-navy); margin-top: 0.2rem; }
+  .footer-copy { font-size: 0.75rem; color: var(--muted-on-navy); opacity: 0.8; }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .live-dot { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+<link rel="stylesheet" href="assets/dock.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="container">
+    <a href="#"><img src="assets/logo-dark.png" alt="Geonergy" class="nav-logo-img"></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#savings">Savings</a>
+      <a href="calculator.html">Calculator</a>
+      <a href="store.html">Systems</a>
+      <a href="#how-it-works">How it Works</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="#contact" class="nav-cta">Get in Touch</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="hero-bg">
+      <picture>
+        <source type="image/webp" srcset="assets/hero-900.webp 900w, assets/hero-1600.webp 1600w"
+                sizes="100vw">
+        <img src="assets/hero-1600.jpg" srcset="assets/hero-900.jpg 900w, assets/hero-1600.jpg 1600w"
+             sizes="100vw" width="1600" height="900" fetchpriority="high" decoding="async"
+             alt="Aerial view of a Geonergy rooftop solar array: twenty black panels mounted in two rows across a corrugated roof.">
+      </picture>
+    </div>
+
+    <div class="container hero-inner">
+      <span class="hero-badge">Diesel keeps getting more expensive</span>
+      <h1>Predictable power for an <br>unpredictable grid.</h1>
+      <p class="hero-sub">Geonergy designs, sizes and installs solar and battery systems built
+         for Nigeria's power realities &mdash; so you stop paying for fuel you shouldn't need.</p>
+      <div class="hero-ctas">
+        <a href="#savings" class="btn-pill btn-pill-solid">See What You&rsquo;d Save</a>
+        <a href="store.html" class="btn-pill">Browse Systems</a>
+      </div>
+    </div>
+
+    <div class="hero-wordmark" aria-hidden="true">Geonergy</div>
+  </section>
+
+  <section class="section-light">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow">The Reality</span>
+        <h2>Nigeria runs on backup power.</h2>
+      </div>
+      <p class="section-body reveal">For most Nigerian homes and businesses, the grid is a supplement, not a guarantee. Diesel and petrol generators fill the gap — noisy, expensive to fuel, and hard on the equipment that depends on them.</p>
+      <p class="section-body reveal">Solar and battery systems solve that problem, but only when they are sized correctly. An undersized system still leaves you running the generator, and an oversized one costs far more than it needs to.</p>
+    </div>
+  </section>
+
+  <section id="solution" class="section-dark">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow">The System</span>
+        <h2>Solar and storage, sized around your load.</h2>
+        <p class="section-body">Geonergy works out what you actually run, specifies the system that covers it, and installs it properly — so the savings show up on your bill.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="feature-card reveal">
+          <span class="feature-tag">SIZE</span>
+          <h3>Sized Properly</h3>
+          <p>We size the array and battery to what you actually run, so you don't overpay for capacity you never use.</p>
+        </div>
+        <div class="feature-card reveal">
+          <span class="feature-tag">SAVE</span>
+          <h3>Lower Running Cost</h3>
+          <p>Every hour the array carries your load is an hour the generator stays off and the fuel stays in your pocket.</p>
+        </div>
+        <div class="feature-card reveal">
+          <span class="feature-tag">SWITCH</span>
+          <h3>Automatic Changeover</h3>
+          <p>Solar, battery, and grid power are balanced automatically to stretch every kilowatt-hour further.</p>
+        </div>
+        <div class="feature-card reveal">
+          <span class="feature-tag">SERVICE</span>
+          <h3>Technician-Led Support</h3>
+          <p>Built by technicians who've climbed the roof themselves — most issues get diagnosed before a truck ever rolls.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="savings" class="section-dark savings-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow">Your Solar Savings</span>
+        <h2>See what solar could save you.</h2>
+        <p class="section-body">Put in what you spend now. We'll estimate what stays in your pocket each month.</p>
+      </div>
+
+      <div class="sv-layout reveal">
+
+        <form class="sv-controls" id="svForm" novalidate>
+          <div class="sv-field">
+            <label class="sv-label" for="svGrid">Monthly electricity spend</label>
+            <div class="sv-input-wrap">
+              <span class="sv-prefix" aria-hidden="true">₦</span>
+              <input class="sv-input" type="text" inputmode="numeric" id="svGrid"
+                     value="40,000" autocomplete="off" aria-describedby="svGridHelp">
+            </div>
+            <p class="sv-help" id="svGridHelp">What you pay the disco in a typical month.</p>
+          </div>
+
+          <div class="sv-field">
+            <label class="sv-label" for="svFuel">Monthly generator fuel <span class="sv-optional">optional</span></label>
+            <div class="sv-input-wrap">
+              <span class="sv-prefix" aria-hidden="true">₦</span>
+              <input class="sv-input" type="text" inputmode="numeric" id="svFuel"
+                     value="30,000" autocomplete="off" aria-describedby="svFuelHelp">
+            </div>
+            <p class="sv-help" id="svFuelHelp">Petrol or diesel you buy for the gen. Leave at 0 if you don't run one.</p>
+          </div>
+
+          <div class="sv-field">
+            <span class="sv-label" id="svSizeLabel">System size</span>
+            <div class="sv-sizes" role="radiogroup" aria-labelledby="svSizeLabel">
+              <button type="button" class="sv-size" data-size="1.5" role="radio" aria-checked="false">
+                <span class="sv-size-kva">1.5 kVA</span><span class="sv-size-note">Lights, fans, TV</span>
+              </button>
+              <button type="button" class="sv-size active" data-size="3" role="radio" aria-checked="true">
+                <span class="sv-size-kva">3 kVA</span><span class="sv-size-note">Adds fridge, pump</span>
+              </button>
+              <button type="button" class="sv-size" data-size="5" role="radio" aria-checked="false">
+                <span class="sv-size-kva">5 kVA</span><span class="sv-size-note">Most of the house</span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="sv-results">
+          <div class="sv-totals">
+            <div class="sv-total">
+              <span class="sv-total-label">First year</span>
+              <span class="sv-total-value" id="svYear" data-naira="0">₦0</span>
+            </div>
+            <div class="sv-total sv-total-hero">
+              <span class="sv-total-label">Over five years</span>
+              <span class="sv-total-value" id="svFive" data-naira="0">₦0</span>
+            </div>
+          </div>
+
+          <figure class="sv-chart-figure">
+            <figcaption class="sv-chart-title">
+              Estimated monthly savings
+              <span class="sv-chart-unit">Naira</span>
+            </figcaption>
+            <div class="sv-chart-wrap">
+              <svg class="sv-chart" id="svChart" viewBox="0 0 720 260" preserveAspectRatio="xMidYMid meet"
+                   role="img" aria-labelledby="svChartDesc">
+                <desc id="svChartDesc">Bar chart of estimated savings for each month of the first year.</desc>
+              </svg>
+              <div class="sv-tip" id="svTip" role="status" aria-live="polite" hidden></div>
+            </div>
+            <table class="sv-table" id="svTable">
+              <caption>Estimated monthly savings, first year</caption>
+              <thead><tr><th scope="col">Month</th><th scope="col">Savings</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <button type="button" class="sv-table-toggle" id="svTableToggle" aria-expanded="false">
+              Show the numbers as a table
+            </button>
+          </figure>
+
+          <p class="sv-note">
+            <strong>This is an estimate, not a quote.</strong> Real savings depend on how much
+            power you actually use, your tariff band, how much sun your roof gets, and the
+            system size you install. Output dips during the rains and the harmattan, which is
+            why the months above are not all equal. We confirm the real numbers on site.
+          </p>
+        </div>
+      </div>
+
+      <div class="sv-cta reveal">
+        <p class="sv-cta-text">Ready to know the right solar system for you?</p>
+        <a href="calculator.html" class="btn btn-primary" id="svCtaBtn">Calculate My Solar System</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-light compat-strip">
+    <div class="container compat-inner reveal">
+      <span class="eyebrow">Hardware Agnostic</span>
+      <p class="compat-text">Works with the inverters already on the ground — no rip-and-replace.</p>
+      <div class="compat-brands">
+        <span class="compat-brand">Deye</span>
+        <span class="compat-brand">Growatt</span>
+        <span class="compat-brand">Sunsynk</span>
+        <span class="compat-brand">Felicity</span>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="how-it-works" class="section-light">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow">Getting Started</span>
+        <h2>From install to always-on.</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <span class="step-num">01</span>
+          <h3>Size</h3>
+          <p>We work through what you run and how often, then specify the array, inverter and battery to match it.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">02</span>
+          <h3>Install</h3>
+          <p>Our technicians mount the array, wire the inverter and battery, and commission the system on site.</p>
+        </div>
+        <div class="step reveal">
+          <span class="step-num">03</span>
+          <h3>Support</h3>
+          <p>We commission the system, show you how it behaves through the year, and stay reachable when you need us.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why-nigeria" class="section-dark">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow">Why Here</span>
+        <h2>Built for Nigeria, not adapted for it.</h2>
+      </div>
+      <div class="why-grid">
+        <p class="section-body reveal">Every part of Geonergy is designed around local conditions most platforms treat as edge cases — not bolted on as an afterthought.</p>
+        <ul class="conditions-list reveal">
+          <li class="condition-item"><span class="marker">//</span>Harmattan dust cutting panel output for weeks at a time</li>
+          <li class="condition-item"><span class="marker">//</span>Heat and humidity that shorten battery lifespan if left unmanaged</li>
+          <li class="condition-item"><span class="marker">//</span>Grid power that can swing or vanish without warning</li>
+          <li class="condition-item"><span class="marker">//</span>Generator hand-offs that need to happen automatically, not manually</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="founder-section">
+    <div class="container">
+      <span class="eyebrow reveal">Who's Building This</span>
+      <blockquote class="founder-quote reveal">Geonergy is founder-led by a solar and inverter technician who has spent years hands-on with the systems Nigerians depend on — installing, diagnosing, and fixing them in the field. Geonergy is that field experience, built into software.</blockquote>
+      <p class="founder-attribution reveal">— Founder, Geonergy</p>
+    </div>
+  </section>
+
+  <section id="contact" class="section-dark contact-section">
+    <div class="container">
+      <span class="eyebrow reveal">Get In Touch</span>
+      <h2 class="reveal">Let's build Nigeria's smartest power layer.</h2>
+      <p class="section-body reveal">Whether you're exploring an investment or want smarter power for your home or business, we'd like to hear from you.</p>
+      <a href="mailto:hello@geonergy.ng" class="btn btn-primary reveal">Email Geonergy</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div>
+      <img src="assets/logo-light.png" alt="Geonergy" class="footer-logo-img">
+      <div class="footer-tagline">Intelligent solar for Nigeria.</div>
+    </div>
+    <div class="footer-copy">© 2026 Geonergy. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+
+  // ---------------------------------------------------------------
+  // YOUR SOLAR SAVINGS — estimator + single-series bar chart
+  //
+  // Deliberately an ESTIMATE. Offsets below are the share of each bill
+  // a given system size typically covers for a Nigerian household.
+  // They are averages across a year, not guarantees — the on-site
+  // survey is what produces a real number.
+  //
+  // Where the CTA points. If Geonergy already has a calculator hosted
+  // elsewhere, change this one line to that URL.
+  // ---------------------------------------------------------------
+  const SAVINGS_CALCULATOR_URL = 'calculator.html';
+
+  const SV_SIZES = {
+    '1.5': { gridOffset: 0.35, fuelOffset: 0.55 },
+    '3':   { gridOffset: 0.55, fuelOffset: 0.80 },
+    '5':   { gridOffset: 0.75, fuelOffset: 0.92 }
+  };
+
+  // Relative solar yield through a Nigerian year: strong in the dry
+  // months, down through the rains (Jun–Sep), slightly dulled by
+  // harmattan haze in Dec–Feb. Normalised to average 1.0 so the
+  // offsets above read as annual averages.
+  const SV_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const SV_RAW_YIELD = [0.98, 1.00, 1.04, 1.02, 0.96, 0.88, 0.82, 0.80, 0.87, 0.96, 1.03, 1.02];
+  const SV_YIELD = (() => {
+    const mean = SV_RAW_YIELD.reduce((a, b) => a + b, 0) / SV_RAW_YIELD.length;
+    return SV_RAW_YIELD.map(v => v / mean);
+  })();
+
+  // Grid tariffs and fuel prices drift upward; a flat five-year total
+  // would understate it. 8%/yr is conservative but not invented-low.
+  const SV_ESCALATION = 0.08;
+
+  const svNaira = new Intl.NumberFormat('en-NG', {
+    style: 'currency', currency: 'NGN', maximumFractionDigits: 0
+  });
+  const svReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function svParseAmount(str) {
+    const n = parseFloat(String(str).replace(/[^0-9.]/g, ''));
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  }
+
+  function svGroupDigits(n) {
+    return n ? n.toLocaleString('en-NG') : '';
+  }
+
+  const svState = { size: '3', monthly: [], year: 0, five: 0, hoverIndex: -1, revealed: false };
+
+  function svCompute() {
+    const grid = svParseAmount(document.getElementById('svGrid').value);
+    const fuel = svParseAmount(document.getElementById('svFuel').value);
+    const cfg = SV_SIZES[svState.size];
+    const base = grid * cfg.gridOffset + fuel * cfg.fuelOffset;
+
+    svState.monthly = SV_YIELD.map(f => Math.round(base * f));
+    svState.year = svState.monthly.reduce((a, b) => a + b, 0);
+
+    let five = 0;
+    for (let y = 0; y < 5; y++) five += svState.year * Math.pow(1 + SV_ESCALATION, y);
+    svState.five = Math.round(five);
+  }
+
+  function svAnimateValue(el, to) {
+    const from = Number(el.dataset.naira) || 0;
+    el.dataset.naira = String(to);
+    if (svReduceMotion || from === to) { el.textContent = svNaira.format(to); return; }
+    const start = performance.now(), dur = 850;
+    function tick(now) {
+      const t = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = svNaira.format(Math.round(from + (to - from) * eased));
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function svRenderChart() {
+    const svg = document.getElementById('svChart');
+    const wrap = svg.parentElement;
+    const W = Math.max(280, Math.round(wrap.clientWidth));
+    const H = svg.clientHeight || 260;
+    const padL = 8, padR = 8, padTop = 26, padBottom = 26;
+    const plotW = W - padL - padR;
+    const plotH = H - padTop - padBottom;
+    const peak = Math.max(...svState.monthly, 1);
+    const narrow = W < 470;
+
+    const slot = plotW / 12;
+    const gap = 2;                                   // 2px surface gap between bars
+    const barW = Math.max(6, slot - gap);
+    const maxIdx = svState.monthly.indexOf(peak);
+
+    const parts = [];
+    parts.push(`<line class="sv-grid-line" x1="${padL}" y1="${padTop + plotH}" x2="${W - padR}" y2="${padTop + plotH}"></line>`);
+
+    svState.monthly.forEach((val, i) => {
+      const h = peak > 0 ? Math.max(val > 0 ? 2 : 0, (val / peak) * plotH) : 0;
+      const x = padL + i * slot + (slot - barW) / 2;
+      const y = padTop + plotH - h;
+      const r = Math.min(4, barW / 2);              // 4px rounded data-end
+      parts.push(
+        `<rect class="sv-bar${i === svState.hoverIndex ? ' is-active' : ''}" data-i="${i}" ` +
+        `x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${h.toFixed(1)}" rx="${r}"></rect>`
+      );
+      // Selective direct label: the peak month only.
+      if (i === maxIdx && val > 0) {
+        const short = val >= 1000 ? Math.round(val / 1000) + 'k' : String(val);
+        parts.push(`<text class="sv-bar-label" x="${(x + barW / 2).toFixed(1)}" y="${(y - 8).toFixed(1)}">₦${short}</text>`);
+      }
+      if (!narrow || i % 2 === 0) {
+        parts.push(
+          `<text class="sv-axis-label" text-anchor="middle" x="${(x + barW / 2).toFixed(1)}" ` +
+          `y="${(padTop + plotH + 16).toFixed(1)}">${SV_MONTHS[i]}</text>`
+        );
+      }
+      parts.push(
+        `<rect class="sv-bar-hit" data-i="${i}" x="${(padL + i * slot).toFixed(1)}" y="${padTop}" ` +
+        `width="${slot.toFixed(1)}" height="${plotH}"></rect>`
+      );
+    });
+
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.innerHTML =
+      `<desc id="svChartDesc">Estimated savings for each month of the first year. ` +
+      `Highest is ${SV_MONTHS[maxIdx]} at ${svNaira.format(peak)}.</desc>` + parts.join('');
+  }
+
+  function svRenderTable() {
+    const body = document.querySelector('#svTable tbody');
+    body.innerHTML = svState.monthly
+      .map((v, i) => `<tr><td>${SV_MONTHS[i]}</td><td>${svNaira.format(v)}</td></tr>`)
+      .join('');
+  }
+
+  function svShowTip(i, evt) {
+    const tip = document.getElementById('svTip');
+    const wrap = document.querySelector('.sv-chart-wrap');
+    if (i < 0) { tip.hidden = true; document.getElementById('svChart').classList.remove('has-hover'); return; }
+    const rect = wrap.getBoundingClientRect();
+    const bar = document.querySelector(`.sv-bar[data-i="${i}"]`);
+    if (!bar) return;
+    const bRect = bar.getBoundingClientRect();
+    tip.hidden = false;
+    tip.innerHTML = `<strong>${SV_MONTHS[i]}</strong>${svNaira.format(svState.monthly[i])}`;
+    tip.style.left = (bRect.left - rect.left + bRect.width / 2) + 'px';
+    tip.style.top = Math.max(18, bRect.top - rect.top - 6) + 'px';
+    document.getElementById('svChart').classList.add('has-hover');
+  }
+
+  function svUpdate(animate) {
+    svCompute();
+    svRenderChart();
+    svRenderTable();
+    const yearEl = document.getElementById('svYear');
+    const fiveEl = document.getElementById('svFive');
+    if (animate === false) {
+      yearEl.dataset.naira = String(svState.year); yearEl.textContent = svNaira.format(svState.year);
+      fiveEl.dataset.naira = String(svState.five); fiveEl.textContent = svNaira.format(svState.five);
+    } else {
+      svAnimateValue(yearEl, svState.year);
+      svAnimateValue(fiveEl, svState.five);
+    }
+  }
+
+  function initSavings() {
+    const form = document.getElementById('svForm');
+    if (!form) return;
+
+    document.getElementById('svCtaBtn').setAttribute('href', SAVINGS_CALCULATOR_URL);
+
+    ['svGrid', 'svFuel'].forEach(id => {
+      const input = document.getElementById(id);
+      input.addEventListener('input', () => {
+        const caretAtEnd = input.selectionStart === input.value.length;
+        const n = svParseAmount(input.value);
+        input.value = svGroupDigits(n);
+        if (caretAtEnd) input.setSelectionRange(input.value.length, input.value.length);
+        svUpdate(true);
+      });
+      input.addEventListener('blur', () => { if (!input.value) { input.value = '0'; svUpdate(true); } });
+    });
+
+    form.querySelectorAll('.sv-size').forEach(btn => {
+      btn.addEventListener('click', () => {
+        form.querySelectorAll('.sv-size').forEach(b => {
+          const on = b === btn;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-checked', on ? 'true' : 'false');
+        });
+        svState.size = btn.dataset.size;
+        svUpdate(true);
+      });
+    });
+
+    const svg = document.getElementById('svChart');
+    svg.addEventListener('mousemove', e => {
+      const hit = e.target.closest('.sv-bar-hit');
+      const i = hit ? Number(hit.dataset.i) : -1;
+      if (i !== svState.hoverIndex) {
+        svState.hoverIndex = i;
+        svRenderChart();
+        svShowTip(i, e);
+      }
+    });
+    svg.addEventListener('mouseleave', () => {
+      svState.hoverIndex = -1; svRenderChart(); svShowTip(-1);
+    });
+    svg.addEventListener('click', e => {
+      const hit = e.target.closest('.sv-bar-hit');
+      if (!hit) return;
+      svState.hoverIndex = Number(hit.dataset.i);
+      svRenderChart();
+      svShowTip(svState.hoverIndex, e);
+    });
+
+    const toggle = document.getElementById('svTableToggle');
+    toggle.addEventListener('click', () => {
+      const table = document.getElementById('svTable');
+      const open = table.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      toggle.textContent = open ? 'Hide the table' : 'Show the numbers as a table';
+    });
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => { svRenderChart(); svShowTip(-1); }, 150);
+    });
+
+    svUpdate(false);
+
+    // Count the totals up the first time the section comes into view.
+    const section = document.getElementById('savings');
+    if ('IntersectionObserver' in window && !svReduceMotion) {
+      document.getElementById('svYear').dataset.naira = '0';
+      document.getElementById('svFive').dataset.naira = '0';
+      document.getElementById('svYear').textContent = svNaira.format(0);
+      document.getElementById('svFive').textContent = svNaira.format(0);
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !svState.revealed) {
+            svState.revealed = true;
+            svUpdate(true);
+            io.disconnect();
+          }
+        });
+      }, { threshold: 0.25 });
+      io.observe(section);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initSavings();
+
+    const toggle = document.getElementById('navToggle');
+    const links = document.getElementById('navLinks');
+    if (toggle && links) {
+      toggle.addEventListener('click', () => links.classList.toggle('open'));
+      links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+    }
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealEls = document.querySelectorAll('.reveal');
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      revealEls.forEach(el => obs.observe(el));
+    } else {
+      revealEls.forEach(el => el.classList.add('visible'));
+    }
+  });
+</script>
+
+<nav class="dock" aria-label="Quick navigation">
+  <a class="dock-item" href="index.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20a1 1 0 0 0 1 1H10v-6h4v6h3.5a1 1 0 0 0 1-1V9.5"/></svg><span class="dock-label">Home</span></a>
+  <a class="dock-item" href="store.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1 12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="dock-label">Store</span></a>
+  <a class="dock-item" href="calculator.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4.5 13.5H11l-1 8.5L19.5 10H13V2Z"/></svg><span class="dock-label">Watts</span></a>
+  <a class="dock-item" href="inverter.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/></svg><span class="dock-label">Inverter</span></a>
+</nav>
+
+</body>
+</html>
