@@ -305,10 +305,51 @@
 
   /* Why Nigeria */
   /* Compatible hardware strip */
-  .compat-strip { padding: var(--space-5) 0; border-top: 1px solid var(--border-on-white); border-bottom: 1px solid var(--border-on-white); }
-  .compat-inner { text-align: center; }
-  .compat-strip .eyebrow { text-align: center; }
-  .compat-text { color: var(--muted-on-white); font-size: 1rem; max-width: 44ch; margin: 0 auto var(--space-3); }
+  /* ---------------------------------------------------------------
+     Trusted for Quality and Performance — logo band
+     Wordmarks are set in type rather than images: we have no licensed
+     logo files, and a faked logo is worse than an honest wordmark.
+     Drop real artwork into .trust-logo later and the layout holds.
+     --------------------------------------------------------------- */
+  .trust-strip { background: #2B2A28; color: #F2F0EC; padding: var(--space-5) 0; }
+  .trust-inner { text-align: center; }
+  .trust-title {
+    font-family: var(--font-body); font-weight: 500;
+    font-size: clamp(1.05rem, 2.4vw, 1.45rem); letter-spacing: -0.01em;
+    color: #F2F0EC; margin-bottom: var(--space-4);
+  }
+  .trust-logos {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 14px; margin: 0; padding: 0; list-style: none;
+  }
+  .trust-logo {
+    display: flex; align-items: center; justify-content: center;
+    min-width: 124px; height: 62px; padding: 0 1.15rem;
+    background: #3A3835; border-radius: 8px;
+    color: #EDEAE4; transition: background 0.18s ease;
+  }
+  .trust-logo:hover { background: #454340; }
+  .trust-logo span { white-space: nowrap; line-height: 1; }
+
+  /* Each wordmark gets its own treatment so the row reads as six marks,
+     not one font repeated six times. */
+  .tl-deye     { font-family: var(--font-body); font-weight: 600; font-size: 1.1rem; letter-spacing: 0.16em; }
+  .tl-growatt  { font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.02em; }
+  .tl-sunsynk  { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; letter-spacing: 0.08em; }
+  .tl-felicity { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; letter-spacing: 0.01em; }
+  .tl-jinko    { font-family: var(--font-body); font-weight: 600; font-size: 1rem; font-style: italic; }
+  .tl-canadian { font-family: var(--font-body); font-weight: 500; font-size: 0.92rem; letter-spacing: 0.04em; }
+
+  .trust-note {
+    margin-top: var(--space-3); font-size: 0.78rem;
+    color: rgba(242,240,236,0.58); letter-spacing: 0.01em;
+  }
+
+  @media (max-width: 600px) {
+    .trust-logos { gap: 10px; }
+    .trust-logo { min-width: 0; flex: 1 1 calc(50% - 10px); height: 54px; padding: 0 0.6rem; }
+  }
+
   .compat-brands { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
   .compat-brand { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em; padding: 0.5rem 1.1rem; border: 1px solid var(--border-on-white); border-radius: 999px; color: var(--text-on-white); }
 
@@ -541,16 +582,18 @@
     </div>
   </section>
 
-  <section class="section-light compat-strip">
-    <div class="container compat-inner reveal">
-      <span class="eyebrow">Hardware Agnostic</span>
-      <p class="compat-text">Works with the inverters already on the ground — no rip-and-replace.</p>
-      <div class="compat-brands">
-        <span class="compat-brand">Deye</span>
-        <span class="compat-brand">Growatt</span>
-        <span class="compat-brand">Sunsynk</span>
-        <span class="compat-brand">Felicity</span>
-      </div>
+  <section class="trust-strip">
+    <div class="container trust-inner reveal">
+      <h2 class="trust-title">Trusted for Quality and Performance</h2>
+      <ul class="trust-logos">
+        <li class="trust-logo"><span class="tl-deye">DEYE</span></li>
+        <li class="trust-logo"><span class="tl-growatt">GROWATT</span></li>
+        <li class="trust-logo"><span class="tl-sunsynk">SUNSYNK</span></li>
+        <li class="trust-logo"><span class="tl-felicity">Felicity</span></li>
+        <li class="trust-logo"><span class="tl-jinko">JinkoSolar</span></li>
+        <li class="trust-logo"><span class="tl-canadian">Canadian&nbsp;Solar</span></li>
+      </ul>
+      <p class="trust-note">Equipment brands Geonergy installs and services.</p>
     </div>
   </section>
 
