@@ -311,12 +311,18 @@
      logo files, and a faked logo is worse than an honest wordmark.
      Drop real artwork into .trust-logo later and the layout holds.
      --------------------------------------------------------------- */
-  .trust-strip { background: #2B2A28; color: #F2F0EC; padding: var(--space-5) 0; }
+  /* Sits between a navy section above and a white one below, so it uses
+     the raised navy to read as its own band rather than merging upward. */
+  .trust-strip {
+    background: var(--navy-2); color: var(--text-on-navy);
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--border-on-navy);
+  }
   .trust-inner { text-align: center; }
   .trust-title {
     font-family: var(--font-body); font-weight: 500;
     font-size: clamp(1.05rem, 2.4vw, 1.45rem); letter-spacing: -0.01em;
-    color: #F2F0EC; margin-bottom: var(--space-4);
+    color: var(--text-on-navy); margin-bottom: var(--space-4);
   }
   .trust-logos {
     display: flex; flex-wrap: wrap; justify-content: center;
@@ -325,10 +331,11 @@
   .trust-logo {
     display: flex; align-items: center; justify-content: center;
     min-width: 124px; height: 62px; padding: 0 1.15rem;
-    background: #3A3835; border-radius: 8px;
-    color: #EDEAE4; transition: background 0.18s ease;
+    background: rgba(237,241,246,0.07);
+    border: 1px solid var(--border-on-navy); border-radius: 8px;
+    color: var(--text-on-navy); transition: background 0.18s ease, border-color 0.18s ease;
   }
-  .trust-logo:hover { background: #454340; }
+  .trust-logo:hover { background: rgba(237,241,246,0.13); border-color: var(--muted-on-navy); }
   .trust-logo span { white-space: nowrap; line-height: 1; }
 
   /* Each wordmark gets its own treatment so the row reads as six marks,
@@ -342,7 +349,7 @@
 
   .trust-note {
     margin-top: var(--space-3); font-size: 0.78rem;
-    color: rgba(242,240,236,0.58); letter-spacing: 0.01em;
+    color: var(--muted-on-navy); letter-spacing: 0.01em;
   }
 
   @media (max-width: 600px) {
