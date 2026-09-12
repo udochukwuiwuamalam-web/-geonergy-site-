@@ -61,7 +61,7 @@
     // They appear as tabs so customers can see they are covered, and the
     // UI says plainly that nothing is listed rather than inventing codes.
     must: { models: [] },
-    sako: { models: [] },
+    cworth: { models: [] },
     haisic: { models: [] },
     itel: { models: [] },
     firman: { models: [] },
