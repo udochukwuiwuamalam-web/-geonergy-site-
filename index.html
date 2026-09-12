@@ -344,6 +344,9 @@
     opacity: 0.88; transition: opacity 0.18s ease;
   }
   .trust-logo:hover img { opacity: 1; }
+  /* A square emblem fitted to a wordmark's height reads far smaller than
+     the wide marks beside it, so give it more height to match optically. */
+  .trust-logo--mark img { max-height: 38px; max-width: 48px; }
 
   .trust-note {
     margin-top: var(--space-3); font-size: 0.78rem;
@@ -595,6 +598,7 @@
     <div class="container trust-inner reveal">
       <h2 class="trust-title">Trusted for Quality and Performance</h2>
       <ul class="trust-logos">
+        <li class="trust-logo"><img src="assets/logos/deye.png" alt="Deye" width="169" height="68" loading="lazy" decoding="async"></li>
         <li class="trust-logo"><img src="assets/logos/growatt.png" alt="Growatt" width="280" height="68" loading="lazy" decoding="async"></li>
         <li class="trust-logo"><img src="assets/logos/must.png" alt="MUST Solar Power System" width="157" height="68" loading="lazy" decoding="async"></li>
         <li class="trust-logo"><img src="assets/logos/sako.png" alt="SAKO" width="185" height="68" loading="lazy" decoding="async"></li>
@@ -602,8 +606,9 @@
         <li class="trust-logo"><img src="assets/logos/haisic.png" alt="Haisic" width="267" height="68" loading="lazy" decoding="async"></li>
         <li class="trust-logo"><img src="assets/logos/firman.png" alt="Firman" width="300" height="42" loading="lazy" decoding="async"></li>
         <li class="trust-logo"><img src="assets/logos/jinko.png" alt="JinkoSolar" width="202" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo trust-logo--mark"><img src="assets/logos/emblem.png" alt="Partner emblem" width="87" height="68" loading="lazy" decoding="async"></li>
       </ul>
-      <p class="trust-note">Equipment brands Geonergy installs and services.</p>
+      <p class="trust-note">Brands we work with.</p>
     </div>
   </section>
 
