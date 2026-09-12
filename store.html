@@ -40,6 +40,19 @@
     align-items: center; justify-content: center; gap: 0.2rem;
     background: linear-gradient(140deg, var(--navy) 0%, var(--navy-3) 100%); color: var(--text-on-navy);
   }
+  /* Line drawing in place of a photograph. currentColor lets the same
+     drawing sit on the navy card and on the white detail sheet. */
+  .product-illus {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(140deg, var(--navy) 0%, var(--navy-3) 100%);
+    color: var(--text-on-navy);
+  }
+  .product-illus svg { width: 72%; height: 72%; }
+  .sheet-diagram { margin: 0; color: var(--text-on-white); }
+  .sheet-diagram svg { width: 100%; height: auto; display: block; }
+  @media (max-width: 480px) { .sheet-diagram svg { min-width: 320px; } }
+  .sheet-diagram > div { overflow-x: auto; }
+
   .ph-kva { font-family: var(--font-display); font-size: 2.6rem; font-weight: 600; line-height: 1; }
   .ph-unit { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.18em; opacity: 0.7; }
   .badge-featured {
@@ -141,6 +154,10 @@
   <div class="sheet-body">
     <h3 class="sheet-section-title">What it runs</h3>
     <ul class="powers-list" id="sheetPowers"></ul>
+    <figure class="sheet-diagram" id="sheetDiagram" hidden>
+      <figcaption class="sheet-section-title">At a glance</figcaption>
+      <div id="sheetDiagramArt"></div>
+    </figure>
     <h3 class="sheet-section-title">Specification</h3>
     <table class="spec-table"><tbody id="sheetSpecs"></tbody></table>
     <h3 class="sheet-section-title">Installation</h3>
@@ -201,10 +218,61 @@
     ));
   }
 
+  // ---------------------------------------------------------------
+  // Line drawings, used where there is no product photograph yet.
+  // Strokes take currentColor, so one drawing reads correctly on the
+  // navy card and again on the white detail sheet.
+  // ---------------------------------------------------------------
+  var UNIT_COLA =
+    '<path d="M64 30q16-13 32 0"/>' +                                  // carry handle
+    '<rect x="48" y="30" width="64" height="82" rx="8"/>' +            // body
+    '<rect x="57" y="41" width="46" height="19" rx="3"/>' +            // display
+    '<path d="M63 50.5h9M78 50.5h7"/>' +                               // readout
+    '<circle cx="71" cy="83" r="10.5"/>' +                             // AC outlet
+    '<path d="M68 80v6M74 80v6"/>' +                                   // outlet pins
+    '<circle cx="96" cy="78" r="4"/><circle cx="96" cy="90" r="4"/>' + // DC ports
+    '<path d="M54 99h9M54 104h9"/>';                                   // vents
+
+  var ILLUSTRATIONS = {
+    'cola-1000': {
+      card:
+        '<svg viewBox="0 0 160 140" fill="none" stroke="currentColor" stroke-width="2" ' +
+        'stroke-linecap="round" stroke-linejoin="round" role="img" ' +
+        'aria-label="Line drawing of the Cola 1000 portable power station">' +
+        '<g transform="translate(0,10)">' + UNIT_COLA + '</g></svg>',
+      labelled:
+        '<svg viewBox="0 0 470 250" fill="none" stroke="currentColor" stroke-width="1.8" ' +
+        'stroke-linecap="round" stroke-linejoin="round" role="img" ' +
+        'aria-label="Labelled diagram of the Cola 1000: carry handle, display, universal AC outlet, solar input, and its 1004.8 watt-hour lithium iron phosphate battery.">' +
+        '<g transform="translate(10,25)">' + UNIT_COLA + '</g>' +
+        // leader lines, each from a part to its label
+        '<g opacity="0.55">' +
+          '<path d="M90 50 H176"/>' +
+          '<path d="M113 86 H176"/>' +
+          '<path d="M92 118 H140 V133 H176"/>' +
+          '<path d="M106 115 H150 V178 H176"/>' +
+          '<path d="M80 140 V196 H176"/>' +
+        '</g>' +
+        '<g fill="currentColor" stroke="none" font-family="IBM Plex Sans, system-ui, sans-serif">' +
+          '<text x="184" y="47" font-size="12" font-weight="600">Carry handle</text>' +
+          '<text x="184" y="61" font-size="11" opacity="0.72">8.70 kg · 210 × 130 × 285 mm</text>' +
+          '<text x="184" y="83" font-size="12" font-weight="600">Charge and output display</text>' +
+          '<text x="184" y="130" font-size="12" font-weight="600">Universal AC outlet</text>' +
+          '<text x="184" y="144" font-size="11" opacity="0.72">200 W max · pure sine wave</text>' +
+          '<text x="184" y="175" font-size="12" font-weight="600">Solar and grid input</text>' +
+          '<text x="184" y="189" font-size="11" opacity="0.72">12–36 V DC, 200 W · 10 A max</text>' +
+          '<text x="184" y="215" font-size="12" font-weight="600">Battery inside</text>' +
+          '<text x="184" y="229" font-size="11" opacity="0.72">1004.8 Wh LiFePO4 · 8000 cycles</text>' +
+        '</g></svg>'
+    }
+  };
+
   function media(p) {
     if (p.image) {
       return '<img src="' + esc(p.image) + '" alt="' + esc(p.name) + '" loading="lazy" decoding="async">';
     }
+    var ill = ILLUSTRATIONS[p.illustration];
+    if (ill) return '<div class="product-illus">' + ill.card + '</div>';
     return '<div class="product-placeholder" aria-hidden="true">' +
            '<span class="ph-kva">' + esc(p.kva) + '</span>' +
            '<span class="ph-unit">KVA</span></div>';
@@ -253,6 +321,9 @@
     $('sheetPowers').innerHTML = (p.powers || []).map(t => '<li>' + esc(t) + '</li>').join('');
     $('sheetSpecs').innerHTML = Object.keys(p.specs || {})
       .map(k => '<tr><th scope="row">' + esc(k) + '</th><td>' + esc(p.specs[k]) + '</td></tr>').join('');
+    var ill = ILLUSTRATIONS[p.illustration];
+    $('sheetDiagramArt').innerHTML = ill ? ill.labelled : '';
+    $('sheetDiagram').hidden = !ill;
     $('sheetInstall').textContent = p.install || '';
     $('sheetWa').setAttribute('href', waLink(p));
     const dlg = $('sheet');

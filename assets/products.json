@@ -1,14 +1,50 @@
 {
   "_comment": "PUBLIC catalogue. This file is served to every visitor, so it deliberately contains NO prices. Prices live only in the admin tool on Geonergy's own device. Edit this by hand, or use admin.html and publish the export it generates.",
-  "updated": "2026-09-11",
+  "updated": "2026-09-12",
   "products": [
+    {
+      "id": "cola-1000",
+      "kva": 0.2,
+      "name": "Cola 1000",
+      "tagline": "Portable power you can carry room to room.",
+      "image": "",
+      "illustration": "cola-1000",
+      "powers": [
+        "Laptops, phones and routers",
+        "LED lights and a standing fan",
+        "TV and decoder",
+        "Small tools and camera gear"
+      ],
+      "specs": {
+        "Battery chemistry": "Lithium iron phosphate (LiFePO4)",
+        "Battery capacity": "1004.8 Wh",
+        "Battery lifespan": "8000 cycles",
+        "Rating": "200 W",
+        "AC output / waveform": "200 W max, pure sine wave",
+        "AC input (grid)": "150–264 V, 45–65 Hz",
+        "AC charging power": "200 W max",
+        "DC input (solar)": "12–36 V DC, 200 W max",
+        "Max PV input current": "10 A",
+        "AC outlet": "Universal",
+        "Net weight": "8.70 kg",
+        "Dimensions": "210 × 130 × 285 mm (L × W × H)"
+      },
+      "install": "Nothing to install. Charge it from a wall socket or a solar panel, then carry it wherever you need it.",
+      "featured": false
+    },
     {
       "id": "sys-1-5",
       "kva": 1.5,
       "name": "1.5 kVA Starter",
       "tagline": "Lights, fans and the TV through the night.",
       "image": "",
-      "powers": ["LED lights through the house", "2 to 3 standing fans", "TV and decoder", "Phone and laptop charging", "Wi-Fi router"],
+      "powers": [
+        "LED lights through the house",
+        "2 to 3 standing fans",
+        "TV and decoder",
+        "Phone and laptop charging",
+        "Wi-Fi router"
+      ],
       "specs": {
         "Solar array": "1 kW — 2 panels",
         "Inverter": "1.5 kVA / 12 V hybrid",
@@ -25,7 +61,12 @@
       "name": "3 kVA Home",
       "tagline": "Adds the fridge and the water pump.",
       "image": "",
-      "powers": ["Everything in the 1.5 kVA", "Small to medium fridge", "Water pump", "Blender and small kitchen appliances"],
+      "powers": [
+        "Everything in the 1.5 kVA",
+        "Small to medium fridge",
+        "Water pump",
+        "Blender and small kitchen appliances"
+      ],
       "specs": {
         "Solar array": "2 kW — 4 panels",
         "Inverter": "3.5 kVA / 24 V hybrid",
@@ -42,7 +83,12 @@
       "name": "4 kVA Home Plus",
       "tagline": "Fridge and freezer running together.",
       "image": "",
-      "powers": ["Everything in the 3 kVA", "Chest freezer", "Microwave", "Washing machine"],
+      "powers": [
+        "Everything in the 3 kVA",
+        "Chest freezer",
+        "Microwave",
+        "Washing machine"
+      ],
       "specs": {
         "Solar array": "3 kW — 6 panels",
         "Inverter": "4.2 kVA / 24 V hybrid",
@@ -59,7 +105,12 @@
       "name": "6 kVA Family",
       "tagline": "First size that runs an air conditioner.",
       "image": "",
-      "powers": ["Everything in the 4 kVA", "One 1 HP air conditioner", "Full kitchen", "Home office equipment"],
+      "powers": [
+        "Everything in the 4 kVA",
+        "One 1 HP air conditioner",
+        "Full kitchen",
+        "Home office equipment"
+      ],
       "specs": {
         "Solar array": "4 kW — 8 panels",
         "Inverter": "6.2 kVA / 48 V hybrid",
@@ -76,7 +127,12 @@
       "name": "7.5 kVA Family Plus",
       "tagline": "Two air conditioners and the whole house.",
       "image": "",
-      "powers": ["Everything in the 6 kVA", "Two air conditioners", "Electric kettle and iron", "Multiple freezers"],
+      "powers": [
+        "Everything in the 6 kVA",
+        "Two air conditioners",
+        "Electric kettle and iron",
+        "Multiple freezers"
+      ],
       "specs": {
         "Solar array": "5 kW — 10 panels",
         "Inverter": "7.5 kVA / 48 V hybrid",
@@ -93,7 +149,12 @@
       "name": "8 kVA Duplex",
       "tagline": "Sized for a full duplex.",
       "image": "",
-      "powers": ["Everything in the 7.5 kVA", "Three air conditioners", "Borehole pump", "Security lighting and gate"],
+      "powers": [
+        "Everything in the 7.5 kVA",
+        "Three air conditioners",
+        "Borehole pump",
+        "Security lighting and gate"
+      ],
       "specs": {
         "Solar array": "6 kW — 12 panels",
         "Inverter": "8 kVA / 48 V hybrid",
@@ -110,7 +171,12 @@
       "name": "15 kVA Business",
       "tagline": "Shops, clinics and small offices.",
       "image": "",
-      "powers": ["Full office or shop floor", "Several air conditioners", "Refrigeration for stock", "POS, servers and network gear"],
+      "powers": [
+        "Full office or shop floor",
+        "Several air conditioners",
+        "Refrigeration for stock",
+        "POS, servers and network gear"
+      ],
       "specs": {
         "Solar array": "11 kW — 20 panels",
         "Inverter": "15 kVA / 48 V, single or three phase",
@@ -127,7 +193,12 @@
       "name": "20 kVA Commercial",
       "tagline": "Larger premises running all day.",
       "image": "",
-      "powers": ["Multi-floor office", "Cold room", "Workshop equipment", "Estate common services"],
+      "powers": [
+        "Multi-floor office",
+        "Cold room",
+        "Workshop equipment",
+        "Estate common services"
+      ],
       "specs": {
         "Solar array": "15 kW — 28 panels",
         "Inverter": "20 kVA three phase",
@@ -144,7 +215,12 @@
       "name": "215 kVA Industrial",
       "tagline": "Factories, estates and large facilities.",
       "image": "",
-      "powers": ["Production lines and heavy motors", "Estate-wide distribution", "Large cold storage", "Campus and facility loads"],
+      "powers": [
+        "Production lines and heavy motors",
+        "Estate-wide distribution",
+        "Large cold storage",
+        "Campus and facility loads"
+      ],
       "specs": {
         "Solar array": "Engineered to the site, typically 150 kW and up",
         "Inverter": "215 kVA three phase, multiple units",
