@@ -85,6 +85,37 @@
       "featured": false
     },
     {
+      "id": "haisic-1-5",
+      "kva": 1.5,
+      "name": "Haisic 1.5 kVA All-in-One",
+      "tagline": "Inverter and 4 kWh battery in one cabinet, with two 450 W panels.",
+      "image": "assets/products/haisic-1-5.webp",
+      "powers": [
+        "LED bulbs through the house",
+        "Ceiling fans",
+        "TV and decoder",
+        "A small fridge"
+      ],
+      "specs": {
+        "Inverter capacity": "1.5 kVA (1,500 VA), 1,200–1,500 W rated",
+        "Waveform": "Pure sine wave",
+        "AC output": "220–230 V (±5%), 50 or 60 Hz",
+        "AC input": "90–280 V, grid or generator",
+        "System voltage": "12 V DC",
+        "Battery capacity": "4 kWh (4,000 Wh, about 314 Ah)",
+        "Battery chemistry": "LiFePO4 (lithium iron phosphate)",
+        "Battery lifespan": "Over 6,000 cycles",
+        "Panels included": "2 × 450 W",
+        "Solar input": "Up to 1,000 W (50–100 V)",
+        "Expandable to": "8 kWh, by stacking a second battery",
+        "Runs from": "Solar, grid and generator",
+        "Warranty": "5 years",
+        "Not suitable for": "Air conditioners, electric cookers, microwaves, irons and heavy washing machines"
+      },
+      "install": "For installation please contact us on WhatsApp.",
+      "featured": false
+    },
+    {
       "id": "sys-3",
       "kva": 3,
       "name": "3 kVA Home",
