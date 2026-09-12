@@ -30,9 +30,11 @@
   .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: var(--space-3); }
   .product-card {
     background: var(--white); border: 1px solid var(--border-on-white); border-radius: var(--radius-md);
-    overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s ease, transform 0.2s ease;
+    overflow: hidden; display: flex; flex-direction: column; cursor: pointer;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
   }
   .product-card:hover { box-shadow: 0 10px 30px rgba(11,29,58,0.10); transform: translateY(-2px); }
+  .product-card:hover .product-name { color: var(--navy-3); }
   .product-media { position: relative; aspect-ratio: 4 / 3; background: var(--navy-2); overflow: hidden; }
   .product-media img { width: 100%; height: 100%; object-fit: cover; display: block; border-bottom: 1px solid var(--border-on-white); }
   .product-placeholder {
@@ -216,7 +218,7 @@
   function card(p) {
     const powers = (p.powers || []).slice(0, 4).map(t => '<li>' + esc(t) + '</li>').join('');
     return '' +
-      '<article class="product-card">' +
+      '<article class="product-card" data-id="' + esc(p.id) + '">' +
         '<div class="product-media">' +
           (p.featured ? '<span class="badge-featured">POPULAR</span>' : '') +
           media(p) +
@@ -302,9 +304,15 @@
       render();
     });
 
+    // Anywhere on a card opens its details, except the WhatsApp link and the
+    // Details button itself. The button stays because it is what a keyboard
+    // reaches; the card click is a convenience on top of it.
     $('productGrid').addEventListener('click', e => {
       const btn = e.target.closest('.btn-detail');
-      if (btn) openSheet(btn.dataset.id);
+      if (btn) { openSheet(btn.dataset.id); return; }
+      if (e.target.closest('a')) return;
+      const card = e.target.closest('.product-card');
+      if (card) openSheet(card.dataset.id);
     });
 
     $('sheetClose').addEventListener('click', () => $('sheet').close());
