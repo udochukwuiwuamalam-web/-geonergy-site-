@@ -116,6 +116,47 @@
       "featured": false
     },
     {
+      "id": "cworth-1-8",
+      "kva": 1.8,
+      "name": "Cworth 1.8 kVA Hybrid",
+      "tagline": "Hybrid inverter, 2.56 kWh lithium battery and three 500 W panels.",
+      "image": "assets/products/cworth-1-8.webp",
+      "powers": [
+        "LED lights through the house",
+        "Ceiling and standing fans",
+        "TV and decoder",
+        "A fridge",
+        "Phones, laptops and the router"
+      ],
+      "specs": {
+        "Inverter model": "Cworth H1.8KL-1812",
+        "Rated output": "1,500 W (1,800 VA)",
+        "Waveform": "Pure sine wave",
+        "AC output": "230 V (±5%), 50 or 60 Hz, adjustable",
+        "AC input": "90–280 V",
+        "System voltage": "12 V DC",
+        "Peak efficiency": "95%",
+        "Transfer time": "10 ms in UPS mode, 20 ms for home appliances",
+        "Max charge / discharge": "105 A charging, 150 A discharging",
+        "Solar input": "MPPT 15–120 V, 130 V maximum open circuit, 20 A maximum",
+        "Panels included": "3 × 500 W",
+        "Inverter size": "350 × 290 × 108 mm, 5.5 to 6 kg",
+        "Battery": "Cworth 12 V 200 Ah LiFePO4, 2.56 kWh",
+        "Battery voltage": "12.8 V nominal (12 to 14.4 V)",
+        "Battery output": "1,280 W continuous, 1,920 W maximum",
+        "Battery lifespan": "3,200+ cycles at 25 °C",
+        "Battery charge / discharge": "Up to 150 A",
+        "Battery protection": "Built-in BMS for overcharge, over-discharge, short circuit and temperature",
+        "Battery expansion": "Series and parallel supported",
+        "Battery size": "About 17.6 kg, 380 × 240 × 277 mm",
+        "Operating temperature": "Inverter −10 °C to 50 °C, battery −10 °C to 60 °C",
+        "Warranty": "3 years on the battery",
+        "Not suitable for": "Air conditioners, electric cookers, microwaves, irons and heavy washing machines"
+      },
+      "install": "For installation please contact us on WhatsApp.",
+      "featured": false
+    },
+    {
       "id": "sys-3",
       "kva": 3,
       "name": "3 kVA Home",

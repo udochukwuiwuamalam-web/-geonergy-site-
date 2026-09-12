@@ -244,7 +244,9 @@
   }
 
   function buildFilters() {
-    const sizes = products.map(p => p.kva).sort((a, b) => a - b);
+    // One chip per size: two products can share a size, and two identical chips
+    // filtering to the same pair reads like a bug.
+    const sizes = [...new Set(products.map(p => p.kva))].sort((a, b) => a - b);
     const chips = ['<button type="button" class="filter-chip active" data-kva="all">All sizes</button>']
       .concat(sizes.map(k => '<button type="button" class="filter-chip" data-kva="' + k + '">' + k + ' kVA</button>'));
     $('filterBar').innerHTML = chips.join('');
