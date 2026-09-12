@@ -388,12 +388,22 @@
   .contact-section .container { position: relative; z-index: 1; }
   .contact-section h2 { max-width: 22ch; margin: 0 auto var(--space-2); }
   .contact-section .section-body { margin: 0 auto var(--space-4); text-align: center; }
+  .contact-actions { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
 
   /* Footer */
   .footer { background: var(--navy); border-top: 1px solid var(--border-on-navy); padding: var(--space-5) 0; }
   .footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2); }
   .footer-logo-img { height: 26px; width: auto; display: block; }
   .footer-tagline { font-size: 0.8125rem; color: var(--muted-on-navy); margin-top: 0.2rem; }
+
+  /* Instagram link — footer and contact */
+  .footer-social {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-size: 0.82rem; color: var(--muted-on-navy);
+    transition: color 0.15s ease;
+  }
+  .footer-social:hover { color: var(--text-on-navy); }
+  .footer-social svg { width: 17px; height: 17px; flex: none; }
   .footer-copy { font-size: 0.75rem; color: var(--muted-on-navy); opacity: 0.8; }
 
   /* Reveal on scroll */
@@ -672,7 +682,12 @@
       <span class="eyebrow reveal">Get In Touch</span>
       <h2 class="reveal">Let's build Nigeria's smartest power layer.</h2>
       <p class="section-body reveal">Whether you're exploring an investment or want smarter power for your home or business, we'd like to hear from you.</p>
-      <a href="mailto:hello@geonergy.ng" class="btn btn-primary reveal">Email Geonergy</a>
+      <div class="contact-actions reveal">
+        <a href="mailto:hello@geonergy.ng" class="btn btn-primary">Email Geonergy</a>
+        <a href="https://instagram.com/geonergy_solar" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px;margin-right:0.5rem"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>@geonergy_solar
+        </a>
+      </div>
     </div>
   </section>
 
@@ -684,6 +699,7 @@
       <img src="assets/logo-light.png" alt="Geonergy" class="footer-logo-img">
       <div class="footer-tagline">Intelligent solar for Nigeria.</div>
     </div>
+    <a class="footer-social" href="https://instagram.com/geonergy_solar" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg><span>@geonergy_solar</span></a>
     <div class="footer-copy">© 2026 Geonergy. All rights reserved.</div>
   </div>
 </footer>
