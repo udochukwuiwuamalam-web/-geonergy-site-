@@ -215,6 +215,39 @@
       "featured": false
     },
     {
+      "id": "haisic-4-2",
+      "kva": 4.2,
+      "name": "Haisic 4.2 kVA All-in-One",
+      "tagline": "4.2 kW inverter, 8 kWh battery and eight 600 W panels.",
+      "image": "assets/products/haisic-4-2.webp",
+      "powers": [
+        "Lights, fans, TV and decoder through the house",
+        "Fridge and freezer together",
+        "Water pump",
+        "Microwave and kitchen appliances",
+        "An air conditioner, with battery left to run into the evening"
+      ],
+      "specs": {
+        "Rated output": "4.2 kW (4,200 VA), 3.5 to 4.2 kW continuous",
+        "Surge power": "5,400 W — covers fridge and air-conditioner compressor starts",
+        "Waveform": "Pure sine wave",
+        "AC output": "200–240 V, 50 or 60 Hz",
+        "System voltage": "24 V, high-frequency design",
+        "Battery": "LiFePO4, 8,038 Wh (8 kWh)",
+        "Usable energy": "About 7.2 to 8 kWh",
+        "Battery voltage": "25.6 V nominal",
+        "Battery capacity": "314 Ah",
+        "Battery lifespan": "6,000 to 6,500+ cycles",
+        "Battery charge / discharge": "50 A recommended, up to 100–120 A charging",
+        "Expandable": "Stackable — extra battery modules can be added",
+        "Solar charge controller": "Built-in MPPT",
+        "Solar input": "5,000 W to 5,400 W array",
+        "Panels included": "8 × 600 W (4.8 kW)"
+      },
+      "install": "For installation please contact us on WhatsApp.",
+      "featured": false
+    },
+    {
       "id": "sys-6",
       "kva": 6,
       "name": "6 kVA Family",
