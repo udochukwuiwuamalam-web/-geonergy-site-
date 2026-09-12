@@ -62,29 +62,6 @@
       "featured": false
     },
     {
-      "id": "sys-1-5",
-      "kva": 1.5,
-      "name": "1.5 kVA Starter",
-      "tagline": "Lights, fans and the TV through the night.",
-      "image": "",
-      "powers": [
-        "LED lights through the house",
-        "2 to 3 standing fans",
-        "TV and decoder",
-        "Phone and laptop charging",
-        "Wi-Fi router"
-      ],
-      "specs": {
-        "Solar array": "1 kW — 2 panels",
-        "Inverter": "1.5 kVA / 12 V hybrid",
-        "Battery": "2.4 kWh",
-        "Backup": "4 to 6 hours on a full charge",
-        "Roof space": "About 5 m²"
-      },
-      "install": "One day on site. Suits a small flat or a self-contained apartment.",
-      "featured": false
-    },
-    {
       "id": "haisic-1-5",
       "kva": 1.5,
       "name": "Haisic 1.5 kVA All-in-One",
@@ -163,7 +140,7 @@
       "tagline": "Adds the fridge and the water pump.",
       "image": "",
       "powers": [
-        "Everything in the 1.5 kVA",
+        "Lights, fans, TV and charging",
         "Small to medium fridge",
         "Water pump",
         "Blender and small kitchen appliances"
