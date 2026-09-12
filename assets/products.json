@@ -32,6 +32,36 @@
       "featured": false
     },
     {
+      "id": "itel-power-tank-500",
+      "kva": 0.5,
+      "name": "itel Power Tank 500",
+      "tagline": "Battery, inverter and a 350 W panel in one box.",
+      "image": "assets/products/itel-power-tank-500.webp",
+      "powers": [
+        "LED lights through a room or two",
+        "A standing fan",
+        "TV and decoder",
+        "Phones, laptops and the router",
+        "A desktop or POS terminal, without it restarting when the light goes"
+      ],
+      "specs": {
+        "Rated output": "500 W continuous, 1,000 W surge",
+        "Waveform": "Pure sine wave",
+        "Battery capacity": "1,000 Wh (1 kWh)",
+        "Battery chemistry": "LiFePO4 (lithium iron phosphate)",
+        "Battery lifespan": "6,000+ cycles, up to 10 years",
+        "Panel included": "350 W",
+        "Solar input": "400 W max, with MPPT",
+        "AC input": "90–280 V",
+        "Charging": "Grid and solar together, full in about 2 hours",
+        "Switchover time": "Under 20 ms",
+        "Noise": "Under 45 dB",
+        "Net weight": "About 10.25 kg"
+      },
+      "install": "Nothing to install. Charge it from a wall socket, or stand the 350 W panel in the sun and charge from both at once. Your appliances plug straight into the unit.",
+      "featured": false
+    },
+    {
       "id": "sys-1-5",
       "kva": 1.5,
       "name": "1.5 kVA Starter",

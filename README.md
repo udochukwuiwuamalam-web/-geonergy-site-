@@ -8,7 +8,7 @@ Marketing site and customer tools for Geonergy: solar and battery systems built 
 | --- | --- |
 | `index.html` | Main site, including the Your Solar Savings estimator |
 | `calculator.html` | Solar production calculator driven by live weather |
-| `store.html` | Customer-facing systems catalogue, 1.5 kVA to 215 kVA |
+| `store.html` | Customer-facing catalogue, from portable power stations to 215 kVA |
 | `admin.html` | Private tool for managing the catalogue and prices |
 | `assets/geonergy.css` | Shared design tokens, nav, buttons and footer |
 | `assets/products.json` | Public catalogue. Contains no prices, by design |
