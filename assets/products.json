@@ -270,6 +270,35 @@
       "featured": true
     },
     {
+      "id": "deye-6",
+      "kva": 6,
+      "name": "Deye 6 kVA Hybrid",
+      "tagline": "6 kW inverter, 10 kWh lithium battery and ten 650 W panels.",
+      "image": "assets/products/deye-6.webp",
+      "powers": [
+        "A full family home — lights, fans, TV, fridge and freezer",
+        "Two air conditioners",
+        "Borehole or water pump",
+        "Washing machine and microwave",
+        "Home office, or a small shop"
+      ],
+      "specs": {
+        "Rated output": "6,000 W (6 kVA)",
+        "Peak power": "12,000 W for 10 seconds",
+        "Maximum efficiency": "97.6%",
+        "Waveform": "Pure sine wave",
+        "Switching time": "About 4 ms, grid to battery",
+        "Battery": "10 kWh lithium",
+        "Solar input": "12,000 W supported, 9,600 W operational maximum",
+        "PV voltage range": "125–500 V DC (150–425 V depending on the load)",
+        "MPPT trackers": "2 independent trackers",
+        "MPPT efficiency": "Better than 99%",
+        "Panels included": "10 × 650 W (6.5 kW)"
+      },
+      "install": "For installation please contact us on WhatsApp.",
+      "featured": false
+    },
+    {
       "id": "sys-7-5",
       "kva": 7.5,
       "name": "7.5 kVA Family Plus",
