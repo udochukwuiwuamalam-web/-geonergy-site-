@@ -119,4 +119,4 @@ repository and keep a copy on your own machine. Nothing else depends on it.
 
 ## Contact
 
-hello@geonergy.ng
+geonergysolarafrican@gmail.com

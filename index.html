@@ -305,10 +305,63 @@
 
   /* Why Nigeria */
   /* Compatible hardware strip */
-  .compat-strip { padding: var(--space-5) 0; border-top: 1px solid var(--border-on-white); border-bottom: 1px solid var(--border-on-white); }
-  .compat-inner { text-align: center; }
-  .compat-strip .eyebrow { text-align: center; }
-  .compat-text { color: var(--muted-on-white); font-size: 1rem; max-width: 44ch; margin: 0 auto var(--space-3); }
+  /* ---------------------------------------------------------------
+     Trusted for Quality and Performance — logo band
+     Wordmarks are set in type rather than images: we have no licensed
+     logo files, and a faked logo is worse than an honest wordmark.
+     Drop real artwork into .trust-logo later and the layout holds.
+     --------------------------------------------------------------- */
+  /* Sits between a navy section above and a white one below, so it uses
+     the raised navy to read as its own band rather than merging upward. */
+  .trust-strip {
+    background: var(--navy-2); color: var(--text-on-navy);
+    padding: var(--space-5) 0;
+    border-top: 1px solid var(--border-on-navy);
+  }
+  .trust-inner { text-align: center; }
+  .trust-title {
+    font-family: var(--font-body); font-weight: 500;
+    font-size: clamp(1.05rem, 2.4vw, 1.45rem); letter-spacing: -0.01em;
+    color: var(--text-on-navy); margin-bottom: var(--space-4);
+  }
+  .trust-logos {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 14px; margin: 0; padding: 0; list-style: none;
+  }
+  .trust-logo {
+    display: flex; align-items: center; justify-content: center;
+    min-width: 124px; height: 62px; padding: 0 1.15rem;
+    background: rgba(237,241,246,0.07);
+    border: 1px solid var(--border-on-navy); border-radius: 8px;
+    color: var(--text-on-navy); transition: background 0.18s ease, border-color 0.18s ease;
+  }
+  .trust-logo:hover { background: rgba(237,241,246,0.13); border-color: var(--muted-on-navy); }
+  /* Logos ship as transparent PNGs already recoloured to the on-navy tone,
+     so the row reads as one set rather than seven competing brand colours. */
+  .trust-logo img {
+    max-width: 118px; max-height: 27px; width: auto; height: auto;
+    object-fit: contain; display: block;
+    opacity: 0.88; transition: opacity 0.18s ease;
+  }
+  .trust-logo:hover img { opacity: 1; }
+  /* A square emblem fitted to a wordmark's height reads far smaller than
+     the wide marks beside it, so give it more height to match optically. */
+  .trust-logo--mark img { max-height: 38px; max-width: 48px; }
+
+  .trust-note {
+    margin-top: var(--space-3); font-size: 0.78rem;
+    color: var(--muted-on-navy); letter-spacing: 0.01em;
+  }
+
+  @media (max-width: 600px) {
+    .trust-logos { gap: 10px; }
+    /* Two per row. The cap stops a lone last tile stretching full width. */
+    .trust-logo {
+      min-width: 0; flex: 1 1 calc(50% - 10px); max-width: calc(50% - 5px);
+      height: 54px; padding: 0 0.6rem;
+    }
+  }
+
   .compat-brands { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
   .compat-brand { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em; padding: 0.5rem 1.1rem; border: 1px solid var(--border-on-white); border-radius: 999px; color: var(--text-on-white); }
 
@@ -335,12 +388,22 @@
   .contact-section .container { position: relative; z-index: 1; }
   .contact-section h2 { max-width: 22ch; margin: 0 auto var(--space-2); }
   .contact-section .section-body { margin: 0 auto var(--space-4); text-align: center; }
+  .contact-actions { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; }
 
   /* Footer */
   .footer { background: var(--navy); border-top: 1px solid var(--border-on-navy); padding: var(--space-5) 0; }
   .footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2); }
   .footer-logo-img { height: 26px; width: auto; display: block; }
   .footer-tagline { font-size: 0.8125rem; color: var(--muted-on-navy); margin-top: 0.2rem; }
+
+  /* Instagram link — footer and contact */
+  .footer-social {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-size: 0.82rem; color: var(--muted-on-navy);
+    transition: color 0.15s ease;
+  }
+  .footer-social:hover { color: var(--text-on-navy); }
+  .footer-social svg { width: 17px; height: 17px; flex: none; }
   .footer-copy { font-size: 0.75rem; color: var(--muted-on-navy); opacity: 0.8; }
 
   /* Reveal on scroll */
@@ -541,16 +604,23 @@
     </div>
   </section>
 
-  <section class="section-light compat-strip">
-    <div class="container compat-inner reveal">
-      <span class="eyebrow">Hardware Agnostic</span>
-      <p class="compat-text">Works with the inverters already on the ground — no rip-and-replace.</p>
-      <div class="compat-brands">
-        <span class="compat-brand">Deye</span>
-        <span class="compat-brand">Growatt</span>
-        <span class="compat-brand">Sunsynk</span>
-        <span class="compat-brand">Felicity</span>
-      </div>
+  <section class="trust-strip">
+    <div class="container trust-inner reveal">
+      <h2 class="trust-title">Trusted for Quality and Performance</h2>
+      <ul class="trust-logos">
+        <li class="trust-logo"><img src="assets/logos/deye.png" alt="Deye" width="169" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/growatt.png" alt="Growatt" width="280" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/felicity.png" alt="Felicity Solar" width="258" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/must.png" alt="MUST Solar Power System" width="157" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/cworth.png" alt="Cworth Energy" width="300" height="48" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/itel.png" alt="itel" width="135" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/haisic.png" alt="Haisic" width="267" height="68" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/firman.png" alt="Firman" width="300" height="42" loading="lazy" decoding="async"></li>
+        <li class="trust-logo"><img src="assets/logos/jinko.png" alt="JinkoSolar" width="202" height="68" loading="lazy" decoding="async"></li>
+        <!-- TODO: replace the alt text with this brand's actual name once confirmed. -->
+        <li class="trust-logo trust-logo--mark"><img src="assets/logos/emblem.png" alt="Equipment brand" width="87" height="68" loading="lazy" decoding="async"></li>
+      </ul>
+      <p class="trust-note">Equipment brands Geonergy installs and services.</p>
     </div>
   </section>
 
@@ -612,7 +682,12 @@
       <span class="eyebrow reveal">Get In Touch</span>
       <h2 class="reveal">Let's build Nigeria's smartest power layer.</h2>
       <p class="section-body reveal">Whether you're exploring an investment or want smarter power for your home or business, we'd like to hear from you.</p>
-      <a href="mailto:hello@geonergy.ng" class="btn btn-primary reveal">Email Geonergy</a>
+      <div class="contact-actions reveal">
+        <a href="mailto:geonergysolarafrican@gmail.com" class="btn btn-primary">Email Geonergy</a>
+        <a href="https://instagram.com/geonergy_solar" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px;margin-right:0.5rem"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>@geonergy_solar
+        </a>
+      </div>
     </div>
   </section>
 
@@ -624,6 +699,7 @@
       <img src="assets/logo-light.png" alt="Geonergy" class="footer-logo-img">
       <div class="footer-tagline">Intelligent solar for Nigeria.</div>
     </div>
+    <a class="footer-social" href="https://instagram.com/geonergy_solar" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg><span>@geonergy_solar</span></a>
     <div class="footer-copy">© 2026 Geonergy. All rights reserved.</div>
   </div>
 </footer>
