@@ -460,6 +460,43 @@
       "featured": false
     },
     {
+      "id": "deye-20",
+      "kva": 20,
+      "name": "Deye 20 kVA Three Phase",
+      "tagline": "20 kW three-phase inverter, 40 kWh stackable battery and forty-eight 650 W panels.",
+      "image": "assets/products/deye-20.webp",
+      "powers": [
+        "A factory floor, estate or large facility",
+        "Three-phase motors and production equipment",
+        "Cold room and bulk refrigeration",
+        "Office block or multi-floor premises",
+        "Borehole pumps and estate-wide services"
+      ],
+      "specs": {
+        "Rated output": "20 kW (20 kVA)",
+        "Output type": "Three phase, 100% unbalanced — up to 50% of rated power on any one phase",
+        "Maximum efficiency": "97.6% (97.0% Euro)",
+        "Solar input": "Up to 40 kW, 800 V maximum DC",
+        "MPPT voltage range": "160–650 V",
+        "MPPT trackers": "2 independent trackers",
+        "Panels included": "48 × 650 W (31.2 kW)",
+        "System voltage": "48 V, lead-acid or lithium (40–60 V, self-adapting to the BMS)",
+        "Max charge / discharge": "350 A",
+        "Parallel operation": "Up to 10 inverters, on-grid and off-grid",
+        "Monitoring": "Wi-Fi, RS485 and CAN, with 6 programmable charge and discharge periods",
+        "Battery": "40 kWh — eight stackable 5.12 kWh LiFePO4 modules",
+        "Battery module": "51.2 V, 100 Ah, 44.8–57.6 V operating range",
+        "Battery lifespan": "6,000+ cycles to 70–80% capacity",
+        "Battery temperature": "−20 °C to 55 °C, air cooled",
+        "Battery protection": "IP65 — rated for indoor or outdoor installation",
+        "Battery module size": "720 × 255 × 569 mm, 74.5 kg each",
+        "Battery warranty": "10 years",
+        "Certification": "UN38.3, IEC62619, CE, UL1973 and UL9540A"
+      },
+      "install": "For installation please contact us on WhatsApp.",
+      "featured": false
+    },
+    {
       "id": "sys-215",
       "kva": 215,
       "name": "215 kVA Industrial",
