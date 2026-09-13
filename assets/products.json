@@ -134,28 +134,6 @@
       "featured": false
     },
     {
-      "id": "sys-3",
-      "kva": 3,
-      "name": "3 kVA Home",
-      "tagline": "Adds the fridge and the water pump.",
-      "image": "",
-      "powers": [
-        "Lights, fans, TV and charging",
-        "Small to medium fridge",
-        "Water pump",
-        "Blender and small kitchen appliances"
-      ],
-      "specs": {
-        "Solar array": "2 kW — 4 panels",
-        "Inverter": "3.5 kVA / 24 V hybrid",
-        "Battery": "4.8 kWh",
-        "Backup": "6 to 8 hours on a full charge",
-        "Roof space": "About 10 m²"
-      },
-      "install": "One day on site. The common choice for a two or three bedroom flat.",
-      "featured": true
-    },
-    {
       "id": "itel-3-6",
       "kva": 3.6,
       "name": "itel 3.6 kVA Hybrid",
@@ -193,28 +171,6 @@
       "featured": false
     },
     {
-      "id": "sys-4",
-      "kva": 4,
-      "name": "4 kVA Home Plus",
-      "tagline": "Fridge and freezer running together.",
-      "image": "",
-      "powers": [
-        "Everything in the 3 kVA",
-        "Chest freezer",
-        "Microwave",
-        "Washing machine"
-      ],
-      "specs": {
-        "Solar array": "3 kW — 6 panels",
-        "Inverter": "4.2 kVA / 24 V hybrid",
-        "Battery": "7.2 kWh",
-        "Backup": "8 to 10 hours on a full charge",
-        "Roof space": "About 15 m²"
-      },
-      "install": "One to two days on site.",
-      "featured": false
-    },
-    {
       "id": "haisic-4-2",
       "kva": 4.2,
       "name": "Haisic 4.2 kVA All-in-One",
@@ -248,28 +204,6 @@
       "featured": false
     },
     {
-      "id": "sys-6",
-      "kva": 6,
-      "name": "6 kVA Family",
-      "tagline": "First size that runs an air conditioner.",
-      "image": "",
-      "powers": [
-        "Everything in the 4 kVA",
-        "One 1 HP air conditioner",
-        "Full kitchen",
-        "Home office equipment"
-      ],
-      "specs": {
-        "Solar array": "4 kW — 8 panels",
-        "Inverter": "6.2 kVA / 48 V hybrid",
-        "Battery": "10 kWh lithium",
-        "Backup": "10 to 12 hours on a full charge",
-        "Roof space": "About 20 m²"
-      },
-      "install": "Two days on site.",
-      "featured": true
-    },
-    {
       "id": "deye-6",
       "kva": 6,
       "name": "Deye 6 kVA Hybrid",
@@ -296,50 +230,6 @@
         "Panels included": "10 × 650 W (6.5 kW)"
       },
       "install": "For installation please contact us on WhatsApp.",
-      "featured": false
-    },
-    {
-      "id": "sys-7-5",
-      "kva": 7.5,
-      "name": "7.5 kVA Family Plus",
-      "tagline": "Two air conditioners and the whole house.",
-      "image": "",
-      "powers": [
-        "Everything in the 6 kVA",
-        "Two air conditioners",
-        "Electric kettle and iron",
-        "Multiple freezers"
-      ],
-      "specs": {
-        "Solar array": "5 kW — 10 panels",
-        "Inverter": "7.5 kVA / 48 V hybrid",
-        "Battery": "15 kWh lithium",
-        "Backup": "12 hours on a full charge",
-        "Roof space": "About 25 m²"
-      },
-      "install": "Two days on site.",
-      "featured": false
-    },
-    {
-      "id": "sys-8",
-      "kva": 8,
-      "name": "8 kVA Duplex",
-      "tagline": "Sized for a full duplex.",
-      "image": "",
-      "powers": [
-        "Everything in the 7.5 kVA",
-        "Three air conditioners",
-        "Borehole pump",
-        "Security lighting and gate"
-      ],
-      "specs": {
-        "Solar array": "6 kW — 12 panels",
-        "Inverter": "8 kVA / 48 V hybrid",
-        "Battery": "15 kWh lithium",
-        "Backup": "12 hours on a full charge",
-        "Roof space": "About 30 m²"
-      },
-      "install": "Two to three days on site.",
       "featured": false
     },
     {
@@ -382,28 +272,6 @@
       "featured": false
     },
     {
-      "id": "sys-15",
-      "kva": 15,
-      "name": "15 kVA Business",
-      "tagline": "Shops, clinics and small offices.",
-      "image": "",
-      "powers": [
-        "Full office or shop floor",
-        "Several air conditioners",
-        "Refrigeration for stock",
-        "POS, servers and network gear"
-      ],
-      "specs": {
-        "Solar array": "11 kW — 20 panels",
-        "Inverter": "15 kVA / 48 V, single or three phase",
-        "Battery": "20 kWh lithium",
-        "Backup": "A full working day",
-        "Roof space": "About 55 m²"
-      },
-      "install": "Three to five days on site, after a load survey.",
-      "featured": false
-    },
-    {
       "id": "haisic-15",
       "kva": 15,
       "name": "Haisic 15 kVA Hybrid",
@@ -435,28 +303,6 @@
         "Battery lifespan": "High depth of discharge and long cycle life"
       },
       "install": "For installation please contact us on WhatsApp.",
-      "featured": false
-    },
-    {
-      "id": "sys-20",
-      "kva": 20,
-      "name": "20 kVA Commercial",
-      "tagline": "Larger premises running all day.",
-      "image": "",
-      "powers": [
-        "Multi-floor office",
-        "Cold room",
-        "Workshop equipment",
-        "Estate common services"
-      ],
-      "specs": {
-        "Solar array": "15 kW — 28 panels",
-        "Inverter": "20 kVA three phase",
-        "Battery": "30 kWh lithium",
-        "Backup": "A full working day",
-        "Roof space": "About 80 m²"
-      },
-      "install": "One week on site, after a load survey.",
       "featured": false
     },
     {
@@ -537,28 +383,6 @@
         "Communication": "Ethernet and Modbus TCP"
       },
       "install": "For installation please contact us on WhatsApp.",
-      "featured": false
-    },
-    {
-      "id": "sys-215",
-      "kva": 215,
-      "name": "215 kVA Industrial",
-      "tagline": "Factories, estates and large facilities.",
-      "image": "",
-      "powers": [
-        "Production lines and heavy motors",
-        "Estate-wide distribution",
-        "Large cold storage",
-        "Campus and facility loads"
-      ],
-      "specs": {
-        "Solar array": "Engineered to the site, typically 150 kW and up",
-        "Inverter": "215 kVA three phase, multiple units",
-        "Battery": "Sized to the load profile",
-        "Backup": "Designed around your operating hours",
-        "Roof space": "Site survey required"
-      },
-      "install": "Engineered per site. Starts with a full energy audit and a written proposal.",
       "featured": false
     }
   ]
