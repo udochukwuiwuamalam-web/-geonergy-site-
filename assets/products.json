@@ -1,6 +1,6 @@
 {
   "_comment": "PUBLIC catalogue. This file is served to every visitor, so it deliberately contains NO prices. Prices live only in the admin tool on Geonergy's own device. Edit this by hand, or use admin.html and publish the export it generates.",
-  "updated": "2026-09-12",
+  "updated": "2026-09-13",
   "products": [
     {
       "id": "cola-1000",
@@ -340,6 +340,45 @@
         "Roof space": "About 30 m²"
       },
       "install": "Two to three days on site.",
+      "featured": false
+    },
+    {
+      "id": "felicity-8",
+      "kva": 8,
+      "name": "Felicity 8 kVA Hybrid",
+      "tagline": "8 kW inverter, 15 kWh lithium battery and ten 650 W panels.",
+      "image": "assets/products/felicity-8.webp",
+      "powers": [
+        "A full house, lights to freezers",
+        "Two to three air conditioners",
+        "Borehole pump",
+        "Washing machine, microwave and electric kettle",
+        "A shop, clinic or small office"
+      ],
+      "specs": {
+        "Rated output": "8,000 W (8 kVA)",
+        "Waveform": "Pure sine wave",
+        "AC output": "230 V single phase",
+        "Frequency": "50 or 60 Hz, detected automatically",
+        "System voltage": "48 V DC — lithium, GEL or AGM",
+        "Solar input": "Up to 8,000 W",
+        "MPPT voltage range": "120–500 V DC",
+        "Max charging current": "Up to 120 A, or 150 A on the built-in MPPT",
+        "Panels included": "10 × 650 W (6.5 kW)",
+        "Runs without a battery": "Yes — it can work on solar and grid alone",
+        "Cold weather": "Lithium activation and cold-start function",
+        "Monitoring": "Built-in Wi-Fi, watched from your phone",
+        "Battery": "15 kWh (15,000 Wh), 300 Ah lithium",
+        "Battery voltage": "51.2 V nominal, 42–57.6 V range",
+        "Usable energy": "About 14.25 to 14.4 kWh — 95%+ depth of discharge",
+        "Battery lifespan": "6,000+ cycles at 25 °C and 80% depth of discharge",
+        "Battery output": "5,000 W recommended, 7,500–8,000 W maximum",
+        "Battery charge / discharge": "100 A to 160 A continuous, depending on model",
+        "Battery communication": "CAN and RS485",
+        "Battery expansion": "Parallel units — up to 6 or 15, depending on the series",
+        "Battery protection": "Smart BMS: over-charge, over-discharge, short circuit and temperature"
+      },
+      "install": "For installation please contact us on WhatsApp.",
       "featured": false
     },
     {
