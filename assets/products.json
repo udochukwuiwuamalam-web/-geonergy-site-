@@ -404,6 +404,40 @@
       "featured": false
     },
     {
+      "id": "haisic-15",
+      "kva": 15,
+      "name": "Haisic 15 kVA Hybrid",
+      "tagline": "15 kVA / 12 kW inverter, 22 kWh battery and sixteen 650 W panels.",
+      "image": "assets/products/haisic-15.webp",
+      "powers": [
+        "A large house or duplex, everything running at once",
+        "Three to four air conditioners",
+        "Borehole pump and water heater",
+        "A shop, clinic or office floor",
+        "Cold room or refrigeration for stock"
+      ],
+      "specs": {
+        "Rated output": "15,000 VA / 12,000 W",
+        "Waveform": "Pure sine wave — safe for computers and induction motors",
+        "System voltage": "48 V DC (51.2 V nominal lithium)",
+        "Solar charge controller": "Dual MPPT — 6 kW + 6 kW, up to 18,000 W",
+        "PV voltage range": "Up to 450–500 V",
+        "Panels included": "16 × 650 W (10.4 kW)",
+        "Charging modes": "Solar only, grid priority, solar priority, or hybrid",
+        "Battery support": "LiFePO4, gel and tubular, with lithium activation",
+        "Runs without a battery": "Yes — it can work on solar and grid alone",
+        "Scalability": "Up to 6 inverters in parallel",
+        "Monitoring": "Wi-Fi, CAN and RS485, with an LCD display",
+        "Protections": "Overload, over-temperature, short circuit and surge",
+        "Battery": "22 kWh (22,000 Wh) LiFePO4",
+        "Battery voltage": "48 V / 51.2 V compatible",
+        "Battery protection": "Integrated BMS with cell balancing, over-charge and over-discharge safety",
+        "Battery lifespan": "High depth of discharge and long cycle life"
+      },
+      "install": "For installation please contact us on WhatsApp.",
+      "featured": false
+    },
+    {
       "id": "sys-20",
       "kva": 20,
       "name": "20 kVA Commercial",
