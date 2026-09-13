@@ -247,8 +247,14 @@
     // One chip per size: two products can share a size, and two identical chips
     // filtering to the same pair reads like a bug.
     const sizes = [...new Set(products.map(p => p.kva))].sort((a, b) => a - b);
+    // Most products are rated in kVA, but not all — a storage cabinet is rated in kW.
+    // A product can name its own size, and that label wins for its chip.
+    const label = new Map(sizes.map(k => {
+      const named = products.find(p => p.kva === k && p.sizeLabel);
+      return [k, named ? named.sizeLabel : k + ' kVA'];
+    }));
     const chips = ['<button type="button" class="filter-chip active" data-kva="all">All sizes</button>']
-      .concat(sizes.map(k => '<button type="button" class="filter-chip" data-kva="' + k + '">' + k + ' kVA</button>'));
+      .concat(sizes.map(k => '<button type="button" class="filter-chip" data-kva="' + k + '">' + esc(label.get(k)) + '</button>'));
     $('filterBar').innerHTML = chips.join('');
   }
 
