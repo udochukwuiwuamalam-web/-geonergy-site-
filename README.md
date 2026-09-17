@@ -7,11 +7,12 @@ Marketing site and customer tools for Geonergy: solar and battery systems built 
 | File | What it is |
 | --- | --- |
 | `index.html` | Main site, including the Your Solar Savings estimator |
-| `calculator.html` | Solar production calculator driven by live weather |
+| `calculator.html` | Solar production calculator, plus the weather and safety watch |
 | `store.html` | Customer-facing catalogue, from a portable power station to a 215 kWh cabinet |
 | `admin.html` | Private tool for managing the catalogue and prices |
 | `assets/geonergy.css` | Shared design tokens, nav, buttons and footer |
 | `assets/products.json` | Public catalogue. Contains no prices, by design |
+| `assets/safety.js` | Weather and safety watch: forecast, risk thresholds, alerts |
 
 There is no build step and no dependencies. Every page is plain HTML, CSS and JavaScript,
 with no charting or framework libraries, which keeps the pages light on mobile data.
@@ -87,10 +88,23 @@ says so on screen rather than passing an estimate off as live data.
 Both are estimates and both say so. Real output depends on roof orientation, shade, dust
 and the actual load in the building.
 
+The weather and safety watch on the same page reads the forecast over the site where a
+system is installed — saved once to the browser, so it keeps watching that roof when the
+owner is somewhere else — and rates the next twelve hours Normal, Weather warning or
+Severe weather from thunderstorm codes, CAPE, wind gusts and hourly rainfall. Thresholds
+live in one object at the top of `assets/safety.js`, and `assess()` is a pure function of
+the API response, so the risk calls can be tested against invented forecasts offline.
+
+It is an early warning and says so everywhere: it switches nothing off, it does not watch
+while the page is closed, push alerts arrive only while the page is open, and the WhatsApp
+and email channels prefill a message for a person to send. Anything stronger than that
+needs a server-side watcher, which this site does not have.
+
 ## Deploying
 
 `.github/workflows/pages.yml` publishes the site to GitHub Pages. It deploys `index.html`,
-`calculator.html`, `store.html` and `assets/`, and **deliberately leaves out `admin.html`**,
+`calculator.html`, `store.html`, `inverter.html` and `assets/`, and **deliberately leaves out
+`admin.html`**,
 so the pricing tool is never served from the live site. Two guard steps fail the build
 rather than publish by accident: one if the admin tool reaches the artifact, one if a price
 field appears in the public catalogue.

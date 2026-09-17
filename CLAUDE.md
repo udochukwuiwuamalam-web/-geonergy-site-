@@ -32,7 +32,25 @@ contrast rather than on a cut line, and drop floor reflections and any
 generated-image sparkle in the corner. A product with no photo falls back to the
 navy kVA placeholder tile on its own.
 
+## The weather and safety watch
+
+Lives on `calculator.html` (the "Watts" page) with its logic in
+`assets/safety.js`. Forecasts come from Open-Meteo - no key, no account,
+CORS-enabled - the same source the production calculator uses.
+
+- **It watches the installation, not the reader.** The site is saved to
+  `localStorage` once; geolocation only ever drops that pin. An owner checking
+  a roof three states away is the normal case. Don't wire it to the
+  calculator's own location picker, which follows whoever is reading.
+- **Thresholds are in one object**, `T` at the top of `assets/safety.js`, and
+  `assess()` is a pure function of the API response so it can be tested
+  against invented forecasts with no browser and no network.
+- **Early warning only.** Nothing in the copy may promise protection, and
+  nothing may imply the page switches anything off or watches while closed.
+  Push alerts only fire while the page is open; WhatsApp and email prefill a
+  message for a person to send. Say so where a customer will read it.
+
 ## Before going live
 
-`WHATSAPP_NUMBER` in `store.html` and `inverter.html` is still the placeholder
+`WHATSAPP_NUMBER` in `store.html`, `inverter.html` and `calculator.html` is still the placeholder
 `2348000000000`. `PASSCODE` in `admin.html` is still the default.

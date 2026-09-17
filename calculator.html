@@ -99,8 +99,74 @@
   .calc-cta p { font-family: var(--font-display); font-size: clamp(1.1rem, 2.6vw, 1.5rem); margin: 0; }
   .calc-main .btn-primary { background: var(--white); color: var(--navy); }
   .calc-main .btn-primary:hover { background: var(--off-white); }
+
+  /* ---- Weather and safety watch ---- */
+  .watch { margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid var(--border-on-navy); }
+  .watch-head { max-width: 680px; margin-bottom: var(--space-4); }
+  .watch-head h2 { font-size: clamp(1.5rem, 3.6vw, 2.3rem); margin-bottom: var(--space-2); }
+  .watch-head p { color: var(--muted-on-navy); font-size: 0.98rem; }
+  .watch-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: var(--space-5); align-items: start; }
+  @media (max-width: 900px) { .watch-grid { grid-template-columns: 1fr; gap: var(--space-4); } }
+
+  .calc-input {
+    width: 100%; padding: 0.8rem 0.9rem; border-radius: var(--radius-sm);
+    background: var(--navy); border: 1px solid var(--border-on-navy); color: var(--text-on-navy);
+    font-family: var(--font-mono); font-size: 0.95rem;
+  }
+  .calc-input::placeholder { color: var(--muted-on-navy); opacity: 0.7; }
+  .calc-input:focus-visible { outline: 2px solid var(--green); outline-offset: -1px; }
+  .calc-input[hidden] { display: none; }
+
+  .wx-check { display: flex; align-items: center; gap: 0.6rem; font-size: 0.9rem; margin: 0.85rem 0 0.4rem; cursor: pointer; }
+  .wx-check:first-of-type { margin-top: 0.2rem; }
+  .wx-check input { width: 17px; height: 17px; flex: none; accent-color: var(--green); cursor: pointer; }
+
+  /* One card, three states. The card carries the colour so the reading is
+     the same from across a room: green calm, amber building, red act now. */
+  .wx-card { border-radius: var(--radius-md); padding: var(--space-4); border: 1px solid; }
+  .wx-card.is-normal  { background: rgba(61,214,140,0.10); border-color: rgba(61,214,140,0.45); }
+  .wx-card.is-warning { background: rgba(242,180,65,0.12); border-color: rgba(242,180,65,0.55); }
+  .wx-card.is-severe  { background: rgba(242,97,90,0.15);  border-color: rgba(242,97,90,0.70); }
+
+  .wx-card-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3); }
+  .wx-badge {
+    display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.75rem;
+    border-radius: 100px; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); background: var(--green);
+  }
+  .wx-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--navy); opacity: 0.55; }
+  .is-warning .wx-badge { background: #F2B441; }
+  .is-severe .wx-badge { background: #F2615A; color: var(--white); }
+  .is-severe .wx-badge::before { background: var(--white); animation: wxPulse 1.6s ease-in-out infinite; }
+  @keyframes wxPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @media (prefers-reduced-motion: reduce) { .is-severe .wx-badge::before { animation: none; } }
+
+  .wx-site { font-size: 0.78rem; color: var(--muted-on-navy); font-family: var(--font-mono); }
+  .wx-site strong { color: var(--text-on-navy); font-weight: 600; }
+  .wx-headline { font-size: clamp(1.3rem, 3vw, 1.75rem); margin-bottom: 0.4rem; }
+  .wx-message { font-size: 0.95rem; line-height: 1.6; }
+
+  .wx-risks { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: grid; gap: 0.55rem; }
+  .wx-risk { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.88rem; line-height: 1.5; }
+  .wx-risk svg { width: 18px; height: 18px; flex: none; margin-top: 0.1rem; }
+  .wx-clear { margin-top: var(--space-2); font-size: 0.85rem; color: var(--text-on-navy); opacity: 0.8; }
+
+  .wx-send { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: var(--space-3); }
+  .wx-btn {
+    display: inline-flex; align-items: center; padding: 0.6rem 0.9rem; border-radius: var(--radius-sm);
+    border: 1px solid var(--text-on-navy); color: var(--text-on-navy); font-size: 0.82rem; font-weight: 600;
+    transition: background 0.15s ease;
+  }
+  .wx-btn:hover { background: rgba(237,241,246,0.12); }
+  .wx-btn[hidden] { display: none; }
+
+  .wx-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px solid var(--border-on-navy); }
+  .wx-recheck { color: var(--text-on-navy); font-size: 0.8rem; text-decoration: underline; text-underline-offset: 3px; background: none; opacity: 0.8; }
+  .wx-recheck:hover { opacity: 1; }
+  .wx-meta { margin-top: var(--space-2); }
 </style>
 <link rel="stylesheet" href="assets/dock.css">
+<script src="assets/safety.js" defer></script>
 </head>
 <body>
 
@@ -223,6 +289,90 @@
       </div>
 
     </div>
+
+    <section class="watch" aria-labelledby="watchTitle">
+      <div class="watch-head">
+        <span class="eyebrow">Weather &amp; Safety Watch</span>
+        <h2 id="watchTitle">Early warning for the roof, wherever you are</h2>
+        <p>This watches the forecast over the site where your system is installed &mdash; not wherever
+           this phone happens to be &mdash; and tells you when weather worth shutting down for is
+           on the way.</p>
+      </div>
+
+      <div class="watch-grid">
+
+        <div class="calc-card">
+          <div class="calc-field">
+            <label class="calc-label" for="wxSite">Where is the system installed?</label>
+            <div class="loc-row">
+              <select class="calc-select" id="wxSite"></select>
+              <button type="button" class="loc-btn" id="wxPin">Pin where I am now</button>
+            </div>
+            <p class="calc-hint" id="wxSiteHint">Set this once, standing at the site. The watch stays
+               on it afterwards, even when you travel.</p>
+          </div>
+
+          <div class="calc-field">
+            <label class="calc-label" for="wxLabel">Name this site</label>
+            <input class="calc-input" id="wxLabel" type="text" maxlength="40" placeholder="Home &mdash; Lekki">
+            <p class="calc-hint">Optional, and useful if we have put in more than one system for you.</p>
+          </div>
+
+          <div class="calc-field">
+            <span class="calc-label">How you want to be told</span>
+
+            <label class="wx-check" for="wxPush"><input type="checkbox" id="wxPush"><span>Push alert on this device</span></label>
+            <p class="calc-hint" id="wxPushHint">Arrives while this page is open in your browser.</p>
+
+            <label class="wx-check" for="wxWa"><input type="checkbox" id="wxWa"><span>WhatsApp</span></label>
+            <input class="calc-input" id="wxWaNum" type="tel" inputmode="tel" placeholder="Number to alert">
+
+            <label class="wx-check" for="wxMail"><input type="checkbox" id="wxMail"><span>Email</span></label>
+            <input class="calc-input" id="wxMailTo" type="email" placeholder="Address to alert">
+
+            <p class="calc-hint">WhatsApp and email open a ready-written message for you to send in
+               one tap &mdash; to whoever is at the site, or to us. Nothing goes out on its own, and
+               nothing is watched while this page is closed. Ask us if you want the watch running on
+               a server around the clock.</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="wx-card is-normal" id="wxCard" role="status" aria-live="polite">
+            <div class="wx-card-top">
+              <span class="wx-badge" id="wxBadge">Normal</span>
+              <span class="wx-site">Watching <strong id="wxWatching">&mdash;</strong></span>
+            </div>
+            <h3 class="wx-headline" id="wxHeadline">Normal</h3>
+            <p class="wx-message" id="wxMessage">Checking the forecast for your site&hellip;</p>
+            <ul class="wx-risks" id="wxRisks" hidden></ul>
+            <p class="wx-clear" id="wxClear" hidden>No thunderstorms, damaging gusts or heavy rain
+               showing in the next 12 hours.</p>
+            <div class="wx-send" id="wxSend" hidden>
+              <a class="wx-btn" id="wxSendWa" target="_blank" rel="noopener">Send this on WhatsApp</a>
+              <a class="wx-btn" id="wxSendMail">Send this by email</a>
+            </div>
+            <div class="wx-actions">
+              <a class="btn btn-primary" href="index.html#contact">Contact Geonergy</a>
+              <button type="button" class="wx-recheck" id="wxRecheck">Check again</button>
+            </div>
+          </div>
+
+          <p class="calc-status wx-meta" id="wxMeta"></p>
+
+          <p class="calc-note">
+            <strong>An early warning, not protection.</strong> This reads a public weather forecast
+            for your site every 15 minutes while the page is open. Forecasts miss storms, lightning
+            can come out of a sky that looked fine, and nothing here switches your system off or
+            shields it from anything. Treat it as a reason to act early, and follow the shutdown
+            procedure Geonergy gave you at commissioning. If you cannot find it, call us rather
+            than guessing.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
   </div>
 </main>
 
@@ -250,6 +400,10 @@
   // clear-sky model computed from the sun's position, and say so in
   // the status line rather than passing the estimate off as live data.
   // -----------------------------------------------------------------
+
+  // Placeholder until Geonergy's real line is in. Same number as store.html
+  // and inverter.html - change all three together.
+  const WHATSAPP_NUMBER = '2348000000000';
 
   const CITIES = [
     ['Lagos', 6.5244, 3.3792], ['Abuja', 9.0765, 7.3986], ['Kano', 12.0022, 8.5920],
@@ -570,6 +724,12 @@
     sync();
     bindChartHover();
     refetch();
+
+    // The safety watch keeps its own saved site: the calculator's picker
+    // follows whoever is reading, the watch follows the installation.
+    if (window.GeonergySafety) {
+      window.GeonergySafety.init({ cities: CITIES, whatsapp: WHATSAPP_NUMBER });
+    }
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
