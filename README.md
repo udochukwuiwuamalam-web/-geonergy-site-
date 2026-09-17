@@ -13,6 +13,7 @@ Marketing site and customer tools for Geonergy: solar and battery systems built 
 | `assets/geonergy.css` | Shared design tokens, nav, buttons and footer |
 | `assets/products.json` | Public catalogue. Contains no prices, by design |
 | `assets/safety.js` | Weather and safety watch: forecast, risk thresholds, alerts |
+| `assets/weather-api.js` | Open-Meteo endpoint and commercial key, for every weather call |
 
 There is no build step and no dependencies. Every page is plain HTML, CSS and JavaScript,
 with no charting or framework libraries, which keeps the pages light on mobile data.
@@ -81,9 +82,15 @@ varied across the year to reflect Nigerian solar yield, which drops through the 
 is dulled by harmattan haze. The five-year total assumes tariffs and fuel rise 8% a year.
 
 The production calculator uses Open-Meteo for hourly irradiance, cloud cover and
-temperature. It needs no API key, which is what makes it workable on a static host. If that
-call fails, the page falls back to a clear-sky model computed from the sun's position and
-says so on screen rather than passing an estimate off as live data.
+temperature. If that call fails, the page falls back to a clear-sky model computed from the
+sun's position and says so on screen rather than passing an estimate off as live data.
+
+Both weather features build their requests in `assets/weather-api.js`, which holds the
+endpoint and the key for Geonergy's paid Open-Meteo plan. Leave the key blank and requests
+fall back to the free, non-commercial endpoint so nothing breaks in development — which
+also means shipping with it blank puts the live site on the wrong licence. On a static host
+the key is readable by anyone who views source; locking it to the domain, or putting one
+small serverless function in front of it, are the two real answers, and the file says so.
 
 Both are estimates and both say so. Real output depends on roof orientation, shade, dust
 and the actual load in the building.

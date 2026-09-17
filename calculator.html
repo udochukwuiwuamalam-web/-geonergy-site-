@@ -166,6 +166,7 @@
   .wx-meta { margin-top: var(--space-2); }
 </style>
 <link rel="stylesheet" href="assets/dock.css">
+<script src="assets/weather-api.js" defer></script>
 <script src="assets/safety.js" defer></script>
 </head>
 <body>
@@ -394,8 +395,8 @@
   // -----------------------------------------------------------------
   // SOLAR PRODUCTION CALCULATOR
   //
-  // Live weather comes from Open-Meteo, which needs no API key and no
-  // account - important for a static site with no backend.
+  // Live weather comes from Open-Meteo on Geonergy's commercial plan; the
+  // endpoint and key are set once in assets/weather-api.js.
   // If that call fails (offline, blocked, API down) we fall back to a
   // clear-sky model computed from the sun's position, and say so in
   // the status line rather than passing the estimate off as live data.
@@ -456,10 +457,13 @@
 
   // ---- Weather ----------------------------------------------------
   async function loadWeather() {
-    const url = 'https://api.open-meteo.com/v1/forecast'
-      + '?latitude=' + state.lat.toFixed(4) + '&longitude=' + state.lon.toFixed(4)
-      + '&hourly=shortwave_radiation,cloud_cover,temperature_2m'
-      + '&forecast_days=2&timezone=auto';
+    const url = window.GeonergyWeather.forecastUrl({
+      latitude: state.lat.toFixed(4),
+      longitude: state.lon.toFixed(4),
+      hourly: 'shortwave_radiation,cloud_cover,temperature_2m',
+      forecast_days: 2,
+      timezone: 'auto'
+    });
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 9000);
     try {

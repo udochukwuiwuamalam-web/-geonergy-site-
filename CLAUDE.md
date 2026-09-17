@@ -35,8 +35,16 @@ navy kVA placeholder tile on its own.
 ## The weather and safety watch
 
 Lives on `calculator.html` (the "Watts" page) with its logic in
-`assets/safety.js`. Forecasts come from Open-Meteo - no key, no account,
-CORS-enabled - the same source the production calculator uses.
+`assets/safety.js`. Forecasts come from Open-Meteo on Geonergy's paid
+commercial plan.
+
+**Every weather request on the site goes through `assets/weather-api.js`** -
+the watch and the production calculator both. The key and the endpoint are set
+there once; never paste a host or a key into a page. With the key blank it
+falls back to the free endpoint so the pages keep working, and that endpoint is
+non-commercial only, so a blank key is a launch blocker. The key is readable by
+anyone who views source, which is what a site with no backend costs; the file
+says so and lists the two ways out.
 
 - **It watches the installation, not the reader.** The site is saved to
   `localStorage` once; geolocation only ever drops that pin. An owner checking
@@ -51,6 +59,11 @@ CORS-enabled - the same source the production calculator uses.
   message for a person to send. Say so where a customer will read it.
 
 ## Before going live
+
+`API_KEY` in `assets/weather-api.js` is empty, so both weather features are
+still calling Open-Meteo's free, non-commercial endpoint. Paste in the key from
+the commercial subscription, and check the host and `&apikey=` spelling against
+the subscription email while you are there.
 
 `WHATSAPP_NUMBER` in `store.html`, `inverter.html` and `calculator.html` is still the placeholder
 `2348000000000`. `PASSCODE` in `admin.html` is still the default.

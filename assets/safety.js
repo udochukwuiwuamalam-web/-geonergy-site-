@@ -14,9 +14,9 @@
 // storms. Every string in here is written to say so - please keep it that
 // way if you edit them.
 //
-// Weather comes from Open-Meteo: no API key, no account, CORS-enabled,
-// which is what a static site with no backend can actually use. The same
-// source already feeds the production calculator on this page.
+// Weather comes from Open-Meteo, on Geonergy's commercial plan. The endpoint
+// and key live in assets/weather-api.js, which this file needs loaded first;
+// the production calculator on this page goes through the same place.
 (function (global) {
   'use strict';
 
@@ -67,12 +67,16 @@
 
   // timezone=auto matters: every time in the response is then local to the
   // SITE, so "4 PM" means 4 PM on that roof, whatever clock the reader is on.
+  // The host and the commercial key come from assets/weather-api.js.
   function forecastUrl(lat, lon) {
-    return 'https://api.open-meteo.com/v1/forecast'
-      + '?latitude=' + Number(lat).toFixed(4) + '&longitude=' + Number(lon).toFixed(4)
-      + '&current=weather_code,wind_speed_10m,wind_gusts_10m,precipitation,temperature_2m'
-      + '&hourly=weather_code,wind_gusts_10m,precipitation,precipitation_probability,cape'
-      + '&forecast_days=2&timezone=auto';
+    return global.GeonergyWeather.forecastUrl({
+      latitude: Number(lat).toFixed(4),
+      longitude: Number(lon).toFixed(4),
+      current: 'weather_code,wind_speed_10m,wind_gusts_10m,precipitation,temperature_2m',
+      hourly: 'weather_code,wind_gusts_10m,precipitation,precipitation_probability,cape',
+      forecast_days: 2,
+      timezone: 'auto'
+    });
   }
 
   async function fetchForecast(lat, lon) {
