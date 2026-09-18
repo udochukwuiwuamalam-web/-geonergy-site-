@@ -324,22 +324,25 @@
     font-size: clamp(1.05rem, 2.4vw, 1.45rem); letter-spacing: -0.01em;
     color: var(--text-on-navy); margin-bottom: var(--space-4);
   }
+  /* Ten brands, five to a row. A wrapping flex row packed them 7 and 3 once
+     the tiles came off, which read as an accident; a fixed column count
+     cannot drift as logos are added or the container resizes. */
   .trust-logos {
-    display: flex; flex-wrap: wrap; justify-content: center;
-    gap: 14px; margin: 0; padding: 0; list-style: none;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: var(--space-3) 14px; margin: 0; padding: 0; list-style: none;
   }
   /* No tile behind the logos - the marks sit straight on the navy. The
      dimensions stay, since they are what keeps marks of very different
      proportions optically the same size along the row. */
   .trust-logo {
     display: flex; align-items: center; justify-content: center;
-    min-width: 124px; height: 62px; padding: 0 1.15rem;
+    height: 62px; padding: 0 0.6rem;
     color: var(--text-on-navy);
   }
   /* Logos ship as transparent PNGs already recoloured to the on-navy tone,
      so the row reads as one set rather than seven competing brand colours. */
   .trust-logo img {
-    max-width: 118px; max-height: 27px; width: auto; height: auto;
+    max-width: min(118px, 100%); max-height: 27px; width: auto; height: auto;
     object-fit: contain; display: block;
     opacity: 0.88; transition: opacity 0.18s ease;
   }
@@ -353,13 +356,14 @@
     color: var(--muted-on-navy); letter-spacing: 0.01em;
   }
 
+  /* Below this, five columns squeeze the marks smaller than they read at.
+     Two divides ten evenly too, so the rows stay square either way. */
+  @media (max-width: 820px) {
+    .trust-logos { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 600px) {
-    .trust-logos { gap: 10px; }
-    /* Two per row. The cap stops a lone last tile stretching full width. */
-    .trust-logo {
-      min-width: 0; flex: 1 1 calc(50% - 10px); max-width: calc(50% - 5px);
-      height: 54px; padding: 0 0.6rem;
-    }
+    .trust-logos { gap: var(--space-2) 10px; }
+    .trust-logo { height: 54px; }
   }
 
   .compat-brands { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
