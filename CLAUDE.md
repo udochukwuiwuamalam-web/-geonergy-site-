@@ -32,37 +32,16 @@ contrast rather than on a cut line, and drop floor reflections and any
 generated-image sparkle in the corner. A product with no photo falls back to the
 navy kVA placeholder tile on its own.
 
-## The weather and safety watch
+## Weather data
 
-Lives on `calculator.html` (the "Watts" page) with its logic in
-`assets/safety.js`. Forecasts come from Open-Meteo on Geonergy's paid
-commercial plan.
-
-**Every weather request on the site goes through `assets/weather-api.js`** -
-the watch and the production calculator both. The key and the endpoint are set
-there once; never paste a host or a key into a page. With the key blank it
-falls back to the free endpoint so the pages keep working, and that endpoint is
-non-commercial only, so a blank key is a launch blocker. The key is readable by
-anyone who views source, which is what a site with no backend costs; the file
-says so and lists the two ways out.
-
-- **It watches the installation, not the reader.** The site is saved to
-  `localStorage` once; geolocation only ever drops that pin. An owner checking
-  a roof three states away is the normal case. Don't wire it to the
-  calculator's own location picker, which follows whoever is reading.
-- **Thresholds are in one object**, `T` at the top of `assets/safety.js`, and
-  `assess()` is a pure function of the API response so it can be tested
-  against invented forecasts with no browser and no network.
-- **The request is in two tiers.** `CORE_HOURLY` makes the call; `EXTRA_HOURLY`
-  only sharpens it. A 4xx retries once with the core three, so one variable
-  name the service dislikes costs a signal rather than the whole watch. Adding
-  a new variable means deciding which tier it belongs to.
-- **Green means "we looked and it is calm".** When the forecast cannot be read
-  the card goes neutral and reads "No forecast" - never a green Normal.
-- **Early warning only.** Nothing in the copy may promise protection, and
-  nothing may imply the page switches anything off or watches while closed.
-  Push alerts only fire while the page is open; WhatsApp and email prefill a
-  message for a person to send. Say so where a customer will read it.
+The production calculator on `calculator.html` reads Open-Meteo on Geonergy's
+paid commercial plan. **Every weather request goes through
+`assets/weather-api.js`** - the key and the endpoint are set there once; never
+paste a host or a key into a page. With the key blank it falls back to the free
+endpoint so the page keeps working, and that endpoint is non-commercial only,
+so a blank key is a launch blocker. The key is readable by anyone who views
+source, which is what a site with no backend costs; the file says so and lists
+the two ways out.
 
 ## Before going live
 
@@ -71,5 +50,5 @@ still calling Open-Meteo's free, non-commercial endpoint. Paste in the key from
 the commercial subscription, and check the host and `&apikey=` spelling against
 the subscription email while you are there.
 
-`WHATSAPP_NUMBER` in `store.html`, `inverter.html` and `calculator.html` is still the placeholder
+`WHATSAPP_NUMBER` in `store.html` and `inverter.html` is still the placeholder
 `2348000000000`. `PASSCODE` in `admin.html` is still the default.
