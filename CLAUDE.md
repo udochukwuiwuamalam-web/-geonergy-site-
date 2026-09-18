@@ -53,6 +53,12 @@ says so and lists the two ways out.
 - **Thresholds are in one object**, `T` at the top of `assets/safety.js`, and
   `assess()` is a pure function of the API response so it can be tested
   against invented forecasts with no browser and no network.
+- **The request is in two tiers.** `CORE_HOURLY` makes the call; `EXTRA_HOURLY`
+  only sharpens it. A 4xx retries once with the core three, so one variable
+  name the service dislikes costs a signal rather than the whole watch. Adding
+  a new variable means deciding which tier it belongs to.
+- **Green means "we looked and it is calm".** When the forecast cannot be read
+  the card goes neutral and reads "No forecast" - never a green Normal.
 - **Early warning only.** Nothing in the copy may promise protection, and
   nothing may imply the page switches anything off or watches while closed.
   Push alerts only fire while the page is open; WhatsApp and email prefill a

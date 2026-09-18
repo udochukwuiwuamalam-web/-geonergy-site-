@@ -127,6 +127,7 @@
   .wx-card.is-normal  { background: rgba(61,214,140,0.10); border-color: rgba(61,214,140,0.45); }
   .wx-card.is-warning { background: rgba(242,180,65,0.12); border-color: rgba(242,180,65,0.55); }
   .wx-card.is-severe  { background: rgba(242,97,90,0.15);  border-color: rgba(242,97,90,0.70); }
+  .wx-card.is-unknown { background: var(--navy-2); border-color: var(--border-on-navy); }
 
   .wx-card-top { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3); }
   .wx-badge {
@@ -137,6 +138,7 @@
   .wx-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--navy); opacity: 0.55; }
   .is-warning .wx-badge { background: #F2B441; }
   .is-severe .wx-badge { background: #F2615A; color: var(--white); }
+  .is-unknown .wx-badge { background: var(--muted-on-navy); color: var(--navy); }
   .is-severe .wx-badge::before { background: var(--white); animation: wxPulse 1.6s ease-in-out infinite; }
   @keyframes wxPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
   @media (prefers-reduced-motion: reduce) { .is-severe .wx-badge::before { animation: none; } }

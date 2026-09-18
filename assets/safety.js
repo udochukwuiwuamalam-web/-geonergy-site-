@@ -23,6 +23,10 @@
   const LEVEL = { NORMAL: 0, WARNING: 1, SEVERE: 2 };
   const LEVEL_NAME = ['Normal', 'Weather warning', 'Severe weather'];
   const LEVEL_CLASS = ['is-normal', 'is-warning', 'is-severe'];
+  // A fourth look, for when the forecast could not be read at all. Green
+  // "Normal" on a safety badge has to mean "we looked and it is calm",
+  // never "we could not look".
+  const UNKNOWN_CLASS = 'is-unknown';
 
   // Thunderstorm codes in the WMO table Open-Meteo reports:
   // 95 thunderstorm, 96 with slight hail, 99 with heavy hail.
@@ -68,32 +72,57 @@
   // timezone=auto matters: every time in the response is then local to the
   // SITE, so "4 PM" means 4 PM on that roof, whatever clock the reader is on.
   // The host and the commercial key come from assets/weather-api.js.
-  function forecastUrl(lat, lon) {
+  // Asking for everything in one request means one variable name the API
+  // does not recognise costs the whole forecast, and a watch that shows
+  // "unavailable" is worse than a blunter one. So the request is in two
+  // tiers: the three that MAKE the call, and the two that sharpen it.
+  const CORE_HOURLY = 'weather_code,wind_gusts_10m,precipitation';
+  const EXTRA_HOURLY = 'precipitation_probability,cape';
+
+  function forecastUrl(lat, lon, full) {
     return global.GeonergyWeather.forecastUrl({
       latitude: Number(lat).toFixed(4),
       longitude: Number(lon).toFixed(4),
       current: 'weather_code,wind_speed_10m,wind_gusts_10m,precipitation,temperature_2m',
-      hourly: 'weather_code,wind_gusts_10m,precipitation,precipitation_probability,cape',
+      hourly: full ? CORE_HOURLY + ',' + EXTRA_HOURLY : CORE_HOURLY,
       forecast_days: 2,
       timezone: 'auto'
     });
   }
 
-  async function fetchForecast(lat, lon) {
+  async function request(lat, lon, full) {
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 9000);
     try {
-      const res = await fetch(forecastUrl(lat, lon), { signal: ctrl.signal });
+      const res = await fetch(forecastUrl(lat, lon, full), { signal: ctrl.signal });
       clearTimeout(timer);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      if (!res.ok) {
+        const e = new Error('HTTP ' + res.status);
+        e.status = res.status;
+        throw e;
+      }
       const data = await res.json();
       if (!data || !data.hourly || !Array.isArray(data.hourly.time)) {
         throw new Error('unexpected response shape');
       }
+      data.reduced = !full;
       return data;
     } catch (err) {
       clearTimeout(timer);
       throw err;
+    }
+  }
+
+  async function fetchForecast(lat, lon) {
+    try {
+      return await request(lat, lon, true);
+    } catch (err) {
+      // A 4xx means the service refused the request itself - a variable name
+      // it does not know, most likely. That is worth one retry with the core
+      // three. Anything else (offline, timeout, 5xx) fails the same way twice,
+      // so don't make the customer wait through it.
+      if (!(err && err.status >= 400 && err.status < 500)) throw err;
+      return request(lat, lon, false);
     }
   }
 
@@ -224,6 +253,7 @@
       level: LEVEL.NORMAL,
       told: LEVEL.NORMAL,          // highest level already announced
       risks: [],
+      reduced: false,
       timezone: '',
       checked: null,
       error: null,
@@ -303,9 +333,9 @@
     function paint() {
       const card = $('wxCard');
       const s = summarise(state.level);
-      LEVEL_CLASS.forEach(c => card.classList.remove(c));
-      card.classList.add(LEVEL_CLASS[state.level]);
-      $('wxBadge').textContent = LEVEL_NAME[state.level];
+      LEVEL_CLASS.concat(UNKNOWN_CLASS).forEach(c => card.classList.remove(c));
+      card.classList.add(state.error ? UNKNOWN_CLASS : LEVEL_CLASS[state.level]);
+      $('wxBadge').textContent = state.error ? 'No forecast' : LEVEL_NAME[state.level];
       $('wxHeadline').textContent = state.error ? 'Forecast unavailable' : s.headline;
       $('wxMessage').textContent = state.error
         ? 'We could not reach the forecast for this site just now. This section is not watching anything until it loads — try again, and contact Geonergy if weather is already building.'
@@ -330,7 +360,8 @@
       else if (state.checked) {
         meta = 'Checked ' + state.checked.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
              + ' · forecast times are local to the site'
-             + (state.timezone ? ' (' + state.timezone + ')' : '');
+             + (state.timezone ? ' (' + state.timezone + ')' : '')
+             + (state.reduced ? ' · storm build-up signal unavailable' : '');
       } else meta = '';
       $('wxMeta').textContent = meta;
     }
@@ -362,6 +393,7 @@
         const verdict = assess(data);
         state.level = verdict.level;
         state.risks = verdict.risks;
+        state.reduced = !!data.reduced;
         state.timezone = verdict.timezone;
         state.checked = new Date();
         state.busy = false;
