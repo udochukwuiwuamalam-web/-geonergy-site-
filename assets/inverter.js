@@ -225,7 +225,29 @@
           id: 'ivcm-2012-3224',
           name: 'IVCM2012P1G2 / IVCM3224P1G2',
           category: 'Off-Grid Inverter',
-          note: 'Manual was uploaded, but the pages with specs, fault codes, or settings weren\u2019t in what was available to check yet.',
+          note: 'Nothing is filled in for this series yet. A manual was uploaded before, but not the pages carrying the specs, fault codes, warning codes or program list. Send those pages and they go in here. Until then, ring us with the code on the screen.',
+          specsSource: null,
+          specs: [],
+          faultSource: null,
+          faultWarning: null,
+          faultCodes: [],
+          warnSource: null,
+          warnWarning: null,
+          warnCodes: [],
+          settingsSource: null,
+          settingsWarning: null,
+          settingsCodes: [],
+        },
+        {
+          // Felicity publish an IVPS-IVPM series user guide (doc. 358-010148-00
+          // on their download page) covering IVPM2512/2524/3524/3548/5024/5048/
+          // 7548/10048. It has not been supplied, so nothing is entered here:
+          // this is a placeholder so the series is findable, not a stub to fill
+          // with guesses.
+          id: 'ivpm-ivps-series',
+          name: 'IVPM / IVPS Series',
+          category: 'Off-Grid Inverter',
+          note: 'Nothing is filled in for this series yet. Felicity publish a user guide for it; once Geonergy sends it, the specs, fault codes, warning codes and programs go in here. Until then, ring us with the code on the screen.',
           specsSource: null,
           specs: [],
           faultSource: null,
