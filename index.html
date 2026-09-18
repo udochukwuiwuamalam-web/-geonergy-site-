@@ -328,14 +328,14 @@
     display: flex; flex-wrap: wrap; justify-content: center;
     gap: 14px; margin: 0; padding: 0; list-style: none;
   }
+  /* No tile behind the logos - the marks sit straight on the navy. The
+     dimensions stay, since they are what keeps marks of very different
+     proportions optically the same size along the row. */
   .trust-logo {
     display: flex; align-items: center; justify-content: center;
     min-width: 124px; height: 62px; padding: 0 1.15rem;
-    background: rgba(237,241,246,0.07);
-    border: 1px solid var(--border-on-navy); border-radius: 8px;
-    color: var(--text-on-navy); transition: background 0.18s ease, border-color 0.18s ease;
+    color: var(--text-on-navy);
   }
-  .trust-logo:hover { background: rgba(237,241,246,0.13); border-color: var(--muted-on-navy); }
   /* Logos ship as transparent PNGs already recoloured to the on-navy tone,
      so the row reads as one set rather than seven competing brand colours. */
   .trust-logo img {
