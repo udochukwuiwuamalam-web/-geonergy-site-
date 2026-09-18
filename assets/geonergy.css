@@ -131,7 +131,8 @@
   .footer-logo-img { height: 26px; width: auto; display: block; }
   .footer-tagline { font-size: 0.8125rem; color: var(--muted-on-navy); margin-top: 0.2rem; }
 
-  /* Instagram link — footer and contact */
+  /* Email and Instagram links — footer and contact */
+  .footer-links { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
   .footer-social {
     display: inline-flex; align-items: center; gap: 0.45rem;
     font-size: 0.82rem; color: var(--muted-on-navy);
