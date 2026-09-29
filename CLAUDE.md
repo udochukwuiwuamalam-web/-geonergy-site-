@@ -47,9 +47,32 @@ electrical system is worse than no answer.
   anything the local engine cannot answer is forwarded there, rendered in the
   same panel with its sources. Leave it empty and the panel falls back to
   WhatsApp.
-- **It cannot search the web**, for the same reason. Where a question wants an
-  outside source it links to the primary one (`REFERENCES`) and says so, rather
-  than claiming to have read it.
+- **It can reach the internet, within limits.** A page with no backend cannot
+  run a search engine - that needs a key - but it can read public APIs that
+  allow cross-origin requests and need no key. Wikipedia's REST API is the one
+  worth having: open licence, a named article to link, and nothing to sign up
+  for. It runs only after the local engine has come up empty, and two gates
+  keep it honest. `WEB_NEVER` blocks it from anything about somebody's own
+  wiring, settings, codes or safety - a general article does not know your
+  battery class or your cable runs, and a confident generic answer about live
+  DC is how people get hurt; those go to WhatsApp instead. `WEB_TOPIC` keeps
+  it inside this site's subject, so an off-topic question gets an honest "I do
+  not know" rather than a solar article about Ghana. The answer is always
+  labelled as background rather than Geonergy's advice, and always carries the
+  article link. Set `WEB_LOOKUP = false` to switch the whole thing off. Where
+  the network is blocked - the artifact preview's CSP does block it - the
+  lookup fails quietly and the panel falls back to WhatsApp. `REFERENCES` is
+  still there for the primary sources worth linking by hand.
+- **Comparisons.** "X vs Y" is routed before everything else, because "deye vs
+  growatt" is full of brand words and no fault code. Four hand-written tables
+  (`BATTERIES`, `INV_TYPES`, `CONTROLLERS`, `VOLTAGES`) compare like with like
+  on identical rows; products are compared from their own `specs` in
+  `products.json`; brands are compared on *facts this site holds* - what is in
+  the store, which manuals are on file, how many code and program tables -
+  and then say plainly that Geonergy will not rank one badge over another,
+  because sizing and installation decide the outcome, not the label. Add a
+  comparison by adding an option to one of those tables with the same row keys
+  as its siblings.
 - **The code tables load on demand.** `assets/inverter.js` is ~96KB and is only
   fetched when somebody actually asks about a code. The catalogue is shared with
   `store.html` through `window.__GEONERGY_PRODUCTS__` so it is fetched once.

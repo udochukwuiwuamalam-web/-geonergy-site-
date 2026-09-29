@@ -27,6 +27,30 @@
   // Empty = local knowledge only. See the note at the top of this file.
   const ASSISTANT_ENDPOINT = '';
 
+  // WEB LOOKUP. The page cannot run a search engine - those need a key and a
+  // server - but it can read public APIs that allow browser requests and need
+  // no key at all. Wikipedia is the one worth having: open licence, no key,
+  // cross-origin allowed, and a named article to link so the customer can see
+  // exactly where the words came from. It is used only when Geonergy's own
+  // guidance has nothing, and never for a question about somebody's own
+  // wiring, settings or safety - see WEB_NEVER below. Set to false to switch
+  // the whole thing off.
+  const WEB_LOOKUP = true;
+  const WIKI_SEARCH = 'https://en.wikipedia.org/w/rest.php/v1/search/page?limit=3&q=';
+  const WIKI_PAGE = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
+  const WEB_TIMEOUT = 6000;
+
+  // The web lookup stays inside this site's subject. Without this gate,
+  // "what is the capital of Ghana" gets searched as "capital ghana solar"
+  // and comes back with a solar-industry article, which is a strange way to
+  // be wrong. Off-topic questions get an honest "I do not know" instead.
+  const WEB_TOPIC = /solar|panel|photovoltaic|\bpv\b|inverter|battery|batteries|lithium|lead.acid|tubular|charge|charging|mppt|pwm|watt|kw|kva|kwh|volt|amp|current|energy|power|electric|grid|nepa|disco|generator|diesel|fuel|sun|sunlight|irradiat|off.grid|hybrid|ups|load|backup|renewab/;
+
+  // Questions an encyclopedia must not answer on this site. A general article
+  // does not know your battery class, your cable runs or your local code, and
+  // a confident generic answer about live DC is how somebody gets hurt.
+  const WEB_NEVER = /fault|error|\berr\b|code|warning|alarm|program|setting|wire|wiring|connect|terminal|shock|electrocut|fire|burn|volt|amp\b|breaker|fuse|earth|ground|install|mount|repair|fix my|my inverter|my battery|my panel|my system/;
+
   const HOUSE = 'Geonergy house guidance';
 
   // ---------------------------------------------------------------
@@ -440,6 +464,378 @@
   }
 
   // ---------------------------------------------------------------
+  // COMPARISONS
+  // "X vs Y" is the question people actually arrive with. Each table below
+  // compares like with like on the same rows, so the two columns line up
+  // and the difference is readable rather than two paragraphs to hold in
+  // your head. Figures are the same ones the rest of this file quotes.
+  // ---------------------------------------------------------------
+  const BATTERIES = {
+    lithium: {
+      name: 'Lithium (LiFePO4)', k: 'lithium lifepo4 lfp li-ion ion',
+      rows: {
+        'Cycle life': '6,000+ cycles, 8 to 10 years in daily use',
+        'Usable capacity': 'About 90% of the rated kWh',
+        'Charging': 'Takes a fast charge - fills in the hours of good sun',
+        'Maintenance': 'None. Sealed, no watering',
+        'Weight and space': 'Roughly a third the weight for the same usable kWh',
+        'Heat': 'Tolerates Nigerian ambient well; BMS protects it',
+        'Up-front cost': 'Highest',
+        'Cost per year': 'Usually the lowest, because it lasts and you use more of it'
+      }
+    },
+    tubular: {
+      name: 'Tubular lead-acid', k: 'tubular lead acid wet flooded battery',
+      rows: {
+        'Cycle life': '1,000 to 1,500 cycles, 3 to 5 years in daily use',
+        'Usable capacity': 'About 50% if you want it to reach that life',
+        'Charging': 'Slower, and it needs to reach full regularly or it sulphates',
+        'Maintenance': 'Top up with distilled water; keep terminals clean',
+        'Weight and space': 'Heavy, and needs a ventilated space - it gases when charging',
+        'Heat': 'Heat shortens its life noticeably',
+        'Up-front cost': 'Lower',
+        'Cost per year': 'Often higher once you count replacing it'
+      }
+    },
+    gel: {
+      name: 'Gel / AGM (sealed lead-acid)', k: 'gel agm sealed vrla',
+      rows: {
+        'Cycle life': '500 to 1,200 cycles depending on how deep you go',
+        'Usable capacity': 'About 50%, same as tubular',
+        'Charging': 'Fussy about charge voltage - set it from the manual or you cook it',
+        'Maintenance': 'Sealed, no watering',
+        'Weight and space': 'Heavy, but no watering and less gassing',
+        'Heat': 'Heat sensitive',
+        'Up-front cost': 'Between tubular and lithium',
+        'Cost per year': 'Middling - the convenience costs you cycles'
+      }
+    },
+    verdict: 'For a home that cycles the battery every single day, lithium almost always wins on cost per year even though it costs more on the day. Tubular still makes sense for a standby system that rarely discharges, or where the up-front figure is the binding constraint. Gel sits in between and is mostly chosen when the battery has to live somewhere unventilated.'
+  };
+
+  const INV_TYPES = {
+    hybrid: {
+      name: 'Hybrid', k: 'hybrid',
+      rows: {
+        'Battery': 'Yes - solar, battery and grid all work together',
+        'When the grid fails': 'Keeps running off battery and solar',
+        'Solar use': 'Charges the battery and carries the load at the same time',
+        'You control': 'Priority - solar first, grid first or battery first',
+        'Generator': 'Usually accepted on the AC input, in GEN mode',
+        'Fits': 'Most Nigerian homes and businesses'
+      }
+    },
+    'off-grid': {
+      name: 'Off-grid', k: 'off grid offgrid standalone',
+      rows: {
+        'Battery': 'Yes - required. Everything runs through it',
+        'When the grid fails': 'No difference; it was never carrying your load',
+        'Solar use': 'Charges the battery; loads are fed from the battery',
+        'You control': 'Charge source - solar only, or solar plus mains',
+        'Generator': 'Can charge the battery, cannot feed loads directly',
+        'Fits': 'Sites with no grid at all, or where the grid is barely there'
+      }
+    },
+    'grid-tie': {
+      name: 'Grid-tie', k: 'grid tie gridtie on-grid ongrid net',
+      rows: {
+        'Battery': 'None',
+        'When the grid fails': 'Shuts down - by design, to protect line workers',
+        'Solar use': 'Feeds your load and exports the surplus',
+        'You control': 'Very little; it follows the grid',
+        'Generator': 'Not applicable',
+        'Fits': 'Places that pay you for export. Little use in Nigeria'
+      }
+    },
+    verdict: 'In Nigeria the question is almost always hybrid versus off-grid, and hybrid wins wherever there is any grid at all, because mains can top the battery up on a run of dull days. Grid-tie is the one to rule out: when NEPA goes, so does a grid-tie inverter, which is the opposite of what you bought solar for.'
+  };
+
+  const CONTROLLERS = {
+    mppt: {
+      name: 'MPPT', k: 'mppt maximum power point tracking',
+      rows: {
+        'How it works': 'Tracks the panel’s best operating point and converts surplus voltage into charging current',
+        'Typical harvest': '20 to 30% more from the same panels',
+        'Panel wiring': 'Series strings at high voltage are fine',
+        'Cable': 'Thinner cable over a long run, because current is lower',
+        'Cost': 'Higher',
+        'Use it': 'Everything Geonergy sizes for a home'
+      }
+    },
+    pwm: {
+      name: 'PWM', k: 'pwm pulse width',
+      rows: {
+        'How it works': 'Connects the panel to the battery and throws the voltage difference away',
+        'Typical harvest': 'Baseline - you lose the surplus',
+        'Panel wiring': 'Panel voltage must match the battery class',
+        'Cable': 'Thicker cable, because current is higher',
+        'Cost': 'Lower',
+        'Use it': 'Small, cheap, short-run systems only'
+      }
+    },
+    verdict: 'On anything above a couple of panels the extra harvest pays for the controller quickly, which is why every system here uses MPPT.'
+  };
+
+  const VOLTAGES = {
+    '12v': { name: '12 V', k: '12v 12 volt twelve',
+      rows: { 'Typical size': 'Up to about 1.5 kVA', 'Current for the same power': 'Highest - four times a 48 V system',
+        'Cable': 'Thickest, and short runs only', 'Losses and heat': 'Highest', 'Expansion': 'Limited' } },
+    '24v': { name: '24 V', k: '24v 24 volt twenty-four',
+      rows: { 'Typical size': 'About 2 to 5 kVA', 'Current for the same power': 'Half of 12 V',
+        'Cable': 'Moderate', 'Losses and heat': 'Moderate', 'Expansion': 'Reasonable' } },
+    '48v': { name: '48 V', k: '48v 48 volt forty-eight',
+      rows: { 'Typical size': '5 kVA and up', 'Current for the same power': 'Lowest - a quarter of 12 V',
+        'Cable': 'Thinnest for the same power', 'Losses and heat': 'Lowest', 'Expansion': 'Best - most stackable batteries are 48 V' } },
+    verdict: 'The voltage class follows the size of the system rather than being a choice you make on its own. It matters for settings too: a 21 V cut-off is right on a 24 V machine and meaningless on a 12 V one, so always take voltages from the manual for your own battery class.'
+  };
+
+  const TABLES = [BATTERIES, INV_TYPES, CONTROLLERS, VOLTAGES];
+
+  // The whole brand list the site shows, not only the ones with code tables.
+  const BRAND_NAMES = ['Deye', 'Growatt', 'Sunsynk', 'Felicity', 'MUST', 'Haisic', 'Cworth', 'itel', 'Firman', 'JinkoSolar'];
+
+  function splitVersus(t) {
+    const m = t.match(/^(?:what(?:’s|s)? (?:is )?the )?(?:difference between |compare |which is better,? )?(.+?)\s+(?:vs\.?|versus|or|against|compared to|compared with|and)\s+(.+?)[?.!]*$/);
+    if (!m) return null;
+    const strip = x => x.replace(/^(the |a |an )/, '')
+      .replace(/\b(battery|batteries|inverter|inverters|inverter type|system|systems|panel|panels|which|better|best|good)\b$/,'')
+      .trim();
+    const a = strip(m[1]), b = strip(m[2]);
+    if (!a || !b || a === b) return null;
+    return [a, b];
+  }
+
+  function fromTable(term) {
+    for (let i = 0; i < TABLES.length; i++) {
+      const tb = TABLES[i];
+      const keys = Object.keys(tb).filter(k => k !== 'verdict');
+      for (let j = 0; j < keys.length; j++) {
+        const opt = tb[keys[j]];
+        const m = score(words(term), opt.k);
+        if (m.s >= 3) return { kind: 'table', table: tb, opt: opt };
+      }
+    }
+    return null;
+  }
+
+  function fromBrand(term) {
+    const w = term.toLowerCase().replace(/[^a-z0-9 ]/g, ' ').trim();
+    for (let i = 0; i < BRAND_NAMES.length; i++) {
+      const n = BRAND_NAMES[i].toLowerCase();
+      if (w === n || new RegExp('\\b' + n + '\\b').test(w)) return { kind: 'brand', name: BRAND_NAMES[i] };
+    }
+    return null;
+  }
+
+  // Product matching gets its own tokeniser rather than reusing the KB one:
+  // the size IS the name here ("Haisic 1.5" and "Haisic 4.2" are different
+  // machines), and the general matcher drops single digits as noise.
+  function fromProduct(term, list) {
+    if (!list) return null;
+    const toks = term.toLowerCase().split(/[^a-z0-9.]+/).filter(Boolean);
+    let top = null, best = 0;
+    list.forEach(p => {
+      const names = p.name.toLowerCase().split(/[^a-z0-9.]+/).filter(Boolean);
+      let s = 0;
+      toks.forEach(w => { if (names.indexOf(w) >= 0) s += /^[0-9]/.test(w) ? 4 : 3; });
+      if (toks.indexOf(String(p.kva)) >= 0) s += 4;
+      if (s > best) { best = s; top = p; }
+    });
+    // 6 means at least a name word plus a number, or two name words - one
+    // brand word alone must not resolve to whichever model is listed first.
+    return best >= 6 ? { kind: 'product', product: top } : null;
+  }
+
+  function cmpTable(title, cols, rows, verdict) {
+    let h = '<div class="ai-cmp"><div class="ai-cmp-head"><span>' + esc(cols[0]) + '</span><span>' + esc(cols[1]) + '</span></div>';
+    rows.forEach(r => {
+      h += '<div class="ai-cmp-row"><div class="ai-cmp-key">' + esc(r[0]) + '</div>' +
+        '<div class="ai-cmp-vals"><span>' + esc(r[1]) + '</span><span>' + esc(r[2]) + '</span></div></div>';
+    });
+    h += '</div>';
+    if (verdict) h += '<p><strong>Which one:</strong> ' + esc(verdict) + '</p>';
+    return (title ? '<p>' + esc(title) + '</p>' : '') + h;
+  }
+
+  function compareTables(a, b) {
+    if (a.table !== b.table || a.opt === b.opt) return null;
+    const keys = Object.keys(a.opt.rows);
+    const rows = keys.map(k => [k, a.opt.rows[k], b.opt.rows[k] || '—']);
+    return {
+      html: cmpTable(null, [a.opt.name, b.opt.name], rows, a.table.verdict),
+      source: { text: HOUSE },
+      chips: ['Build a quote', 'What size do I need?']
+    };
+  }
+
+  // Spec rows worth putting side by side first, when both products carry them.
+  const SPEC_ORDER = ['Rated output', 'Continuous output', 'Rated energy', 'Inverter capacity', 'Waveform',
+    'Surge capacity', 'Surge power', 'Peak power', 'System voltage', 'Battery', 'Battery capacity',
+    'Battery chemistry', 'Usable energy', 'Battery lifespan', 'Panels included', 'Solar input',
+    'Expandable', 'Expandable to', 'Warranty'];
+
+  function compareProducts(a, b) {
+    const pa = a.product, pb = b.product;
+    const rows = [['Size', pa.kva + ' kVA', pb.kva + ' kVA']];
+    const sa = pa.specs || {}, sb = pb.specs || {};
+    const both = Object.keys(sa).filter(k => sb[k] != null);
+    const ordered = SPEC_ORDER.filter(k => both.indexOf(k) >= 0)
+      .concat(both.filter(k => SPEC_ORDER.indexOf(k) < 0));
+    ordered.slice(0, 8).forEach(k => rows.push([k, String(sa[k]), String(sb[k])]));
+    const bigger = pa.kva === pb.kva ? null : (pa.kva > pb.kva ? pa : pb);
+    const smaller = bigger === pa ? pb : pa;
+    const verdict = bigger
+      ? 'The ' + bigger.name + ' runs more at once and for longer; the ' + smaller.name +
+        ' is the right buy if your load genuinely fits inside it, because paying for capacity you never draw is money sitting on the wall. Build a load list below and the arithmetic will tell you which side of that line you are on.'
+      : 'Same size class, so the choice comes down to the battery, the panels and what is in the box rather than the inverter rating. Send your load list over and we will say which suits your site.';
+    return {
+      html: cmpTable('Side by side:', [pa.name, pb.name], rows, verdict),
+      source: { text: 'Geonergy product catalogue', href: 'store.html', label: 'both are on the Store page' },
+      chips: ['Build a quote', 'What size do I need?']
+    };
+  }
+
+  function brandFacts(name, data, list) {
+    const key = name.toLowerCase();
+    const models = (data && data[key] && data[key].models) || [];
+    const withCodes = models.filter(m => (m.faultCodes || []).length || (m.warnCodes || []).length);
+    const withPrograms = models.filter(m => (m.settingsCodes || []).length);
+    const stocked = (list || []).filter(p => new RegExp('\\b' + key + '\\b', 'i').test(p.name));
+    const cats = [];
+    models.forEach(m => { if (m.category && cats.indexOf(m.category) < 0) cats.push(m.category); });
+    return {
+      'In the Geonergy store': stocked.length
+        ? stocked.map(p => p.name + ' (' + p.kva + ' kVA)').join(', ')
+        : 'Nothing listed right now - ask us what is in',
+      'Types Geonergy documents': cats.length ? cats.join(', ') : 'Not recorded here yet',
+      'Manuals on file': models.length ? models.map(m => m.name).join(', ') : 'None yet',
+      'Fault and warning codes here': withCodes.length ? withCodes.length + ' model' + (withCodes.length > 1 ? 's' : '') : 'Not yet',
+      'Programming tables here': withPrograms.length ? withPrograms.length + ' model' + (withPrograms.length > 1 ? 's' : '') : 'Not yet'
+    };
+  }
+
+  function compareBrands(a, b) {
+    return Promise.all([inverterData(), products()]).then(res => {
+      const fa = brandFacts(a.name, res[0], res[1]);
+      const fb = brandFacts(b.name, res[0], res[1]);
+      const rows = Object.keys(fa).map(k => [k, fa[k], fb[k]]);
+      const verdict = 'Geonergy will not tell you one badge beats another, because the honest answer is that a well-sized ' +
+        a.name + ' beats a badly sized ' + b.name + ' and the other way round. What actually decides whether you are happy in ' +
+        'three years is sizing, installation quality, whether parts and support exist near you, and the warranty you can ' +
+        'hold somebody to. Tell us what you run and we will recommend a specific unit and say why.';
+      return {
+        html: '<p>Here is what this site actually holds on each - facts, not a verdict:</p>' +
+          cmpTable(null, [a.name, b.name], rows, verdict),
+        sources: [{ title: 'Geonergy catalogue and the manuals on file' }, { title: 'the Inverter page', url: 'inverter.html' }],
+        ask: true,
+        chips: ['Build a quote', 'What size do I need?']
+      };
+    });
+  }
+
+  function mixed(a, b) {
+    const label = x => x.kind === 'brand' ? x.name : (x.kind === 'product' ? x.product.name : x.opt.name);
+    return {
+      html: '<p>Those two are not the same kind of thing - ' + esc(label(a)) + ' and ' + esc(label(b)) +
+        ' are not measured on the same rows, so a straight table would be misleading.</p>' +
+        '<p>Ask me either a like-for-like comparison - two batteries, two systems, two brands - or tell me what you want to run and I will size it.</p>',
+      chips: ['Lithium vs tubular', 'Hybrid vs off-grid', 'Build a quote']
+    };
+  }
+
+  // "Deye 6 kVA Hybrid vs Felicity 8 kVA Hybrid" contains the word hybrid
+  // twice, so a plain keyword match would compare inverter types and answer
+  // a question nobody asked. A model number means they mean the machine.
+  // A bare voltage ("48v") is not a model number.
+  const looksLikeModel = t => /\d/.test(t) && !/^\d+\s*v(olts?)?$/.test(t.trim());
+
+  function comparison(t) {
+    const pair = splitVersus(t);
+    if (!pair) return Promise.resolve(null);
+    const named = looksLikeModel(pair[0]) || looksLikeModel(pair[1]);
+    const tA = fromTable(pair[0]), tB = fromTable(pair[1]);
+    if (!named && tA && tB && tA.opt !== tB.opt) {
+      return Promise.resolve(compareTables(tA, tB) || mixed(tA, tB));
+    }
+    const bA = fromBrand(pair[0]), bB = fromBrand(pair[1]);
+    if (!named && bA && bB) return compareBrands(bA, bB);
+    return products().then(list => {
+      const pA = fromProduct(pair[0], list) || bA || tA;
+      const pB = fromProduct(pair[1], list) || bB || tB;
+      if (!pA || !pB) return null;
+      if (pA.kind === 'product' && pB.kind === 'product') {
+        return pA.product === pB.product ? null : compareProducts(pA, pB);
+      }
+      if (pA.kind === 'brand' && pB.kind === 'brand') return compareBrands(pA, pB);
+      if (pA.kind === 'table' && pB.kind === 'table') return compareTables(pA, pB) || mixed(pA, pB);
+      return mixed(pA, pB);
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // WEB LOOKUP
+  // ---------------------------------------------------------------
+  function fetchJSON(url) {
+    // AbortController so a slow network does not leave the panel thinking
+    // forever on a phone with one bar.
+    let ctl = null, timer = null;
+    try {
+      ctl = new AbortController();
+      timer = setTimeout(() => ctl.abort(), WEB_TIMEOUT);
+    } catch (e) { ctl = null; }
+    return fetch(url, { headers: { Accept: 'application/json' }, signal: ctl ? ctl.signal : undefined })
+      .then(r => (r.ok ? r.json() : null))
+      .catch(() => null)
+      .then(j => { if (timer) clearTimeout(timer); return j; });
+  }
+
+  // What to actually search for. The question as typed is a bad query - "so
+  // what exactly is an mppt charge controller then" searches badly. Keep the
+  // content words, and keep "solar" in the mix so a generic word lands on the
+  // energy article rather than something else entirely.
+  function webQuery(qw) {
+    const terms = qw.filter(w => w.length > 2).slice(0, 6);
+    if (!terms.length) return null;
+    const solarish = /solar|inverter|battery|panel|photovoltaic|charge|watt|volt|energy|grid/.test(terms.join(' '));
+    return (solarish ? terms : terms.concat(['solar'])).join(' ');
+  }
+
+  function webLookup(q, qw) {
+    if (!WEB_LOOKUP || !global.fetch) return Promise.resolve(null);
+    const lower = q.toLowerCase();
+    if (WEB_NEVER.test(lower) || !WEB_TOPIC.test(lower)) return Promise.resolve(null);
+    const query = webQuery(qw);
+    if (!query) return Promise.resolve(null);
+    return fetchJSON(WIKI_SEARCH + encodeURIComponent(query)).then(res => {
+      const pages = (res && res.pages) || [];
+      if (!pages.length) return null;
+      const key = pages[0].key;
+      return fetchJSON(WIKI_PAGE + encodeURIComponent(key)).then(sum => {
+        const text = sum && (sum.extract || '');
+        if (!text || text.length < 80) return null;
+        const url = (sum.content_urls && sum.content_urls.desktop && sum.content_urls.desktop.page) ||
+          'https://en.wikipedia.org/wiki/' + encodeURIComponent(key);
+        const title = sum.title || pages[0].title || key;
+        const trimmed = text.length > 700 ? text.slice(0, 700).replace(/\s+\S*$/, '') + '…' : text;
+        const others = pages.slice(1, 3).map(p => ({
+          title: p.title,
+          url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(p.key)
+        }));
+        return {
+          html: '<p>Geonergy’s own guidance does not cover that, so I looked it up on the web. ' +
+            'This is general background, not Geonergy’s advice about your system:</p>' +
+            '<p>' + esc(trimmed) + '</p>' +
+            '<p>If it touches what you actually run, message us - the general article does not know your ' +
+            'battery class, your roof or your cable runs.</p>',
+          sources: [{ title: 'Wikipedia: ' + title, url: url }].concat(others),
+          ask: true,
+          chips: ['Build a quote', 'What size do I need?']
+        };
+      });
+    });
+  }
+
+  // ---------------------------------------------------------------
   // ROUTING
   // ---------------------------------------------------------------
   function localAnswer(q, qw) {
@@ -457,8 +853,11 @@
   function followUps(id) {
     const map = {
       'sizing-inverter': ['Build a quote', 'How many panels?'],
-      'sizing-battery': ['Lithium or tubular?', 'Build a quote'],
-      'battery-type': ['How long do batteries last?'],
+      'sizing-battery': ['Lithium vs tubular', 'Build a quote'],
+      'battery-type': ['Lithium vs tubular', 'How long do batteries last?'],
+      types: ['Hybrid vs off-grid', 'Build a quote'],
+      mppt: ['MPPT vs PWM'],
+      voltage: ['24V vs 48V'],
       beep: ['My inverter shows fault 01', 'Contact Geonergy'],
       'backup-short': ['Why are my panels not charging?'],
       'not-charging': ['Contact Geonergy'],
@@ -499,6 +898,15 @@
     return { html: h, ask: true, chips: ['Build a quote', 'What size do I need?'] };
   }
 
+  // Local first, then a hosted model if one is configured, then the open web,
+  // then WhatsApp. Never the other way round: the manuals and the house
+  // guidance are better than an encyclopedia on every question they cover.
+  function beyondLocal(q, qw) {
+    return remoteAnswer(q)
+      .then(x => x || webLookup(q, qw))
+      .then(x => x || unknown(qw));
+  }
+
   function route(q) {
     const t = q.toLowerCase();
     const qw = words(q);
@@ -511,16 +919,20 @@
         ask: true, chips: ['Build a quote']
       });
     }
-    const cq = codeQuery(t);
-    const first = cq ? lookupCode(cq) : Promise.resolve(null);
-    return first.then(r => {
-      if (r) return r;
-      if (/product|catalogue|catalog|what do you sell|in stock|available|which.*(?:buy|stock)|do(?:es)? (?:you|geonergy|they) (?:have|stock|sell)|got a\b/.test(t)) {
-        return productAnswer(t, qw).then(p => p || localAnswer(q, qw) || remoteAnswer(q).then(x => x || unknown(qw)));
-      }
-      const local = localAnswer(q, qw);
-      if (local) return local;
-      return remoteAnswer(q).then(x => x || unknown(qw));
+    // A comparison is checked before the code lookup: "deye vs growatt" is
+    // full of brand words and no code at all.
+    return comparison(t).then(cmp => {
+      if (cmp) return cmp;
+      const cq = codeQuery(t);
+      return (cq ? lookupCode(cq) : Promise.resolve(null)).then(r => {
+        if (r) return r;
+        if (/product|catalogue|catalog|what do you sell|in stock|available|which.*(?:buy|stock)|do(?:es)? (?:you|geonergy|they) (?:have|stock|sell)|got a\b/.test(t)) {
+          return productAnswer(t, qw).then(p => p || localAnswer(q, qw) || beyondLocal(q, qw));
+        }
+        const local = localAnswer(q, qw);
+        if (local) return local;
+        return beyondLocal(q, qw);
+      });
     });
   }
 
@@ -860,7 +1272,7 @@
 
     addAI({
       html: '<p>' + GREET + '</p>',
-      chips: ['What size inverter do I need?', 'Build a quote', 'Why is my inverter beeping?', 'Lithium or tubular?']
+      chips: ['What size inverter do I need?', 'Build a quote', 'Lithium vs tubular', 'Hybrid vs off-grid', 'Why is my inverter beeping?']
     });
   }
 
