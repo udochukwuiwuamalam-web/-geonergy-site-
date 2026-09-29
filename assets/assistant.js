@@ -174,6 +174,23 @@
       .split(/\s+/).filter(w => w.length > 1 && !STOP.has(w)).map(stem);
   }
 
+  // Geonergy's own mark - the sun over the horizon, traced from the wordmark
+  // in assets/logo-dark.png. The rays are thinner than the dome and the
+  // horizon sits in front of it, as in the logo. Drawn rather than loaded as
+  // an image so it inherits colour from the button and stays crisp at any
+  // size. No text: the symbol IS the brand, and a nav bar has no room for
+  // words nobody needs.
+  const MARK =
+    '<svg viewBox="0 0 24 13" fill="none" stroke="currentColor" stroke-linecap="round" ' +
+    'stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+    '<path stroke-width="0.7" d="M19.29 9.02L21.85 8.56M18.65 7.06L20.99 5.92' +
+    'M17.5 5.35L19.43 3.61M15.92 4.02L17.3 1.82M14.04 3.19L14.76.69M12 2.9L12 .3' +
+    'M9.96 3.19L9.24.69M8.08 4.02L6.7 1.82M6.5 5.35L4.57 3.61M5.35 7.06L3.01 5.92' +
+    'M4.71 9.02L2.15 8.56"/>' +
+    '<path stroke-width="1.8" d="M6.4 10.3a5.6 5.6 0 0 1 11.2 0"/>' +
+    '<path stroke-width="1.15" d="M.7 12.4c3.6-.2 6.5-2.3 11.3-2.3s7.7 2.1 11.3 2.3"/>' +
+    '</svg>';
+
   const ICON = {
     spark: '<path d="M12 2.5 14 9l6.5 2-6.5 2-2 6.5-2-6.5L3.5 11 10 9z"/><path d="M19 3.5v3M17.5 5h3"/>',
     close: '<path d="M6 6l12 12M18 6L6 18"/>',
@@ -1223,7 +1240,7 @@
     panel.hidden = true;
     panel.innerHTML =
       '<div class="ai-head">' +
-        '<span class="ai-head-mark">' + svg(ICON.spark) + '</span>' +
+        '<span class="ai-head-mark">' + MARK + '</span>' +
         '<span class="ai-head-text"><span class="ai-head-title">Geonergy AI</span>' +
         '<span class="ai-head-sub">Solar, inverters and batteries</span></span>' +
         '<button type="button" class="ai-icon-btn" data-speak aria-pressed="false" title="Read answers aloud">' + svg(ICON.mute) + '</button>' +
@@ -1301,12 +1318,25 @@
 
   function onKey(e) { if (e.key === 'Escape') close(); }
 
+  // Every page carries the same header, and .nav-right is the cluster that
+  // never collapses into the phone menu - so the assistant is reachable at
+  // any width without a second floating thing fighting the dock for the
+  // corner. If a page ever ships without that header, fall back to floating
+  // rather than losing the button entirely.
   function mount() {
     if (document.querySelector('.ai-launch')) return;
-    launcher = el('button', 'ai-launch', svg(ICON.spark) + '<span>Ask Geonergy AI</span>');
+    launcher = el('button', 'ai-launch', MARK);
     launcher.type = 'button';
+    launcher.setAttribute('aria-label', 'Ask Geonergy AI');
+    launcher.setAttribute('title', 'Ask Geonergy AI');
+    launcher.setAttribute('aria-haspopup', 'dialog');
     launcher.addEventListener('click', open);
-    document.body.appendChild(launcher);
+    // After "Get in Touch", before the phone menu button. Putting it first
+    // in that cluster sat it right beside the wordmark at phone width, and
+    // two sun marks an inch apart read as a mistake.
+    const nav = document.querySelector('.nav-right');
+    if (nav) nav.insertBefore(launcher, nav.querySelector('.nav-toggle'));
+    else { launcher.classList.add('ai-launch--float'); document.body.appendChild(launcher); }
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);

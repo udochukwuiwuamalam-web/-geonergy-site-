@@ -109,6 +109,8 @@
   .nav-links a { font-size: 0.9rem; color: var(--muted-on-white); transition: color 0.2s; }
   .nav-links a:hover { color: var(--text-on-white); }
   .nav-right { display: flex; align-items: center; gap: var(--space-3); }
+
+
   .nav-cta { background: var(--navy); color: var(--white); font-weight: 600; font-size: 0.85rem; padding: 0.6rem 1.15rem; border-radius: var(--radius-sm); }
   .nav-cta:hover { background: var(--navy-3); }
   .nav-toggle { display: none; color: var(--text-on-white); font-size: 1.4rem; padding: 0.2rem; }
@@ -123,6 +125,22 @@
     }
     .nav-links.open { display: flex; }
     .nav-toggle { display: block; }
+  }
+
+  /* Phone header. It carries a wordmark, the AI button, the CTA and the menu
+     toggle on one line; with the desktop gutter that is more than fits on a
+     360px screen, so the gutter, the gap and finally the CTA's own padding
+     give way rather than "Get in Touch" wrapping onto a second line.
+     These sit after the nav rules above deliberately - a media query does not
+     outrank a later rule of the same specificity. */
+  @media (max-width: 480px) {
+    .nav .container { padding-left: var(--space-3); padding-right: var(--space-3); }
+    .nav-right { gap: 0.55rem; }
+  }
+  @media (max-width: 359px) {
+    .nav .container { padding-left: var(--space-2); padding-right: var(--space-2); }
+    .nav-right { gap: 0.4rem; }
+    .nav-cta { padding: 0.55rem 0.7rem; font-size: 0.78rem; }
   }
 
   /* Footer */

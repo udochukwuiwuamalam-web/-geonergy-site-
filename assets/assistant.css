@@ -2,31 +2,48 @@
    Shared by index, store, calculator and inverter. Tokens come from
    geonergy.css; nothing here needs a framework or an icon font.
 
-   The launcher sits above the floating dock rather than beside it: the dock
-   is bottom-centre and grows to nearly full width on a phone, so the only
-   free corner is above it. */
+   The launcher is an icon button in the site header rather than a floating
+   pill: the dock already owns the bottom of the screen, and the header is
+   where people look for a tool that belongs to the site. */
 
+/* The launcher lives in the site header, left of "Get in Touch". A circle
+   with a ring round it so it reads as a button rather than decoration, and
+   nothing but Geonergy's own sun-and-horizon mark inside it. */
 .ai-launch {
-  position: fixed; right: 16px; bottom: 92px; z-index: 95;
-  display: inline-flex; align-items: center; gap: 0.55rem;
-  padding: 0.85rem 1.15rem; border-radius: 999px; border: none;
-  background: var(--navy, #0B1D3A); color: #fff;
-  font-family: var(--font-body, system-ui), sans-serif;
-  font-size: 0.92rem; font-weight: 600; letter-spacing: -0.01em;
-  box-shadow: 0 10px 30px rgba(11,29,58,0.32), 0 2px 8px rgba(11,29,58,0.18);
-  cursor: pointer; transition: transform 0.16s ease, box-shadow 0.16s ease;
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; padding: 0; border-radius: 50%;
+  border: 1px solid rgba(11, 29, 58, 0.18);
+  background: #FFFFFF; color: var(--navy, #0B1D3A); cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
 }
-.ai-launch:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(11,29,58,0.38); }
-.ai-launch:focus-visible { outline: 2px solid #3DD68C; outline-offset: 3px; }
-.ai-launch svg { width: 19px; height: 19px; flex: none; }
+.ai-launch svg { width: 23px; height: auto; display: block; }
+.ai-launch:hover {
+  background: var(--navy, #0B1D3A); color: #FFFFFF;
+  border-color: var(--navy, #0B1D3A); transform: translateY(-1px);
+}
+.ai-launch:focus-visible { outline: 2px solid #3DD68C; outline-offset: 2px; }
 .ai-launch[hidden] { display: none; }
-@media (max-width: 460px) {
-  /* Still a pill, not a bar. Full width here would read as a second
-     navigation strip stacked on the dock and cover the page. */
-  .ai-launch { right: 12px; bottom: 86px; padding: 0.72rem 1rem; font-size: 0.86rem; }
-  .ai-launch svg { width: 17px; height: 17px; }
+
+/* Only for a page with no site header to sit in. */
+.ai-launch--float {
+  position: fixed; right: 16px; bottom: 92px; z-index: 95;
+  width: 46px; height: 46px;
+  box-shadow: 0 10px 30px rgba(11, 29, 58, 0.30), 0 2px 8px rgba(11, 29, 58, 0.18);
 }
-@media (prefers-reduced-motion: reduce) { .ai-launch { transition: none; } }
+.ai-launch--float svg { width: 27px; height: auto; }
+
+@media (max-width: 420px) {
+  .ai-launch { width: 36px; height: 36px; }
+  .ai-launch svg { width: 22px; height: auto; }
+}
+@media (max-width: 359px) {
+  .ai-launch { width: 32px; height: 32px; }
+  .ai-launch svg { width: 20px; height: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-launch { transition: none; }
+  .ai-launch:hover { transform: none; }
+}
 
 /* ---- panel ---- */
 .ai-scrim {
@@ -67,7 +84,7 @@
   display: grid; place-items: center; background: rgba(61,214,140,0.18);
   color: #3DD68C;
 }
-.ai-head-mark svg { width: 19px; height: 19px; }
+.ai-head-mark svg { width: 22px; height: auto; }
 .ai-head-text { flex: 1; min-width: 0; }
 .ai-head-title { display: block; font-size: 0.95rem; font-weight: 600; line-height: 1.2; }
 .ai-head-sub { display: block; font-size: 0.72rem; color: #93A3BE; margin-top: 0.1rem; }
