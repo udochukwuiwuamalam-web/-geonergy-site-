@@ -900,4 +900,7 @@
   }
 
   global.initErrorCodes = initErrorCodes;
+  // Read-only handle for the AI assistant, which loads this file on demand
+  // to look up a code the customer reads off their screen.
+  global.GeonergyInverterData = INVERTER_DATA;
 })(window);
