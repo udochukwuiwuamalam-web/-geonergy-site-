@@ -386,3 +386,39 @@
   .ai-chip:hover, .ai-chip:active, .ai-cta:hover, .ai-cta:active,
   .ai-send:active, .ai-mic:active, .ai-icon-btn:active, .ai-stepper button:active { transform: none; }
 }
+
+/* ---- first-visit hint ----
+   Anchored to the button rather than the page, so it points at the thing it
+   is talking about at any width. It is a child of the button, which means a
+   tap on it opens the panel without any extra wiring. */
+.ai-hint {
+  position: absolute; top: calc(100% + 11px); right: -3px; z-index: 96;
+  display: block; width: max-content; max-width: min(232px, calc(100vw - 30px));
+  padding: 0.55rem 0.72rem; border-radius: 10px;
+  background: var(--navy, #0B1D3A); color: #EDF1F6;
+  font-family: var(--font-body, system-ui), sans-serif;
+  font-size: 0.775rem; font-weight: 500; line-height: 1.4;
+  text-align: left; letter-spacing: -0.005em; white-space: normal;
+  /* It hangs below the header and lands on the navy hero on most pages, so a
+     navy bubble would dissolve into it. A hairline white ring keeps the edge
+     crisp there and is simply invisible against the white header. */
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.92),
+              0 10px 28px rgba(11, 29, 58, 0.26), 0 2px 6px rgba(11, 29, 58, 0.14);
+  opacity: 0; transform: translateY(-6px) scale(0.96); transform-origin: top right;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* The arrow is a rotated square, so only its top-left edges show above the
+   bubble - an unblurred shadow offset that way paints the ring on exactly
+   those two edges and nowhere else. */
+.ai-hint::before {
+  content: ''; position: absolute; top: -3px; right: 15px;
+  width: 9px; height: 9px; background: inherit;
+  border-radius: 2px; transform: rotate(45deg);
+  box-shadow: -1.5px -1.5px 0 rgba(255, 255, 255, 0.92);
+}
+.ai-hint.show { opacity: 1; transform: none; }
+.ai-hint.is-calm { transition: none; opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-hint { transition: none; opacity: 1; transform: none; }
+}

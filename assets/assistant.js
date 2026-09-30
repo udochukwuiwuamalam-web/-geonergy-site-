@@ -1295,6 +1295,7 @@
 
   function open() {
     build();
+    if (dropHint) dropHint();
     if (launcher) { launcher.classList.remove('is-intro'); launcher.classList.add('is-open'); }
     // Replay the sunrise on the panel's own mark each time it opens. This one
     // is user-initiated, so it cannot nag.
@@ -1333,17 +1334,53 @@
   // again, so the whole thing is best-effort.
   const SEEN_KEY = 'geonergy.ai.seen';
 
+  let dropHint = null;
+
   function introduce(btn) {
     let seen = false;
     try { seen = localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { seen = false; }
     if (seen) return;
-    if (global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* nothing to do */ }
+    const calm = !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches);
     // A beat after the page settles, so it is not lost in the page load.
     setTimeout(() => {
-      btn.classList.add('is-intro');
-      setTimeout(() => btn.classList.remove('is-intro'), 3200);
-    }, 900);
-    try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* nothing to do */ }
+      // The sunrise is decoration and goes when motion is unwelcome. The hint
+      // is information - somebody who cannot see the animation needs the words
+      // more, not less - so it stays, just without the movement.
+      if (!calm) {
+        btn.classList.add('is-intro');
+        setTimeout(() => btn.classList.remove('is-intro'), 3200);
+      }
+      hint(btn, calm);
+    }, calm ? 500 : 1500);
+  }
+
+  // One line, once, beside the button: the only thing that tells a first-time
+  // visitor on a phone what the mark is for, since there is no hover there to
+  // show the tooltip. It leaves on its own, on the first touch anywhere, on a
+  // scroll, or when the panel opens - whichever comes first. Tapping it opens
+  // the panel, because it sits inside the button and the click carries.
+  function hint(btn, calm) {
+    const bubble = el('span', 'ai-hint' + (calm ? ' is-calm' : ''), 'Ask me anything about solar');
+    bubble.setAttribute('aria-hidden', 'true');
+    btn.appendChild(bubble);
+    let gone = false;
+    const drop = () => {
+      if (gone) return;
+      gone = true;
+      dropHint = null;
+      bubble.classList.remove('show');
+      document.removeEventListener('pointerdown', drop, true);
+      document.removeEventListener('keydown', drop, true);
+      global.removeEventListener('scroll', drop);
+      setTimeout(() => { if (bubble.parentNode) bubble.remove(); }, 400);
+    };
+    dropHint = drop;
+    requestAnimationFrame(() => bubble.classList.add('show'));
+    setTimeout(drop, calm ? 10000 : 7000);
+    document.addEventListener('pointerdown', drop, true);
+    document.addEventListener('keydown', drop, true);
+    global.addEventListener('scroll', drop, { passive: true });
   }
 
   // Every page carries the same header, and .nav-right is the cluster that
