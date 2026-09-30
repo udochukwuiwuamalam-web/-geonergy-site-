@@ -49,20 +49,29 @@ electrical system is worse than no answer.
   WhatsApp.
 - **It can reach the internet, within limits.** A page with no backend cannot
   run a search engine - that needs a key - but it can read public APIs that
-  allow cross-origin requests and need no key. Wikipedia's REST API is the one
-  worth having: open licence, a named article to link, and nothing to sign up
-  for. It runs only after the local engine has come up empty, and two gates
-  keep it honest. `WEB_NEVER` blocks it from anything about somebody's own
+  allow cross-origin requests and need none. `WEB_SOURCES` is the registry:
+  Wikipedia's REST API for prose, DuckDuckGo's instant answers (which draw on
+  whatever site it judged authoritative, and name it), and Electrical
+  Engineering Stack Exchange for titles and links only - never a forum answer's
+  text, because that is somebody's opinion and this site will not hand one to a
+  customer as guidance. They run in parallel; prose comes from the first that
+  returns any, everything else contributes links. Any source that is blocked,
+  offline or rate-limited drops out without taking the others with it, which
+  matters because whether a given site allows browser requests is not something
+  this file can promise on anyone else's behalf. `searchLinks()` needs no API at
+  all and is the floor: if every source is unreachable the customer still gets
+  handed the search.
+  Two gates keep it honest. `WEB_NEVER` blocks anything about somebody's own
   wiring, settings, codes or safety - a general article does not know your
   battery class or your cable runs, and a confident generic answer about live
-  DC is how people get hurt; those go to WhatsApp instead. `WEB_TOPIC` keeps
-  it inside this site's subject, so an off-topic question gets an honest "I do
-  not know" rather than a solar article about Ghana. The answer is always
-  labelled as background rather than Geonergy's advice, and always carries the
-  article link. Set `WEB_LOOKUP = false` to switch the whole thing off. Where
-  the network is blocked - the artifact preview's CSP does block it - the
-  lookup fails quietly and the panel falls back to WhatsApp. `REFERENCES` is
-  still there for the primary sources worth linking by hand.
+  DC is how people get hurt; those go to WhatsApp instead. `WEB_TOPIC` keeps it
+  inside this site's subject, so an off-topic question gets an honest "I do not
+  know" rather than a solar article about Ghana. The answer is always labelled
+  as background rather than Geonergy's advice, and always carries its links.
+  Set `WEB_LOOKUP = false` to switch the whole thing off. Where the network is
+  blocked - the artifact preview's CSP does block it - every source fails
+  quietly and the panel falls back to WhatsApp. `REFERENCES` is still there for
+  the primary sources worth linking by hand.
 - **Comparisons.** "X vs Y" is routed before everything else, because "deye vs
   growatt" is full of brand words and no fault code. Four hand-written tables
   (`BATTERIES`, `INV_TYPES`, `CONTROLLERS`, `VOLTAGES`) compare like with like

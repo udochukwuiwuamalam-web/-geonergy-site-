@@ -36,9 +36,15 @@
   // wiring, settings or safety - see WEB_NEVER below. Set to false to switch
   // the whole thing off.
   const WEB_LOOKUP = true;
+  const WEB_TIMEOUT = 6000;
   const WIKI_SEARCH = 'https://en.wikipedia.org/w/rest.php/v1/search/page?limit=3&q=';
   const WIKI_PAGE = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
-  const WEB_TIMEOUT = 6000;
+  const DDG_API = 'https://api.duckduckgo.com/?no_html=1&skip_disambig=1&format=json&t=geonergy&q=';
+  // Electrical Engineering Stack Exchange. Titles and links only, never the
+  // answer text: a forum post is somebody's opinion, and this site will not
+  // put one in a customer's hands as though it were guidance.
+  const SE_API = 'https://api.stackexchange.com/2.3/search/advanced?order=desc&sort=relevance' +
+    '&pagesize=4&answers=1&site=electronics&q=';
 
   // The web lookup stays inside this site's subject. Without this gate,
   // "what is the capital of Ghana" gets searched as "capital ghana solar"
@@ -817,38 +823,136 @@
     return (solarish ? terms : terms.concat(['solar'])).join(' ');
   }
 
+  // Handful of entities the JSON APIs hand back in titles.
+  const unent = t => String(t || '')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&apos;/g, "'")
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+
+  // ---------------------------------------------------------------
+  // THE SOURCES
+  // Each one is tried on its own and any that fails - blocked, offline,
+  // rate-limited, or simply not answering - drops out without taking the
+  // others with it. That matters because a browser can only read a site
+  // that allows cross-origin requests, and which sites do that is not
+  // something this file can promise on anyone else's behalf.
+  //
+  // Prose is taken from the first source in this order that returns any.
+  // Everything else contributes links.
+  // ---------------------------------------------------------------
+  const WEB_SOURCES = [
+    {
+      id: 'wikipedia',
+      // Two calls: find the article, then read its summary.
+      run: q => fetchJSON(WIKI_SEARCH + encodeURIComponent(q)).then(res => {
+        const pages = (res && res.pages) || [];
+        if (!pages.length) return null;
+        return fetchJSON(WIKI_PAGE + encodeURIComponent(pages[0].key)).then(sum => {
+          const text = sum && sum.extract;
+          if (!text || text.length < 80) return null;
+          return {
+            prose: text,
+            title: 'Wikipedia: ' + (sum.title || pages[0].title),
+            url: (sum.content_urls && sum.content_urls.desktop && sum.content_urls.desktop.page) ||
+              'https://en.wikipedia.org/wiki/' + encodeURIComponent(pages[0].key),
+            links: pages.slice(1, 3).map(p => ({
+              title: 'Wikipedia: ' + p.title,
+              url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(p.key)
+            }))
+          };
+        });
+      })
+    },
+    {
+      id: 'duckduckgo',
+      // Its instant answers are drawn from whichever site DuckDuckGo judged
+      // authoritative, so this is the one that reaches past Wikipedia. It
+      // names that site, and so do we.
+      run: q => fetchJSON(DDG_API + encodeURIComponent(q)).then(j => {
+        if (!j) return null;
+        const text = j.AbstractText || '';
+        const links = (j.RelatedTopics || [])
+          .filter(t => t && t.FirstURL && t.Text)
+          .slice(0, 3)
+          .map(t => ({ title: unent(t.Text).split(' - ')[0], url: t.FirstURL }));
+        if (!text || text.length < 80) return links.length ? { links: links } : null;
+        return {
+          prose: text,
+          title: (j.AbstractSource || 'DuckDuckGo') + (j.Heading ? ': ' + j.Heading : ''),
+          url: j.AbstractURL || null,
+          links: links
+        };
+      })
+    },
+    {
+      id: 'stackexchange',
+      run: q => fetchJSON(SE_API + encodeURIComponent(q)).then(j => {
+        const items = (j && j.items) || [];
+        const links = items
+          .filter(it => it.is_answered && it.link && it.title)
+          .slice(0, 3)
+          .map(it => ({ title: unent(it.title), url: it.link, note: 'Electrical Engineering Stack Exchange' }));
+        return links.length ? { links: links } : null;
+      })
+    }
+  ];
+
+  // Always available, because they need no API at all: if every source above
+  // is unreachable, these still put the customer in front of the search.
+  function searchLinks(q) {
+    const e = encodeURIComponent(q);
+    return [
+      { title: 'Search Wikipedia for this', url: 'https://en.wikipedia.org/w/index.php?search=' + e },
+      { title: 'Search the web for this', url: 'https://duckduckgo.com/?q=' + e },
+      { title: 'Search Electrical Engineering Stack Exchange', url: 'https://electronics.stackexchange.com/search?q=' + e }
+    ];
+  }
+
   function webLookup(q, qw) {
     if (!WEB_LOOKUP || !global.fetch) return Promise.resolve(null);
     const lower = q.toLowerCase();
     if (WEB_NEVER.test(lower) || !WEB_TOPIC.test(lower)) return Promise.resolve(null);
     const query = webQuery(qw);
     if (!query) return Promise.resolve(null);
-    return fetchJSON(WIKI_SEARCH + encodeURIComponent(query)).then(res => {
-      const pages = (res && res.pages) || [];
-      if (!pages.length) return null;
-      const key = pages[0].key;
-      return fetchJSON(WIKI_PAGE + encodeURIComponent(key)).then(sum => {
-        const text = sum && (sum.extract || '');
-        if (!text || text.length < 80) return null;
-        const url = (sum.content_urls && sum.content_urls.desktop && sum.content_urls.desktop.page) ||
-          'https://en.wikipedia.org/wiki/' + encodeURIComponent(key);
-        const title = sum.title || pages[0].title || key;
-        const trimmed = text.length > 700 ? text.slice(0, 700).replace(/\s+\S*$/, '') + '…' : text;
-        const others = pages.slice(1, 3).map(p => ({
-          title: p.title,
-          url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(p.key)
-        }));
-        return {
-          html: '<p>Geonergy’s own guidance does not cover that, so I looked it up on the web. ' +
-            'This is general background, not Geonergy’s advice about your system:</p>' +
-            '<p>' + esc(trimmed) + '</p>' +
-            '<p>If it touches what you actually run, message us - the general article does not know your ' +
-            'battery class, your roof or your cable runs.</p>',
-          sources: [{ title: 'Wikipedia: ' + title, url: url }].concat(others),
-          ask: true,
-          chips: ['Build a quote', 'What size do I need?']
-        };
+
+    // All at once. One slow or dead source must not hold up the rest, and
+    // each already carries its own timeout.
+    return Promise.all(WEB_SOURCES.map(src =>
+      Promise.resolve().then(src.run.bind(null, query)).catch(() => null)
+    )).then(results => {
+      let prose = null;
+      const links = [];
+      results.forEach(r => {
+        if (!r) return;
+        if (!prose && r.prose) prose = r;
+        (r.links || []).forEach(l => {
+          if (links.length < 4 && !links.some(x => x.url === l.url)) links.push(l);
+        });
       });
+      if (!prose && !links.length) return null;
+
+      let h = '<p>Geonergy’s own guidance does not cover that, so I went and looked it up. ' +
+        'This is general background from the web, not Geonergy’s advice about your system:</p>';
+      if (prose) {
+        const text = prose.prose.length > 700
+          ? prose.prose.slice(0, 700).replace(/\s+\S*$/, '') + '…'
+          : prose.prose;
+        h += '<p>' + esc(text) + '</p>';
+      } else {
+        h += '<p>I could not get a plain answer out of it, but these look like the right places to read:</p>';
+      }
+      if (links.length) {
+        h += '<p><strong>Also worth reading</strong></p><ul>' +
+          links.map(l => '<li><a href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' +
+            esc(l.title) + '</a>' + (l.note ? ' <em>' + esc(l.note) + '</em>' : '') + '</li>').join('') +
+          '</ul>';
+      }
+      h += '<p>If it touches what you actually run, message us - a general article does not know your ' +
+        'battery class, your roof or your cable runs.</p>';
+
+      const sources = [];
+      if (prose) sources.push({ title: prose.title, url: prose.url || undefined });
+      sources.push(searchLinks(query)[1]);
+      return { html: h, sources: sources, ask: true, chips: ['Build a quote', 'What size do I need?'] };
     });
   }
 
@@ -907,9 +1011,10 @@
     const refs = refsFor(qw);
     let h = '<p>I do not have a reliable answer to that one, and guessing about somebody’s electrical system is not worth it.</p>' +
       '<p>Geonergy will answer it properly on WhatsApp - describe your setup and someone who installs these every week will reply.</p>';
-    if (refs.length) {
-      h += '<p>If you would rather read the primary source yourself:</p><ul>' +
-        refs.map(r => '<li><a href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer">' + esc(r.title) + '</a></li>').join('') +
+    const out = refs.concat(qw.length ? searchLinks(qw.join(' ')) : []);
+    if (out.length) {
+      h += '<p>If you would rather go and look yourself:</p><ul>' +
+        out.map(r => '<li><a href="' + esc(r.url) + '" target="_blank" rel="noopener noreferrer">' + esc(r.title) + '</a></li>').join('') +
         '</ul>';
     }
     return { html: h, ask: true, chips: ['Build a quote', 'What size do I need?'] };

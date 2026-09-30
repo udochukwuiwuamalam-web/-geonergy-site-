@@ -94,8 +94,15 @@
 }
 .ai-launch--float svg { width: 30px; }
 @media (max-width: 460px) {
-  .ai-launch--float { left: 16px; bottom: 92px; width: 50px; height: 50px; }
-  .ai-launch--float svg { width: 29px; }
+  /* Smaller on a phone: it floats over the page rather than beside it, and
+     at 52px it covered too much of what is underneath. */
+  .ai-launch--float { left: 14px; bottom: 90px; width: 44px; height: 44px; }
+  .ai-launch--float svg { width: 26px; }
+  .ai-launch--float .ai-dot { width: 8px; height: 8px; border-width: 1.5px; }
+}
+@media (max-width: 359px) {
+  .ai-launch--float { width: 40px; height: 40px; }
+  .ai-launch--float svg { width: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
