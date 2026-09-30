@@ -6,43 +6,109 @@
    pill: the dock already owns the bottom of the screen, and the header is
    where people look for a tool that belongs to the site. */
 
-/* The launcher lives in the site header, left of "Get in Touch". A circle
-   with a ring round it so it reads as a button rather than decoration, and
-   nothing but Geonergy's own sun-and-horizon mark inside it. */
+/* ---------------------------------------------------------------
+   LAUNCHER
+   A round button in the site header carrying Geonergy's own mark.
+
+   Two problems this shape solves. The header already shows that same sun
+   in the wordmark, so a hairline outline read as the logo printed twice
+   rather than as a control; a filled tint and a live dot make it a button.
+   And it carries no label by design, so motion does the introducing: the
+   sun comes up once on a first visit, and the mark answers the pointer.
+   --------------------------------------------------------------- */
 .ai-launch {
+  position: relative;
   flex: none; display: inline-flex; align-items: center; justify-content: center;
-  width: 38px; height: 38px; padding: 0; border-radius: 50%;
-  border: 1px solid rgba(11, 29, 58, 0.18);
-  background: #FFFFFF; color: var(--navy, #0B1D3A); cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  width: 40px; height: 40px; padding: 0; border-radius: 50%;
+  border: 1px solid rgba(11, 29, 58, 0.10);
+  background: rgba(11, 29, 58, 0.055);
+  color: var(--navy, #0B1D3A); cursor: pointer;
+  /* Before "Get in Touch" on a desktop header: a utility control reads
+     ahead of the primary action, not after it. */
+  order: -1;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+              transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
 }
-.ai-launch svg { width: 23px; height: auto; display: block; }
-.ai-launch:hover {
+.ai-launch svg { width: 24px; height: auto; display: block; overflow: visible; }
+.ai-launch:hover, .ai-launch.is-open {
   background: var(--navy, #0B1D3A); color: #FFFFFF;
-  border-color: var(--navy, #0B1D3A); transform: translateY(-1px);
+  border-color: var(--navy, #0B1D3A);
+  box-shadow: 0 6px 16px rgba(11, 29, 58, 0.22);
 }
-.ai-launch:focus-visible { outline: 2px solid #3DD68C; outline-offset: 2px; }
+.ai-launch:hover { transform: translateY(-1px); }
+.ai-launch:active { transform: scale(0.94); transition-duration: 0.09s; }
+.ai-launch:focus-visible { outline: 2px solid #3DD68C; outline-offset: 3px; }
 .ai-launch[hidden] { display: none; }
+
+/* Live dot. Not a badge to be cleared - a quiet "there is something here",
+   in the brand green, ringed so it holds on both the light and navy states. */
+.ai-dot {
+  position: absolute; top: 1px; right: 1px;
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #3DD68C; border: 1.5px solid #FFFFFF;
+  transition: border-color 0.2s ease;
+}
+.ai-launch:hover .ai-dot, .ai-launch.is-open .ai-dot { border-color: var(--navy, #0B1D3A); }
+
+/* ---- the mark's own motion ---- */
+.gm-rays, .gm-sun {
+  transform-box: view-box; transform-origin: 12px 10.3px;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ai-launch:hover .gm-rays { transform: rotate(7deg) scale(1.1); }
+.ai-launch:hover .gm-sun { transform: translateY(-0.5px); }
+
+@keyframes aiSunRise {
+  from { transform: translateY(4px); opacity: 0; }
+  60%  { opacity: 1; }
+  to   { transform: none; opacity: 1; }
+}
+@keyframes aiRayFan {
+  from { transform: rotate(-14deg) scale(0.45); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+/* Two pulses, then it stops for good. */
+@keyframes aiRing {
+  0%   { box-shadow: 0 0 0 0 rgba(61, 214, 140, 0.5); }
+  70%  { box-shadow: 0 0 0 11px rgba(61, 214, 140, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(61, 214, 140, 0); }
+}
+
+/* The horizon never animates. Drawing it left the button empty for a
+   quarter of a second, which reads as a glitch rather than a sunrise - and
+   the ground is exactly the thing that should already be there when the sun
+   comes up behind it. */
+.ai-launch.is-intro { animation: aiRing 1.7s ease-out 2; }
+.ai-launch.is-intro .gm-sun { animation: aiSunRise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both; }
+.ai-launch.is-intro .gm-rays { animation: aiRayFan 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.36s both; }
 
 /* Only for a page with no site header to sit in. */
 .ai-launch--float {
   position: fixed; right: 16px; bottom: 92px; z-index: 95;
-  width: 46px; height: 46px;
+  width: 50px; height: 50px; background: var(--navy, #0B1D3A); color: #fff;
+  border-color: var(--navy, #0B1D3A);
   box-shadow: 0 10px 30px rgba(11, 29, 58, 0.30), 0 2px 8px rgba(11, 29, 58, 0.18);
 }
-.ai-launch--float svg { width: 27px; height: auto; }
+.ai-launch--float svg { width: 29px; }
 
-@media (max-width: 420px) {
-  .ai-launch { width: 36px; height: 36px; }
-  .ai-launch svg { width: 22px; height: auto; }
+@media (max-width: 480px) {
+  /* On a phone the logo sits right beside this cluster, and two sun marks an
+     inch apart read as a mistake - so here it goes after the CTA instead. */
+  .ai-launch { order: 0; width: 38px; height: 38px; }
+  .ai-launch svg { width: 23px; }
 }
 @media (max-width: 359px) {
-  .ai-launch { width: 32px; height: 32px; }
-  .ai-launch svg { width: 20px; height: auto; }
+  .ai-launch { width: 34px; height: 34px; }
+  .ai-launch svg { width: 21px; }
+  .ai-dot { width: 8px; height: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ai-launch { transition: none; }
-  .ai-launch:hover { transform: none; }
+  .ai-launch, .gm-rays, .gm-sun { transition: none; }
+  .ai-launch:hover, .ai-launch:active { transform: none; }
+  .ai-launch:hover .gm-rays, .ai-launch:hover .gm-sun { transform: none; }
+  .ai-launch.is-intro,
+  .ai-launch.is-intro .gm-sun,
+  .ai-launch.is-intro .gm-rays { animation: none; }
 }
 
 /* ---- panel ---- */
@@ -250,3 +316,73 @@
 .ai-cmp-vals span { padding: 0 0.6rem; line-height: 1.45; }
 .ai-cmp-vals span + span { border-left: 1px solid rgba(11,29,58,0.09); }
 .ai-msg.ai .ai-cmp + p { margin-top: 0.6rem; }
+
+/* ---------------------------------------------------------------
+   PANEL MOTION
+   Nothing decorative. Each piece of movement answers a question the
+   customer would otherwise have to work out: what just opened, what is
+   new since I last looked, and is it still thinking.
+   --------------------------------------------------------------- */
+
+/* The panel's own mark replays the sunrise each time it opens. That one is
+   user-initiated, so it cannot nag. */
+.ai-head-mark.is-rising .gm-sun { animation: aiSunRise 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.06s both; }
+.ai-head-mark.is-rising .gm-rays { animation: aiRayFan 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both; }
+
+/* New messages rise into place, so a long answer arriving below the fold
+   still reads as something that just happened. */
+@keyframes aiMsgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+.ai-msg { animation: aiMsgIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Suggestions arrive just after the answer they belong to, one after the
+   other, so they read as offered rather than as part of the text. */
+@keyframes aiChipIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: none; }
+}
+.ai-chips .ai-chip { animation: aiChipIn 0.3s ease-out both; }
+.ai-chips .ai-chip:nth-child(1) { animation-delay: 0.10s; }
+.ai-chips .ai-chip:nth-child(2) { animation-delay: 0.17s; }
+.ai-chips .ai-chip:nth-child(3) { animation-delay: 0.24s; }
+.ai-chips .ai-chip:nth-child(4) { animation-delay: 0.31s; }
+.ai-chips .ai-chip:nth-child(5) { animation-delay: 0.38s; }
+.ai-chip { transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+.ai-chip:hover { border-color: rgba(11, 29, 58, 0.34); transform: translateY(-1px); }
+.ai-chip:active { transform: scale(0.97); }
+
+/* A comparison table is the one answer that arrives as a block rather than
+   as prose - its rows come in so the eye is led down them. */
+@keyframes aiRowIn { from { opacity: 0; } to { opacity: 1; } }
+.ai-cmp-row { animation: aiRowIn 0.3s ease-out both; }
+.ai-cmp-row:nth-child(2) { animation-delay: 0.04s; }
+.ai-cmp-row:nth-child(3) { animation-delay: 0.08s; }
+.ai-cmp-row:nth-child(4) { animation-delay: 0.12s; }
+.ai-cmp-row:nth-child(5) { animation-delay: 0.16s; }
+.ai-cmp-row:nth-child(6) { animation-delay: 0.20s; }
+.ai-cmp-row:nth-child(7) { animation-delay: 0.24s; }
+.ai-cmp-row:nth-child(8) { animation-delay: 0.28s; }
+
+/* The send button acknowledges the press; the quote's WhatsApp button is
+   the end of the journey, so it gets a little more. */
+.ai-send:active, .ai-mic:active, .ai-icon-btn:active { transform: scale(0.92); }
+.ai-send, .ai-mic, .ai-icon-btn { transition: background 0.15s ease, transform 0.1s ease; }
+.ai-cta { transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease; }
+.ai-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(61, 214, 140, 0.35); }
+.ai-cta:active { transform: scale(0.98); }
+
+/* Stepper feedback in the quote builder: the figure it changes should be
+   seen changing. */
+.ai-stepper button { transition: background 0.14s ease, transform 0.1s ease; }
+.ai-stepper button:active { transform: scale(0.88); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-msg, .ai-chips .ai-chip, .ai-cmp-row,
+  .ai-head-mark.is-rising .gm-sun,
+  .ai-head-mark.is-rising .gm-rays { animation: none; }
+  .ai-chip, .ai-send, .ai-mic, .ai-icon-btn, .ai-cta, .ai-stepper button { transition: none; }
+  .ai-chip:hover, .ai-chip:active, .ai-cta:hover, .ai-cta:active,
+  .ai-send:active, .ai-mic:active, .ai-icon-btn:active, .ai-stepper button:active { transform: none; }
+}

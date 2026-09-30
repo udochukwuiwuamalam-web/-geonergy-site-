@@ -183,12 +183,12 @@
   const MARK =
     '<svg viewBox="0 0 24 13" fill="none" stroke="currentColor" stroke-linecap="round" ' +
     'stroke-linejoin="round" aria-hidden="true" focusable="false">' +
-    '<path stroke-width="0.7" d="M19.29 9.02L21.85 8.56M18.65 7.06L20.99 5.92' +
+    '<path class="gm-rays" stroke-width="0.7" d="M19.29 9.02L21.85 8.56M18.65 7.06L20.99 5.92' +
     'M17.5 5.35L19.43 3.61M15.92 4.02L17.3 1.82M14.04 3.19L14.76.69M12 2.9L12 .3' +
     'M9.96 3.19L9.24.69M8.08 4.02L6.7 1.82M6.5 5.35L4.57 3.61M5.35 7.06L3.01 5.92' +
     'M4.71 9.02L2.15 8.56"/>' +
-    '<path stroke-width="1.8" d="M6.4 10.3a5.6 5.6 0 0 1 11.2 0"/>' +
-    '<path stroke-width="1.15" d="M.7 12.4c3.6-.2 6.5-2.3 11.3-2.3s7.7 2.1 11.3 2.3"/>' +
+    '<path class="gm-sun" stroke-width="1.8" d="M6.4 10.3a5.6 5.6 0 0 1 11.2 0"/>' +
+    '<path class="gm-line" stroke-width="1.15" d="M.7 12.4c3.6-.2 6.5-2.3 11.3-2.3s7.7 2.1 11.3 2.3"/>' +
     '</svg>';
 
   const ICON = {
@@ -1295,6 +1295,11 @@
 
   function open() {
     build();
+    if (launcher) { launcher.classList.remove('is-intro'); launcher.classList.add('is-open'); }
+    // Replay the sunrise on the panel's own mark each time it opens. This one
+    // is user-initiated, so it cannot nag.
+    const mark = $('.ai-head-mark', panel);
+    if (mark) { mark.classList.remove('is-rising'); void mark.offsetWidth; mark.classList.add('is-rising'); }
     panel.hidden = false;
     // Next frame, so the transform has a start state to animate from.
     requestAnimationFrame(() => {
@@ -1307,6 +1312,7 @@
 
   function close() {
     if (!built) return;
+    if (launcher) launcher.classList.remove('is-open');
     scrim.classList.remove('open');
     panel.classList.remove('open');
     document.removeEventListener('keydown', onKey);
@@ -1318,6 +1324,28 @@
 
   function onKey(e) { if (e.key === 'Escape') close(); }
 
+  // The button carries no label, so the first time somebody lands on the site
+  // it introduces itself: the sun comes up behind the horizon and the ring
+  // pulses twice. Once per browser, not once per page - four pages of sunrise
+  // would be a nuisance, and a control that keeps waving at you reads as an
+  // advert rather than a tool. Storage can throw in a private window or be
+  // cleared, and if it does the worst case is somebody sees the sunrise
+  // again, so the whole thing is best-effort.
+  const SEEN_KEY = 'geonergy.ai.seen';
+
+  function introduce(btn) {
+    let seen = false;
+    try { seen = localStorage.getItem(SEEN_KEY) === '1'; } catch (e) { seen = false; }
+    if (seen) return;
+    if (global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // A beat after the page settles, so it is not lost in the page load.
+    setTimeout(() => {
+      btn.classList.add('is-intro');
+      setTimeout(() => btn.classList.remove('is-intro'), 3200);
+    }, 900);
+    try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) { /* nothing to do */ }
+  }
+
   // Every page carries the same header, and .nav-right is the cluster that
   // never collapses into the phone menu - so the assistant is reachable at
   // any width without a second floating thing fighting the dock for the
@@ -1325,12 +1353,13 @@
   // rather than losing the button entirely.
   function mount() {
     if (document.querySelector('.ai-launch')) return;
-    launcher = el('button', 'ai-launch', MARK);
+    launcher = el('button', 'ai-launch', MARK + '<span class="ai-dot" aria-hidden="true"></span>');
     launcher.type = 'button';
     launcher.setAttribute('aria-label', 'Ask Geonergy AI');
     launcher.setAttribute('title', 'Ask Geonergy AI');
     launcher.setAttribute('aria-haspopup', 'dialog');
     launcher.addEventListener('click', open);
+    introduce(launcher);
     // After "Get in Touch", before the phone menu button. Putting it first
     // in that cluster sat it right beside the wordmark at phone width, and
     // two sun marks an inch apart read as a mistake.
