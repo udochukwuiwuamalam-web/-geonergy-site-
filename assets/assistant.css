@@ -81,24 +81,23 @@
 .ai-launch.is-intro .gm-sun { animation: aiSunRise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both; }
 .ai-launch.is-intro .gm-rays { animation: aiRayFan 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.36s both; }
 
-/* Only for a page with no site header to sit in. */
+/* Bottom-left corner. The dock is centred and its left edge sits at about
+   half the leftover width, so above 460px there is clear room in the corner;
+   below that the dock reaches across and the button lifts above it instead,
+   staying on the left. Measured, not guessed: at 360px the dock starts 59px
+   in, which a 52px button in the corner would run straight into. */
 .ai-launch--float {
-  position: fixed; right: 16px; bottom: 92px; z-index: 95;
-  width: 50px; height: 50px; background: var(--navy, #0B1D3A); color: #fff;
+  position: fixed; left: 20px; bottom: 20px; right: auto; z-index: 95;
+  width: 52px; height: 52px; background: var(--navy, #0B1D3A); color: #fff;
   border-color: var(--navy, #0B1D3A);
-  box-shadow: 0 10px 30px rgba(11, 29, 58, 0.30), 0 2px 8px rgba(11, 29, 58, 0.18);
+  box-shadow: 0 12px 32px rgba(11, 29, 58, 0.32), 0 2px 8px rgba(11, 29, 58, 0.20);
 }
-.ai-launch--float svg { width: 29px; }
+.ai-launch--float svg { width: 30px; }
+@media (max-width: 460px) {
+  .ai-launch--float { left: 16px; bottom: 92px; width: 50px; height: 50px; }
+  .ai-launch--float svg { width: 29px; }
+}
 
-@media (max-width: 480px) {
-  .ai-launch { width: 38px; height: 38px; }
-  .ai-launch svg { width: 23px; }
-}
-@media (max-width: 359px) {
-  .ai-launch { width: 34px; height: 34px; }
-  .ai-launch svg { width: 21px; }
-  .ai-dot { width: 8px; height: 8px; }
-}
 @media (prefers-reduced-motion: reduce) {
   .ai-launch, .gm-rays, .gm-sun { transition: none; }
   .ai-launch:hover, .ai-launch:active { transform: none; }
@@ -384,53 +383,90 @@
   .ai-send:active, .ai-mic:active, .ai-icon-btn:active, .ai-stepper button:active { transform: none; }
 }
 
-/* ---- first-visit hint ----
-   Anchored to the button rather than the page, so it points at the thing it
-   is talking about at any width. It is a child of the button, which means a
-   tap on it opens the panel without any extra wiring. */
-.ai-hint {
-  position: absolute; top: calc(100% + 11px); right: -3px; z-index: 96;
-  display: block; width: max-content; max-width: min(232px, calc(100vw - 30px));
-  padding: 0.58rem 0.75rem; border-radius: 12px;
-  /* Frosted glass, like the floating dock. Tinted navy rather than white
-     because it has to carry light text over both the white header and the
-     navy hero; at this alpha the text clears 5.9:1 even in the worst case,
-     over plain white, and where backdrop-filter is unsupported it simply
-     falls back to the same tint without the blur. */
-  background: rgba(11, 29, 58, 0.72); color: #EDF1F6;
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  backdrop-filter: blur(16px) saturate(150%);
-  font-family: var(--font-body, system-ui), sans-serif;
-  font-size: 0.775rem; font-weight: 500; line-height: 1.4;
-  text-align: left; letter-spacing: -0.005em; white-space: normal;
-  /* It hangs below the header and lands on the navy hero on most pages, so a
-     navy bubble would dissolve into it. A hairline white ring keeps the edge
-     crisp there and is simply invisible against the white header. */
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.20),
-              0 0 0 1px rgba(255, 255, 255, 0.55),
-              0 12px 30px rgba(11, 29, 58, 0.28), 0 2px 6px rgba(11, 29, 58, 0.14);
-  opacity: 0; transform: translateY(-6px) scale(0.96); transform-origin: top right;
-  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-/* The arrow is a rotated square, so only its top-left edges show above the
-   bubble - an unblurred shadow offset that way paints the ring on exactly
-   those two edges and nowhere else. */
-/* A clipped triangle sitting flush on the bubble's top edge, not a rotated
-   square overlapping it: two translucent layers stacked where they overlap
-   made the arrow read as a dark notch. It carries its own blur, because a
-   backdrop filter applies only to the element that declares it and this
-   pseudo sits outside the bubble's own box. */
-.ai-hint::before {
-  content: ''; position: absolute; top: -7px; right: 15px;
-  width: 15px; height: 7px; background: inherit;
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-clip-path: polygon(50% 0, 100% 100%, 0 100%);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
-}
-.ai-hint.show { opacity: 1; transform: none; }
-.ai-hint.is-calm { transition: none; opacity: 1; transform: none; }
+/* ---- first-visit hint: Liquid Glass ----
+   Apple's material, translated to what a browser can actually do. Four
+   properties carry it and the rest is restraint:
 
+     blur        - content behind is thrown out of focus
+     saturate    - it picks colour up off whatever it is sitting over, which
+                   is what separates it from flat frosted glass
+     specular    - a bright hairline along the top edge and a rim around it,
+                   so the material catches light and has an edge
+     sheen       - one slow highlight sweep as it arrives, then never again
+
+   Tinted navy rather than clear: it has to carry light text over both the
+   white header and the navy hero, and clear glass would drop the contrast
+   under 3.5:1 over white. At this alpha the worst case measures above 5:1.
+   It hangs above the button and points down at it. */
+.ai-hint {
+  position: absolute; bottom: calc(100% + 13px); left: -2px;
+  top: auto; right: auto; z-index: 96;
+  display: block; width: max-content; max-width: min(236px, calc(100vw - 42px));
+  padding: 0.62rem 0.95rem; border-radius: 999px;
+  background: rgba(11, 29, 58, 0.70);
+  -webkit-backdrop-filter: blur(22px) saturate(185%) brightness(1.04);
+  backdrop-filter: blur(22px) saturate(185%) brightness(1.04);
+  color: #F2F6FB;
+  font-family: var(--font-body, system-ui), sans-serif;
+  font-size: 0.78rem; font-weight: 500; line-height: 1.4;
+  text-align: left; letter-spacing: -0.005em; white-space: normal;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 22px rgba(255, 255, 255, 0.07),
+    0 0 0 1px rgba(255, 255, 255, 0.34),
+    0 16px 38px rgba(11, 29, 58, 0.34),
+    0 3px 10px rgba(11, 29, 58, 0.20);
+  opacity: 0; transform: translateY(8px) scale(0.94); transform-origin: bottom left;
+  transition: opacity 0.34s ease, transform 0.44s cubic-bezier(0.22, 1.1, 0.36, 1);
+}
+
+/* The pointer: a clipped triangle flush under the capsule, not a rotated
+   square overlapping it - two translucent layers stacked where they met and
+   read as a dark notch. It carries its own blur, because a backdrop filter
+   applies only to the element that declares it. */
+.ai-hint::before {
+  content: ''; position: absolute; bottom: -7px; left: 17px;
+  top: auto; right: auto; width: 15px; height: 7px;
+  background: inherit;
+  -webkit-backdrop-filter: blur(22px) saturate(185%) brightness(1.04);
+  backdrop-filter: blur(22px) saturate(185%) brightness(1.04);
+  -webkit-clip-path: polygon(50% 100%, 0 0, 100% 0);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+}
+
+/* The sheen. Clipped to its own capsule rather than with overflow, which
+   would take the pointer with it. */
+.ai-hint::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  pointer-events: none; opacity: 0;
+  background: linear-gradient(105deg,
+    rgba(255, 255, 255, 0) 32%,
+    rgba(255, 255, 255, 0.26) 47%,
+    rgba(255, 255, 255, 0) 62%);
+  -webkit-clip-path: inset(0 round 999px);
+  clip-path: inset(0 round 999px);
+}
+@keyframes aiSheen {
+  from { transform: translateX(-115%); opacity: 1; }
+  to   { transform: translateX(115%); opacity: 1; }
+}
+
+.ai-hint.show { opacity: 1; transform: none; }
+.ai-hint.show::after { animation: aiSheen 1.45s cubic-bezier(0.4, 0, 0.2, 1) 0.42s both; }
+
+/* Liquid Glass reacts to the pointer. */
+.ai-hint:hover { transform: translateY(-1px); }
+.ai-launch:active .ai-hint { transform: scale(0.98); }
+
+.ai-hint.is-calm { transition: none; opacity: 1; transform: none; }
+.ai-hint.is-calm::after { animation: none; }
+
+@media (max-width: 460px) {
+  .ai-hint { max-width: min(220px, calc(100vw - 46px)); }
+}
 @media (prefers-reduced-motion: reduce) {
   .ai-hint { transition: none; opacity: 1; transform: none; }
+  .ai-hint::after { animation: none; }
+  .ai-hint:hover, .ai-launch:active .ai-hint { transform: none; }
 }

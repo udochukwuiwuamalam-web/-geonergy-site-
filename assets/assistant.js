@@ -1397,12 +1397,11 @@
     launcher.setAttribute('aria-haspopup', 'dialog');
     launcher.addEventListener('click', open);
     introduce(launcher);
-    // After "Get in Touch", before the phone menu button. Putting it first
-    // in that cluster sat it right beside the wordmark at phone width, and
-    // two sun marks an inch apart read as a mistake.
-    const nav = document.querySelector('.nav-right');
-    if (nav) nav.insertBefore(launcher, nav.querySelector('.nav-toggle'));
-    else { launcher.classList.add('ai-launch--float'); document.body.appendChild(launcher); }
+    // Floats in the bottom-left corner, clear of the dock in the middle.
+    // The header cluster is where it lived before; down here it is reachable
+    // by thumb on a phone and it stops competing with "Get in Touch".
+    launcher.classList.add('ai-launch--float');
+    document.body.appendChild(launcher);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount);
