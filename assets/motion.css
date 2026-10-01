@@ -180,3 +180,76 @@
      simply does not move. */
   .flow .f-flow { opacity: 1; stroke-dasharray: 0; }
 }
+
+/* ---------------------------------------------------------------
+   RE-RENDER ENTRANCES
+   Store, Watts and Inverter all replace a block of the page when you
+   change something: a filter, a model, a panel count. The motion here
+   exists to answer "what just changed", which is the one question an
+   instant swap leaves you to work out for yourself.
+
+   Driven by a data attribute rather than by each page's own code, so
+   the pages carry markup and nothing else - see assets/motion.js.
+   --------------------------------------------------------------- */
+[data-motion-enter].m-in > * {
+  animation: mRiseSmall var(--m-normal) var(--m-smooth) both;
+}
+[data-motion-enter].m-in > *:nth-child(1) { animation-delay: 0.00s; }
+[data-motion-enter].m-in > *:nth-child(2) { animation-delay: 0.04s; }
+[data-motion-enter].m-in > *:nth-child(3) { animation-delay: 0.08s; }
+[data-motion-enter].m-in > *:nth-child(4) { animation-delay: 0.12s; }
+[data-motion-enter].m-in > *:nth-child(5) { animation-delay: 0.16s; }
+[data-motion-enter].m-in > *:nth-child(6) { animation-delay: 0.20s; }
+[data-motion-enter].m-in > *:nth-child(7) { animation-delay: 0.24s; }
+[data-motion-enter].m-in > *:nth-child(n+8) { animation-delay: 0.28s; }
+
+/* A chart is one picture, not a list - it fades as a whole rather than
+   dealing its own bars out one at a time. */
+[data-motion-enter="fade"].m-in {
+  animation: mFade var(--m-normal) var(--m-smooth) both;
+}
+[data-motion-enter="fade"].m-in > * { animation: none; }
+@keyframes mFade {
+  from { opacity: 0.25; }
+  to   { opacity: 1; }
+}
+
+/* ---------------------------------------------------------------
+   PAGE HEADERS
+   The same entrance the home page hero uses, so moving between pages
+   feels like one site rather than four.
+   --------------------------------------------------------------- */
+.page-enter > * { animation: mRise var(--m-slow) var(--m-smooth) both; }
+.page-enter > *:nth-child(1) { animation-delay: 0.05s; }
+.page-enter > *:nth-child(2) { animation-delay: 0.14s; }
+.page-enter > *:nth-child(3) { animation-delay: 0.22s; }
+.page-enter > *:nth-child(n+4) { animation-delay: 0.30s; }
+
+/* ---------------------------------------------------------------
+   THE STORE'S DETAIL SHEET
+   It is a dialog, so it arrives over the page: it should look like it
+   came from somewhere rather than simply appearing.
+   --------------------------------------------------------------- */
+dialog.sheet[open] { animation: mSheet var(--m-normal) var(--m-smooth) both; }
+@keyframes mSheet {
+  from { opacity: 0; transform: translateY(var(--m-lg)) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+dialog.sheet[open]::backdrop { animation: mBackdrop var(--m-normal) ease both; }
+@keyframes mBackdrop { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------------------------------------------------------------
+   THE INVERTER PAGE'S COLLAPSIBLE TABLES
+   Height is not animated on purpose - it forces a reflow of a long
+   table on a phone. The rows fade instead, which reads the same.
+   --------------------------------------------------------------- */
+.ec-collapse-body:not(.collapsed) { animation: mFade var(--m-normal) var(--m-smooth) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion-enter].m-in > *,
+  [data-motion-enter="fade"].m-in,
+  .page-enter > *,
+  dialog.sheet[open],
+  dialog.sheet[open]::backdrop,
+  .ec-collapse-body:not(.collapsed) { animation: none !important; }
+}

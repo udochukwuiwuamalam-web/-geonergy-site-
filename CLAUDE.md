@@ -93,8 +93,8 @@ electrical system is worse than no answer.
 
 ## Motion
 
-`assets/motion.css` and `assets/motion.js` are the motion layer. The home page
-uses all of it; the other pages have not been wired up yet.
+`assets/motion.css` and `assets/motion.js` are the motion layer, and all four
+pages use it.
 
 - **What motion is for here.** It guides attention, shows state, or keeps a
   thing continuous between two places. Anything that does none of those is
@@ -121,6 +121,25 @@ uses all of it; the other pages have not been wired up yet.
   `reveal-stagger`, alongside the plain `reveal` the pages already had. They
   use their own observer with the same contract: add `visible` once, never take
   it away.
+- **Store, Watts and Inverter are driven by markup, not by their own code.**
+  Each of those pages replaces a block when you change a filter, a model or a
+  panel count, and an instant swap leaves you to work out what changed. Put
+  `data-motion-enter` on a container and `motion.js` watches it with a
+  MutationObserver, replaying a short staggered entrance whenever its children
+  are replaced - the page's render function is untouched and knows nothing
+  about it. `data-motion-enter="fade"` fades the container as one piece
+  instead, which is what a chart wants. Children are visible by default and
+  only the entrance adds the animation, so a container whose script never runs
+  still shows its contents.
+- **`data-m-count`** on an element makes its number count to each new value
+  (`data-m-count="int"` for a whole number). The calculator's figures are
+  written from `state`, never read back from the DOM, so the intermediate
+  values during a count cannot reach any calculation - check that again before
+  putting it on a figure some other code reads. Counting is skipped entirely
+  under `prefers-reduced-motion`.
+- Collapsible tables on the Inverter page fade rather than animating height:
+  height forces a reflow of a long table, which is exactly what a cheap phone
+  is worst at.
 
 ## Weather data
 

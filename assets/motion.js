@@ -54,6 +54,69 @@
     obs.observe(el);
   }
 
+  // ---------------------------------------------------------------
+  // RE-RENDER ENTRANCES
+  // A container marked data-motion-enter replays a short entrance each
+  // time its contents are replaced. Watching the DOM rather than calling
+  // into each page's render function keeps every page's own logic exactly
+  // as it was - they gained an attribute, not a dependency.
+  // ---------------------------------------------------------------
+  function enterOn(el) {
+    let queued = false;
+    const replay = () => {
+      queued = false;
+      el.classList.remove('m-in');
+      // Reading offsetWidth forces the style change to land, so removing
+      // and re-adding the class actually restarts the animation.
+      void el.offsetWidth;
+      el.classList.add('m-in');
+    };
+    const obs = new global.MutationObserver(() => {
+      // A render can touch the DOM several times; coalesce into one replay.
+      if (queued) return;
+      queued = true;
+      global.requestAnimationFrame(replay);
+    });
+    obs.observe(el, { childList: true });
+    if (el.children.length) el.classList.add('m-in');
+  }
+
+  // ---------------------------------------------------------------
+  // COUNTING NUMBERS
+  // The production calculator's figures change when the weather, the
+  // panel count or the town changes. Counting to the new number shows
+  // that something was recalculated; a figure that silently swaps is
+  // easy to miss, especially the small ones.
+  // ---------------------------------------------------------------
+  const busy = typeof WeakSet === 'function' ? new WeakSet() : null;
+
+  function countOn(el) {
+    const dp = el.getAttribute('data-m-count') === 'int' ? 0 : 1;
+    let last = parseFloat(el.textContent);
+    if (!isFinite(last)) last = 0;
+
+    const obs = new global.MutationObserver(() => {
+      if (busy && busy.has(el)) return;
+      const to = parseFloat(el.textContent);
+      // Already where we are going - including the write that ends a run,
+      // which is what stops this feeding itself.
+      if (!isFinite(to) || to === last) return;
+      const from = last;
+      last = to;
+      if (busy) busy.add(el);
+      const started = (global.performance || Date).now();
+      const span = 650;
+      (function tick() {
+        const t = Math.min(((global.performance || Date).now() - started) / span, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = (from + (to - from) * eased).toFixed(dp);
+        if (t < 1) global.requestAnimationFrame(tick);
+        else if (busy) global.setTimeout(() => busy.delete(el), 0);
+      })();
+    });
+    obs.observe(el, { childList: true, characterData: true, subtree: true });
+  }
+
   function start() {
     // The diagram. It gets its loop only on a device that can afford one,
     // and only while it is in view; otherwise it draws itself once, still.
@@ -63,6 +126,14 @@
         () => fig.classList.add('is-live'),
         () => fig.classList.remove('is-live'));
     });
+
+    // Containers that replay an entrance when their contents change.
+    if (global.MutationObserver) {
+      Array.prototype.forEach.call(doc.querySelectorAll('[data-motion-enter]'), enterOn);
+      // Counting is movement for its own sake when somebody has asked for
+      // less of it, so the figure just changes.
+      if (!calm()) Array.prototype.forEach.call(doc.querySelectorAll('[data-m-count]'), countOn);
+    }
 
     // The reveal variants this file adds. The page's own observer only knows
     // about .reveal, so these get their own, with the same contract: add

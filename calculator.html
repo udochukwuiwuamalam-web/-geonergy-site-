@@ -102,6 +102,7 @@
 </style>
 <link rel="stylesheet" href="assets/dock.css">
 <link rel="stylesheet" href="assets/assistant.css">
+<link rel="stylesheet" href="assets/motion.css">
 <script src="assets/weather-api.js" defer></script>
 </head>
 <body>
@@ -177,22 +178,22 @@
 
         <figure class="hero-figure">
           <span class="hero-figure-label">Making right now</span>
-          <div class="hero-figure-value"><span id="pcNow">0.0</span><span class="hero-figure-unit">kW</span></div>
+          <div class="hero-figure-value"><span id="pcNow" data-m-count>0.0</span><span class="hero-figure-unit">kW</span></div>
           <p class="hero-figure-sub" id="pcNowSub">Checking the sky&hellip;</p>
         </figure>
 
         <div class="stat-row">
           <div class="stat">
             <span class="stat-label">Your panels</span>
-            <span class="stat-value"><span id="pcCapacity">6.0</span><span class="stat-unit">kW</span></span>
+            <span class="stat-value"><span id="pcCapacity" data-m-count>6.0</span><span class="stat-unit">kW</span></span>
           </div>
           <div class="stat">
             <span class="stat-label">Today</span>
-            <span class="stat-value"><span id="pcToday">0</span><span class="stat-unit">units</span></span>
+            <span class="stat-value"><span id="pcToday" data-m-count="int">0</span><span class="stat-unit">units</span></span>
           </div>
           <div class="stat">
             <span class="stat-label">Tomorrow</span>
-            <span class="stat-value"><span id="pcTomorrow">0</span><span class="stat-unit">units</span></span>
+            <span class="stat-value"><span id="pcTomorrow" data-m-count="int">0</span><span class="stat-unit">units</span></span>
           </div>
         </div>
 
@@ -202,7 +203,7 @@
             <span class="chart-unit">Kilowatts</span>
           </figcaption>
           <div class="chart-wrap">
-            <svg class="prod-chart" id="pcChart" viewBox="0 0 720 240" preserveAspectRatio="xMidYMid meet"
+            <svg class="prod-chart" id="pcChart" data-motion-enter="fade" viewBox="0 0 720 240" preserveAspectRatio="xMidYMid meet"
                  role="img" aria-labelledby="pcChartDesc">
               <desc id="pcChartDesc">Estimated solar power through today.</desc>
             </svg>
@@ -592,6 +593,7 @@
   <a class="dock-item" href="inverter.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/></svg><span class="dock-label">Inverter</span></a>
 </nav>
 
+<script src="assets/motion.js" defer></script>
 <script src="assets/assistant.js" defer></script>
 </body>
 </html>

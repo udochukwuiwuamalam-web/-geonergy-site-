@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="assets/geonergy.css">
 <link rel="stylesheet" href="assets/dock.css">
 <link rel="stylesheet" href="assets/assistant.css">
+<link rel="stylesheet" href="assets/motion.css">
 <style>
   .inv-main { background: var(--navy); color: var(--text-on-navy); min-height: 80vh; padding: var(--space-6) 0 var(--space-7); }
   .inv-head { max-width: 720px; margin-bottom: var(--space-4); }
@@ -105,11 +106,11 @@
     </div>
 
     <div class="ec-panel">
-      <div class="ec-model-tabs" id="ec-model-tabs"></div>
+      <div class="ec-model-tabs" id="ec-model-tabs" data-motion-enter></div>
       <input type="text" class="ec-search" id="ec-search-input"
              placeholder="Search a code or keyword, like F13 or battery…"
              aria-label="Search fault codes, specifications and settings">
-      <div id="ec-model-view"></div>
+      <div id="ec-model-view" data-motion-enter></div>
     </div>
 
     <p class="inv-note">
@@ -180,6 +181,7 @@
   })();
 </script>
 
+<script src="assets/motion.js" defer></script>
 <script src="assets/assistant.js" defer></script>
 </body>
 </html>
