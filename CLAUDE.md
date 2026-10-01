@@ -91,6 +91,37 @@ electrical system is worse than no answer.
   question where all of it lands, which is what stops an unrelated question
   being answered with whatever came closest.
 
+## Motion
+
+`assets/motion.css` and `assets/motion.js` are the motion layer. The home page
+uses all of it; the other pages have not been wired up yet.
+
+- **What motion is for here.** It guides attention, shows state, or keeps a
+  thing continuous between two places. Anything that does none of those is
+  decoration and comes out. Only `transform` and `opacity` are animated, so the
+  compositor can do the work without repainting; stagger is capped at 0.08s a
+  step, because past about 0.1s a list feels like waiting rather than sequence.
+- **Nothing is required to read the page.** Every animation starts from its
+  finished state until a class is added, so a blocked or failed script leaves
+  the site complete and still. The hero's entrance is pure CSS for the same
+  reason - it must never be possible for a script to leave the headline hidden.
+- **Ambient motion is a privilege, not a default.** The slow drift on the hero
+  photograph and the looping energy diagram only run once `motion.js` has
+  decided the device can afford them: not on 2GB of RAM, not on four cores
+  where the memory API is missing, not with data saver on, and not on 2G.
+  Everything else gets the still version, which says the same thing. The
+  diagram also stops whenever it scrolls out of view - a loop ticking away in a
+  section nobody is looking at is pure battery cost.
+- **The energy diagram** (`.flow` in `index.html`) is an inline SVG: sun to
+  panels, panels to inverter, inverter to the house, surplus to the battery,
+  grid connected but idle above. The movement is the content - a still version
+  would be a diagram of parts rather than a picture of power moving - so under
+  `prefers-reduced-motion` the current stays drawn but stops travelling.
+- Reveal variants are `reveal-left`, `reveal-right`, `reveal-scale` and
+  `reveal-stagger`, alongside the plain `reveal` the pages already had. They
+  use their own observer with the same contract: add `visible` once, never take
+  it away.
+
 ## Weather data
 
 The production calculator on `calculator.html` reads Open-Meteo on Geonergy's

@@ -1,0 +1,182 @@
+/* Geonergy motion layer.
+   Shared by every page; the home page uses all of it.
+
+   The rules it follows, borrowed from the house motion system and from what
+   this site is for:
+
+   - Motion must guide attention, show state, or keep a thing continuous
+     between two places. Decoration that does none of those is removed.
+   - Only transform and opacity, which the compositor can do without
+     repainting. No width, height, top or left.
+   - Stagger stays at or under 0.1s. Past that a list feels slow rather than
+     deliberate.
+   - Nothing loops without a reason, and nothing loops off-screen.
+   - It all stops under prefers-reduced-motion, and the ambient pieces also
+     stop on a weak phone - see assets/motion.js. Nothing here is required to
+     see the page: every animation starts from the finished state unless a
+     class is added, so a failed script leaves the site readable.
+*/
+
+:root {
+  --m-fast: 0.18s;
+  --m-normal: 0.35s;
+  --m-slow: 0.6s;
+  --m-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --m-sharp: cubic-bezier(0.4, 0, 0.2, 1);
+  --m-sm: 8px;
+  --m-md: 16px;
+  --m-lg: 24px;
+}
+
+/* ---------------------------------------------------------------
+   HERO ENTRANCE
+   Pure CSS, so it does not wait on a script and cannot leave the
+   headline hidden if one fails. Reads top to bottom in the order
+   somebody actually reads it.
+   --------------------------------------------------------------- */
+@keyframes mRise {
+  from { opacity: 0; transform: translateY(var(--m-lg)); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes mRiseSmall {
+  from { opacity: 0; transform: translateY(var(--m-sm)); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes mSettle {
+  from { opacity: 0; transform: scale(1.06); }
+  to   { opacity: 1; transform: none; }
+}
+
+.hero-bg img { animation: mSettle 1.2s var(--m-smooth) both; }
+.hero-badge  { animation: mRiseSmall var(--m-slow) var(--m-smooth) 0.15s both; }
+.hero h1     { animation: mRise var(--m-slow) var(--m-smooth) 0.26s both; }
+.hero-sub    { animation: mRise var(--m-slow) var(--m-smooth) 0.36s both; }
+.hero-ctas   { animation: mRise var(--m-slow) var(--m-smooth) 0.46s both; }
+.hero-wordmark { animation: mRiseSmall 1s var(--m-smooth) 0.6s both; }
+
+/* Ambient drift on the photograph. Off by default: it only runs once
+   assets/motion.js has decided the device can afford it. */
+@keyframes mDrift {
+  from { transform: scale(1.015) translate3d(0, 0, 0); }
+  to   { transform: scale(1.075) translate3d(-1.2%, -1%, 0); }
+}
+.motion-ok .hero-bg img {
+  animation: mSettle 1.2s var(--m-smooth) both,
+             mDrift 28s ease-in-out 1.2s infinite alternate;
+}
+
+/* ---------------------------------------------------------------
+   SCROLL REVEALS
+   The page already had a plain fade-up. These are the same idea with
+   a direction, for sections where the direction means something.
+   --------------------------------------------------------------- */
+.reveal-left, .reveal-right, .reveal-scale {
+  opacity: 0;
+  transition: opacity var(--m-slow) var(--m-smooth),
+              transform var(--m-slow) var(--m-smooth);
+}
+.reveal-left  { transform: translateX(calc(var(--m-lg) * -1)); }
+.reveal-right { transform: translateX(var(--m-lg)); }
+.reveal-scale { transform: scale(0.96); }
+.reveal-left.visible, .reveal-right.visible, .reveal-scale.visible {
+  opacity: 1; transform: none;
+}
+
+/* Children of a staggered group come in one after another. Capped at
+   0.08s a step and six steps, because a seventh starts to feel like
+   waiting rather than sequence. */
+.reveal-stagger.visible > * { animation: mRiseSmall var(--m-normal) var(--m-smooth) both; }
+.reveal-stagger.visible > *:nth-child(1) { animation-delay: 0.00s; }
+.reveal-stagger.visible > *:nth-child(2) { animation-delay: 0.08s; }
+.reveal-stagger.visible > *:nth-child(3) { animation-delay: 0.16s; }
+.reveal-stagger.visible > *:nth-child(4) { animation-delay: 0.24s; }
+.reveal-stagger.visible > *:nth-child(5) { animation-delay: 0.32s; }
+.reveal-stagger.visible > *:nth-child(n+6) { animation-delay: 0.40s; }
+.reveal-stagger:not(.visible) > * { opacity: 0; }
+
+/* ---------------------------------------------------------------
+   THE ENERGY DIAGRAM
+   A drawing of what the system actually does: sun to panels, panels to
+   inverter, inverter to the house, with the surplus going to the
+   battery and the grid sitting idle above it. The movement is the
+   point here - a still version of this would be a diagram of parts
+   rather than a picture of power moving.
+   --------------------------------------------------------------- */
+.flow { margin-top: var(--space-5, 3rem); }
+.flow-figure { margin: 0; }
+.flow svg { display: block; width: 100%; height: auto; }
+.flow-caption {
+  margin-top: var(--space-2, 1rem); font-size: 0.82rem;
+  color: var(--muted-on-navy, #93A3BE); max-width: 60ch;
+}
+
+.flow .f-label {
+  font-family: var(--font-mono, ui-monospace), monospace;
+  font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+  fill: #93A3BE;
+}
+.flow .f-box { fill: rgba(237, 241, 246, 0.05); stroke: rgba(237, 241, 246, 0.26); stroke-width: 1.5; }
+.flow .f-line { stroke: rgba(237, 241, 246, 0.22); stroke-width: 2; fill: none; }
+.flow .f-ink { stroke: #EDF1F6; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.flow .f-dim { stroke: rgba(237, 241, 246, 0.3); fill: none; stroke-width: 1.6; }
+.flow .f-dim-label { fill: #5F6E86; }
+
+/* The current itself. Dashes travel along the wire from source to load,
+   which is the one thing a still diagram cannot say. */
+.flow .f-flow {
+  stroke: #3DD68C; stroke-width: 2.6; fill: none; stroke-linecap: round;
+  stroke-dasharray: 14 170; stroke-dashoffset: 184; opacity: 0;
+}
+@keyframes mFlow { to { stroke-dashoffset: 0; } }
+
+.flow.is-live .f-flow { opacity: 1; animation: mFlow 2.6s linear infinite; }
+.flow.is-live .f-flow--b { animation-delay: 0.5s; }
+.flow.is-live .f-flow--c { animation-delay: 1.1s; }
+
+/* The sun keeps its own slow beat, so the drawing is alive before the
+   eye reaches the wires. */
+@keyframes mSunPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.06); }
+}
+.flow .f-sun-rays { transform-box: view-box; transform-origin: 92px 66px; opacity: 0.8; }
+.flow.is-live .f-sun-rays { animation: mSunPulse 3.4s ease-in-out infinite; }
+
+/* The battery filling is the state the picture exists to show. */
+@keyframes mCharge {
+  0%   { transform: scaleY(0.12); }
+  70%  { transform: scaleY(1); }
+  100% { transform: scaleY(1); }
+}
+.flow .f-charge { transform-box: fill-box; transform-origin: bottom; fill: #3DD68C; opacity: 0.85; }
+.flow.is-live .f-charge { animation: mCharge 6s var(--m-smooth) infinite; }
+
+/* And the window of the house comes on. */
+@keyframes mLamp {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+.flow .f-lamp { fill: #3DD68C; }
+.flow.is-live .f-lamp { animation: mLamp 3.4s ease-in-out infinite; }
+
+@media (max-width: 620px) {
+  .flow .f-label { font-size: 17px; }
+}
+
+/* ---------------------------------------------------------------
+   OFF SWITCHES
+   --------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg img, .hero-badge, .hero h1, .hero-sub, .hero-ctas, .hero-wordmark,
+  .motion-ok .hero-bg img,
+  .reveal-stagger.visible > *,
+  .flow.is-live .f-flow, .flow.is-live .f-sun-rays,
+  .flow.is-live .f-charge, .flow.is-live .f-lamp {
+    animation: none !important;
+  }
+  .reveal-left, .reveal-right, .reveal-scale { transition: none; opacity: 1; transform: none; }
+  .reveal-stagger:not(.visible) > * { opacity: 1; }
+  /* The current still needs to read as current, so it stays drawn - it
+     simply does not move. */
+  .flow .f-flow { opacity: 1; stroke-dasharray: 0; }
+}
