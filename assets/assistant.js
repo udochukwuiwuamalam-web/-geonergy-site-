@@ -233,7 +233,9 @@
     { k: 'growatt manual datasheet download',
       title: 'Growatt - manufacturer documentation', url: 'https://www.growatt.com/' },
     { k: 'sunsynk manual datasheet download',
-      title: 'Sunsynk - manufacturer documentation', url: 'https://www.sunsynk.com/' }
+      title: 'Sunsynk - manufacturer documentation', url: 'https://www.sunsynk.com/' },
+    { k: 'srne hesp manual datasheet download',
+      title: 'SRNE - manufacturer documentation', url: 'https://www.srnesolar.com/' }
   ];
 
   // Brand words a customer might type, including model names that identify
@@ -245,13 +247,12 @@
     [/\bfelicity\b|\bivem\b|\bivpm\b|\bivps\b|ivcm/, 'felicity', 'Felicity'],
     [/\bgrowatt\b/, 'growatt', 'Growatt'],
     [/\bsunsynk\b/, 'sunsynk', 'Sunsynk'],
-    [/\bcworth\b/, 'cworth', 'Cworth'],
     [/\bitel\b/, 'itel', 'itel'],
-    [/\bfirman\b/, 'firman', 'Firman']
+    [/\bsrne\b|\bhesp\b/, 'srne', 'SRNE']
   ];
   const BRAND_LABEL = {
     deye: 'Deye', growatt: 'Growatt', sunsynk: 'Sunsynk', must: 'MUST',
-    cworth: 'Cworth', haisic: 'Haisic', itel: 'itel', firman: 'Firman', felicity: 'Felicity'
+    haisic: 'Haisic', itel: 'itel', srne: 'SRNE', felicity: 'Felicity'
   };
 
   // kind, the array on the model, its source line, its caveat
@@ -380,19 +381,31 @@
       const scope = cq.brand
         ? (data[cq.brand] ? [[cq.brand, cq.brandName || BRAND_LABEL[cq.brand], data[cq.brand]]] : [])
         : Object.keys(data).map(k => [k, BRAND_LABEL[k] || k, data[k]]);
-      const hits = [];
-      scope.forEach(row => {
-        (row[2].models || []).forEach(m => {
-          CODE_LISTS.forEach(L => {
-            if (cq.kind !== 'any' && cq.kind !== L[0]) return;
-            (m[L[1]] || []).forEach(c => {
-              if (codeNum(c.code) === cq.num) {
-                hits.push({ brand: row[1], model: m.name, label: L[4], entry: c, source: m[L[2]], caveat: m[L[3]] });
-              }
+      // What somebody calls the code is not what the manual filed it under.
+      // SRNE print one table headed "Fault code" and mark inside it which rows
+      // stop the output, so a customer reading 58 off the screen says "error
+      // 58" for something this page lists as a warning. Haisic and MUST have
+      // the same trap the other way round. So: honour the word they used
+      // first, and if that finds nothing, look across all three lists rather
+      // than telling them the number does not exist.
+      function gather(kind) {
+        const found = [];
+        scope.forEach(row => {
+          (row[2].models || []).forEach(m => {
+            CODE_LISTS.forEach(L => {
+              if (kind !== 'any' && kind !== L[0]) return;
+              (m[L[1]] || []).forEach(c => {
+                if (codeNum(c.code) === cq.num) {
+                  found.push({ brand: row[1], model: m.name, label: L[4], entry: c, source: m[L[2]], caveat: m[L[3]] });
+                }
+              });
             });
           });
         });
-      });
+        return found;
+      }
+      let hits = gather(cq.kind);
+      if (!hits.length && cq.kind !== 'any') hits = gather('any');
       if (!hits.length) {
         if (cq.brand && !(data[cq.brand] && (data[cq.brand].models || []).length)) {
           return {
@@ -615,7 +628,10 @@
   const TABLES = [BATTERIES, INV_TYPES, CONTROLLERS, VOLTAGES];
 
   // The whole brand list the site shows, not only the ones with code tables.
-  const BRAND_NAMES = ['Deye', 'Growatt', 'Sunsynk', 'Felicity', 'MUST', 'Haisic', 'Cworth', 'itel', 'Firman', 'JinkoSolar'];
+  // Brands the site knows about at all - the store, the logo band or the
+  // manuals on file. Not the same list as the code tables: Cworth has a
+  // product in the store but no manual, and a comparison can still say so.
+  const BRAND_NAMES = ['Deye', 'Growatt', 'Sunsynk', 'Felicity', 'MUST', 'Haisic', 'itel', 'SRNE', 'Cworth', 'JinkoSolar'];
 
   function splitVersus(t) {
     const m = t.match(/^(?:what(?:’s|s)? (?:is )?the )?(?:difference between |compare |which is better,? )?(.+?)\s+(?:vs\.?|versus|or|against|compared to|compared with|and)\s+(.+?)[?.!]*$/);
