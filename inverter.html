@@ -162,6 +162,10 @@
     'use strict';
     // Same number as the store. Set it in both places before going live.
     var WHATSAPP_NUMBER = '2348000000000';
+    // The code-lookup module needs it too, for brands whose tables are not in
+    // yet. It reads it from here rather than carrying a fourth copy of the
+    // number around.
+    window.GEONERGY_WA = WHATSAPP_NUMBER;
 
     function init() {
       document.getElementById('yr').textContent = String(new Date().getFullYear());

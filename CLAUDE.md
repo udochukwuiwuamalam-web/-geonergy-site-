@@ -162,5 +162,7 @@ the subscription email while you are there.
 `WHATSAPP_NUMBER` is still the placeholder `2348000000000` in three files -
 `store.html`, `inverter.html` and `assets/assistant.js`. Change all three
 together; a wrong one sends a customer to a WhatsApp chat with nobody.
+(`assets/inverter.js` does not hold a fourth copy - it reads
+`window.GEONERGY_WA`, which `inverter.html` sets from its own constant.)
 
 `PASSCODE` in `admin.html` is still the default.

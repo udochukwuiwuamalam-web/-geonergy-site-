@@ -229,4 +229,14 @@
   .ec-code { font-family: var(--font-mono); font-weight: 600; color: var(--accent-on-navy); font-size: 0.9rem; }
   .ec-meaning { font-weight: 500; color: var(--text-on-navy); font-size: 0.9375rem; }
   .ec-action { color: var(--muted-on-navy); font-size: 0.875rem; }
-  .ec-empty { color: var(--muted-on-navy); font-size: 0.9375rem; padding: var(--space-3) 0; }
+  .ec-empty { color: var(--muted-on-navy); font-size: 0.9375rem; padding: var(--space-3) 0; }  .ec-empty p { margin-bottom: var(--space-2); max-width: 58ch; }
+  .ec-empty p:last-of-type { margin-bottom: var(--space-3); }
+  .ec-wa {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    padding: 0.62rem 1.05rem; border-radius: 999px;
+    background: #3DD68C; color: #06301C; font-weight: 600; font-size: 0.875rem;
+    transition: background 0.18s ease, transform 0.18s ease;
+  }
+  .ec-wa:hover { background: #35c07d; transform: translateY(-1px); }
+  .ec-wa:focus-visible { outline: 2px solid #3DD68C; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .ec-wa { transition: none; } .ec-wa:hover { transform: none; } }

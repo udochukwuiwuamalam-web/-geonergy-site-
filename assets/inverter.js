@@ -783,6 +783,12 @@
   let ecBrand = 'deye';
   let ecModelId = null;
 
+  // Whatever the brand tab says, so the message reads the way they clicked.
+  function ecBrandLabel() {
+    const tab = document.querySelector('.ec-tab[data-brand="' + ecBrand + '"]');
+    return (tab && tab.textContent.trim()) || ecBrand;
+  }
+
   function ecModels() {
     return (INVERTER_DATA[ecBrand] && INVERTER_DATA[ecBrand].models) || [];
   }
@@ -836,7 +842,26 @@
     const models = ecModels();
     const viewEl = document.getElementById('ec-model-view');
     if (!models.length) {
-      viewEl.innerHTML = '<div class="ec-empty">Not researched yet for this brand — nothing added until it\u2019s sourced from a real manual. Check back soon.</div>';
+      // A brand with no tables is still somebody standing in front of a
+      // beeping inverter. Say plainly why there is nothing here, then give
+      // them the one thing that does work.
+      const label = ecBrandLabel();
+      const wa = global.GEONERGY_WA;
+      const note = 'Hello Geonergy, my ' + label + ' inverter is showing a code that is not on your website yet. ' +
+        'Here is a photo of the screen and of the model label:';
+      viewEl.innerHTML =
+        '<div class="ec-empty">' +
+          '<p>No ' + label + ' tables here yet. Every code on this page is transcribed from a manual ' +
+          'Geonergy holds, and nothing goes in until it is \u2014 a wrong number on a live system is ' +
+          'worse than no number at all.</p>' +
+          '<p>If your unit is showing something now, send a photo of the screen and of the model label ' +
+          'and we will read it for you. If you have the manual, send that too and the whole table goes ' +
+          'up here for the next person.</p>' +
+          (wa
+            ? '<a class="ec-wa" href="https://wa.me/' + wa + '?text=' + encodeURIComponent(note) +
+              '" target="_blank" rel="noopener noreferrer">Send a photo on WhatsApp</a>'
+            : '') +
+        '</div>';
       return;
     }
     const model = models.find(m => m.id === ecModelId) || models[0];
