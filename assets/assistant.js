@@ -230,10 +230,6 @@
       title: 'Deye - manufacturer documentation', url: 'https://www.deyeinverter.com/' },
     { k: 'felicity ivem ivpm ivps manual datasheet download',
       title: 'Felicity Solar - manufacturer documentation', url: 'https://www.felicitysolar.com/' },
-    { k: 'growatt manual datasheet download',
-      title: 'Growatt - manufacturer documentation', url: 'https://www.growatt.com/' },
-    { k: 'sunsynk manual datasheet download',
-      title: 'Sunsynk - manufacturer documentation', url: 'https://www.sunsynk.com/' },
     { k: 'srne hesp manual datasheet download',
       title: 'SRNE - manufacturer documentation', url: 'https://www.srnesolar.com/' }
   ];
@@ -245,13 +241,15 @@
     [/\bmust\b|pv1800|pv3000/, 'must', 'MUST'],
     [/\bhaisic\b|pv ?9000|pv ?1000|pv ?5000|ct6ku/, 'haisic', 'Haisic'],
     [/\bfelicity\b|\bivem\b|\bivpm\b|\bivps\b|ivcm/, 'felicity', 'Felicity'],
-    [/\bgrowatt\b/, 'growatt', 'Growatt'],
-    [/\bsunsynk\b/, 'sunsynk', 'Sunsynk'],
     [/\bitel\b/, 'itel', 'itel'],
-    [/\bsrne\b|\bhesp\b/, 'srne', 'SRNE']
+    [/\bsrne\b|\bhesp\b/, 'srne', 'SRNE'],
+    // No tables, no tab. They stay recognised only so that "growatt fault 12"
+    // is declined plainly rather than answered from another make's code 12.
+    [/\bgrowatt\b/, 'growatt', 'Growatt'],
+    [/\bsunsynk\b/, 'sunsynk', 'Sunsynk']
   ];
   const BRAND_LABEL = {
-    deye: 'Deye', growatt: 'Growatt', sunsynk: 'Sunsynk', must: 'MUST',
+    deye: 'Deye', must: 'MUST',
     haisic: 'Haisic', itel: 'itel', srne: 'SRNE', felicity: 'Felicity'
   };
 
@@ -643,7 +641,7 @@
   // Brands the site knows about at all - the store, the logo band or the
   // manuals on file. Not the same list as the code tables: Cworth has a
   // product in the store but no manual, and a comparison can still say so.
-  const BRAND_NAMES = ['Deye', 'Growatt', 'Sunsynk', 'Felicity', 'MUST', 'Haisic', 'itel', 'SRNE', 'Cworth', 'JinkoSolar'];
+  const BRAND_NAMES = ['Deye', 'Growatt', 'Felicity', 'MUST', 'Haisic', 'itel', 'SRNE', 'Cworth', 'JinkoSolar'];
 
   function splitVersus(t) {
     const m = t.match(/^(?:what(?:’s|s)? (?:is )?the )?(?:difference between |compare |which is better,? )?(.+?)\s+(?:vs\.?|versus|or|against|compared to|compared with|and)\s+(.+?)[?.!]*$/);
