@@ -228,7 +228,7 @@
       title: 'NREL PVWatts - independent production estimator', url: 'https://pvwatts.nrel.gov/' },
     { k: 'deye sun sg04lp3 manual datasheet firmware download',
       title: 'Deye - manufacturer documentation', url: 'https://www.deyeinverter.com/' },
-    { k: 'felicity ivem ivpm ivps manual datasheet download',
+    { k: 'felicity ivem ivpm ivps sccm manual datasheet download',
       title: 'Felicity Solar - manufacturer documentation', url: 'https://www.felicitysolar.com/' },
     { k: 'srne hesp manual datasheet download',
       title: 'SRNE - manufacturer documentation', url: 'https://www.srnesolar.com/' }
@@ -240,7 +240,7 @@
     [/\bdeye\b|sg04lp3/, 'deye', 'Deye'],
     [/\bmust\b|pv1800|pv3000/, 'must', 'MUST'],
     [/\bhaisic\b|pv ?9000|pv ?1000|pv ?5000|ct6ku/, 'haisic', 'Haisic'],
-    [/\bfelicity\b|\bivem\b|\bivpm\b|\bivps\b|ivcm/, 'felicity', 'Felicity'],
+    [/\bfelicity\b|\bivem\b|\bivpm\b|\bivps\b|ivcm|\bsccm/, 'felicity', 'Felicity'],
     [/\bitel\b/, 'itel', 'itel'],
     [/\bsrne\b|\bhesp\b/, 'srne', 'SRNE'],
     // No tables, no tab. They stay recognised only so that "growatt fault 12"
@@ -361,6 +361,9 @@
   // alarms as "54~65" rather than twelve rows. Somebody reading 58 off the
   // screen still has to land on it, so a code written as a range matches any
   // number inside it.
+  // Words that are in nearly every question and in some model names without
+  // saying which machine is meant.
+  const CODE_GENERIC = /^(code|codes|fault|faults|error|errors|warning|warnings|alarm|program|programs|setting|settings|showing|display|screen|flash|flashing|inverter|inverters|hybrid|solar|battery|charge|charger|controller|power|series|what|does|mean|means|this|that|with|from|have|help|please|number)$/;
   function codeHit(code, num) {
     const r = String(code).match(/^\s*(\d+)\s*[~\u2013-]\s*(\d+)\s*$/);
     if (r) {
@@ -382,7 +385,10 @@
     const m = t.match(/\b(?:f|e|err|error|fault|warning|warn|alarm|code|program|setting|no\.?)\s*[-:#. ]?\s*(\d{1,3})\b/)
       || t.match(/\b(\d{1,3})\b/);
     if (!m) return null;
-    return { kind: kind, brand: brand, brandName: brandName, num: parseInt(m[1], 10) };
+    // Kept so a model family typed in the question ("sccm fault 07", "ivem 12048
+    // warning 05") can steer which of the brand's tables answer it.
+    const words = t.split(/[^a-z0-9]+/).filter(w => w.length >= 4 && !CODE_GENERIC.test(w));
+    return { kind: kind, brand: brand, brandName: brandName, num: parseInt(m[1], 10), words: words };
   }
 
   function lookupCode(cq) {
@@ -438,6 +444,19 @@
         if (!g) { g = { key: key, brand: x.brand, label: x.label, entry: x.entry, source: x.source, models: [] }; groups.push(g); }
         if (g.models.indexOf(x.model) < 0) g.models.push(x.model);
       });
+      // A question that names a model family is about that family. Score each
+      // group by how many of the customer's words its model names carry and
+      // keep the best-scoring ones - otherwise "sccm fault 07" is answered
+      // with the inverter's code 07 and the controller's can be cut off.
+      const w = cq.words || [];
+      if (w.length) {
+        groups.forEach(g => {
+          const names = g.models.join(' ').toLowerCase();
+          g.fit = w.filter(x => names.indexOf(x) >= 0).length;
+        });
+        const best = Math.max.apply(null, groups.map(g => g.fit));
+        if (best > 0) groups.splice(0, groups.length, ...groups.filter(g => g.fit === best));
+      }
       const shown = groups.slice(0, 4);
       let h = '<p>';
       if (cq.brand) h += 'On ' + esc(shown[0].brand) + ':</p>';
@@ -454,8 +473,11 @@
       // answer spans two battery-voltage classes, because the caveat is
       // usually about exactly that.
       const notes = [];
+      // Only the manuals the answer above actually shows: a caveat from an
+      // inverter guide has no business under a charge controller's answer.
       hits.forEach(x => {
         if (!x.caveat) return;
+        if (!shown.some(g => g.label === x.label && g.models.indexOf(x.model) >= 0)) return;
         let n = null;
         for (let i = 0; i < notes.length; i++) if (notes[i].text === x.caveat) n = notes[i];
         if (!n) { n = { text: x.caveat, models: [] }; notes.push(n); }
