@@ -1392,12 +1392,12 @@
     panel = el('aside', 'ai-panel');
     panel.setAttribute('role', 'dialog');
     panel.setAttribute('aria-modal', 'true');
-    panel.setAttribute('aria-label', 'Geonergy AI assistant');
+    panel.setAttribute('aria-label', 'Geonergy assistant');
     panel.hidden = true;
     panel.innerHTML =
       '<div class="ai-head">' +
         '<span class="ai-head-mark">' + MARK + '</span>' +
-        '<span class="ai-head-text"><span class="ai-head-title">Geonergy AI</span>' +
+        '<span class="ai-head-text"><span class="ai-head-title">Geonergy</span>' +
         '<span class="ai-head-sub">Solar, inverters and batteries</span></span>' +
         '<button type="button" class="ai-icon-btn" data-speak aria-pressed="false" title="Read answers aloud">' + svg(ICON.mute) + '</button>' +
         '<button type="button" class="ai-icon-btn" data-close aria-label="Close assistant">' + svg(ICON.close) + '</button>' +
@@ -1548,8 +1548,8 @@
     if (document.querySelector('.ai-launch')) return;
     launcher = el('button', 'ai-launch', MARK + '<span class="ai-dot" aria-hidden="true"></span>');
     launcher.type = 'button';
-    launcher.setAttribute('aria-label', 'Ask Geonergy AI');
-    launcher.setAttribute('title', 'Ask Geonergy AI');
+    launcher.setAttribute('aria-label', 'Ask Geonergy');
+    launcher.setAttribute('title', 'Ask Geonergy');
     launcher.setAttribute('aria-haspopup', 'dialog');
     launcher.addEventListener('click', open);
     introduce(launcher);
