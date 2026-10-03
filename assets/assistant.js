@@ -240,7 +240,7 @@
     [/\bdeye\b|sg04lp3/, 'deye', 'Deye'],
     [/\bmust\b|pv1800|pv3000/, 'must', 'MUST'],
     [/\bhaisic\b|pv ?9000|pv ?1000|pv ?5000|ct6ku/, 'haisic', 'Haisic'],
-    [/\bfelicity\b|\bivem\b|\bivpm\b|\bivps\b|ivcm|\bsccm/, 'felicity', 'Felicity'],
+    [/\bfelicity\b|\bivem\b|\bivpm\b|\bivps\b|\bsccm/, 'felicity', 'Felicity'],
     [/\bitel\b/, 'itel', 'itel'],
     [/\bsrne\b|\bhesp\b/, 'srne', 'SRNE'],
     // No tables, no tab. They stay recognised only so that "growatt fault 12"
