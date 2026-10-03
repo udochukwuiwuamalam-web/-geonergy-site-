@@ -239,7 +239,7 @@
   const BRANDS = [
     [/\bdeye\b|sg04lp3/, 'deye', 'Deye'],
     [/\bmust\b|pv1800|pv3000/, 'must', 'MUST'],
-    [/\bhaisic\b|pv ?9000|pv ?1000|pv ?5000|ct6ku/, 'haisic', 'Haisic'],
+    [/\bhaisic\b|pv ?9000|pv ?1000|pv ?5000|pv ?6000|pv ?12000|ct6ku/, 'haisic', 'Haisic'],
     [/\bfelicity\b|\bivem\b|\bivpm\b|\bivps\b|\bsccm/, 'felicity', 'Felicity'],
     [/\bitel\b/, 'itel', 'itel'],
     [/\bsrne\b|\bhesp\b/, 'srne', 'SRNE'],
@@ -388,7 +388,9 @@
     // Kept so a model family typed in the question ("sccm fault 07", "ivem 12048
     // warning 05") can steer which of the brand's tables answer it.
     const words = t.split(/[^a-z0-9]+/).filter(w => w.length >= 4 && !CODE_GENERIC.test(w));
-    return { kind: kind, brand: brand, brandName: brandName, num: parseInt(m[1], 10), words: words };
+    // "15 kva" / "6kva" names the machine as surely as a model number does.
+    const kv = t.match(/(\d+(?:\.\d+)?)\s*-?\s*kva\b/);
+    return { kind: kind, brand: brand, brandName: brandName, num: parseInt(m[1], 10), words: words, kva: kv ? kv[1] : null };
   }
 
   function lookupCode(cq) {
@@ -449,10 +451,11 @@
       // keep the best-scoring ones - otherwise "sccm fault 07" is answered
       // with the inverter's code 07 and the controller's can be cut off.
       const w = cq.words || [];
-      if (w.length) {
+      const kvaRe = cq.kva ? new RegExp('(^|[^0-9.])' + cq.kva.replace('.', '\\.') + ' ?kva') : null;
+      if (w.length || kvaRe) {
         groups.forEach(g => {
           const names = g.models.join(' ').toLowerCase();
-          g.fit = w.filter(x => names.indexOf(x) >= 0).length;
+          g.fit = w.filter(x => names.indexOf(x) >= 0).length + (kvaRe && kvaRe.test(names) ? 1 : 0);
         });
         const best = Math.max.apply(null, groups.map(g => g.fit));
         if (best > 0) groups.splice(0, groups.length, ...groups.filter(g => g.fit === best));
