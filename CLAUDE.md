@@ -82,7 +82,7 @@ electrical system is worse than no answer.
   because sizing and installation decide the outcome, not the label. Add a
   comparison by adding an option to one of those tables with the same row keys
   as its siblings.
-- **The code tables load on demand.** `assets/inverter.js` is ~96KB and is only
+- **The code tables load on demand.** `assets/inverter.js` is ~220KB (about 33KB gzipped) and is only
   fetched when somebody actually asks about a code. The catalogue is shared with
   `store.html` through `window.__GEONERGY_PRODUCTS__` so it is fetched once.
 - **Adding house guidance**: add an entry to `KB` with `k` (the words that
@@ -137,9 +137,12 @@ pages use it.
   values during a count cannot reach any calculation - check that again before
   putting it on a figure some other code reads. Counting is skipped entirely
   under `prefers-reduced-motion`.
-- Collapsible tables on the Inverter page fade rather than animating height:
-  height forces a reflow of a long table, which is exactly what a cheap phone
-  is worst at.
+- The Inverter page shows one list at a time - Fault codes, Warning codes or
+  Programs, chosen with the tabs under the model - and swaps it with the same
+  `data-motion-enter` fade as everything else. Only the lists a model really
+  has get a tab, and a search that finds nothing in the current list moves to
+  the one that has it. There is no Specifications section: it was removed on
+  request, and `inverter.js` no longer carries spec data.
 
 ## Weather data
 

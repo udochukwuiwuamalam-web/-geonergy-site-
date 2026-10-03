@@ -238,18 +238,10 @@ dialog.sheet[open] { animation: mSheet var(--m-normal) var(--m-smooth) both; }
 dialog.sheet[open]::backdrop { animation: mBackdrop var(--m-normal) ease both; }
 @keyframes mBackdrop { from { opacity: 0; } to { opacity: 1; } }
 
-/* ---------------------------------------------------------------
-   THE INVERTER PAGE'S COLLAPSIBLE TABLES
-   Height is not animated on purpose - it forces a reflow of a long
-   table on a phone. The rows fade instead, which reads the same.
-   --------------------------------------------------------------- */
-.ec-collapse-body:not(.collapsed) { animation: mFade var(--m-normal) var(--m-smooth) both; }
-
 @media (prefers-reduced-motion: reduce) {
   [data-motion-enter].m-in > *,
   [data-motion-enter="fade"].m-in,
   .page-enter > *,
   dialog.sheet[open],
-  dialog.sheet[open]::backdrop,
-  .ec-collapse-body:not(.collapsed) { animation: none !important; }
+  dialog.sheet[open]::backdrop { animation: none !important; }
 }

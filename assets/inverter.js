@@ -22,8 +22,6 @@
           id: 'sg04lp3',
           name: 'SUN-5/6/8/12K-SG04LP3-EU',
           category: 'Hybrid Inverter',
-          specsSource: null,
-          specs: [],
           faultSource: 'Deye SUN-5/6/8/12K-SG04LP3-EU hybrid inverter manual',
           faultWarning: 'Code numbers shift between firmware and regional variants of this same hardware (confirmed: AU and EU manuals number several faults differently, and Sunsynk-rebadged units differ again). Confirm against your own unit\u2019s manual before acting.',
           faultCodes: [
@@ -61,8 +59,6 @@
           name: 'MUST 1.5 kW / 2 kW - 24 V',
           category: 'Off-Grid Inverter',
           note: 'One manual covers the whole range. The manual’s charge tables split it by battery voltage: the 2KW-3KW units run on DC 24V and are rated 1500W and 2000W. Fault and warning codes are the same across the range; the voltages in the programs are not.',
-          specsSource: null,
-          specs: [],
           faultSource: 'MUST off-grid inverter user manual, 5000W / MPPT 80A edition (customer-provided)',
           faultWarning: 'The manual lists the cause only - it prints no recommended action, so none is invented here. A Fault stops the inverter; a Warning lets it keep running. MUST skip several numbers (there is no 10, 12 to 20, 28 to 30 and so on) - that is the manual, not a gap in this list.',
           faultCodes: [
@@ -159,8 +155,6 @@
           name: 'MUST 3 kW / 4 kW / 5 kW - 48 V',
           category: 'Off-Grid Inverter',
           note: 'The 3KW-5.5KW units run on DC 48V and are rated 3000W, 4000W and 5000W. Fault and warning codes are the same across the whole MUST range; the voltages in the programs are not.',
-          specsSource: null,
-          specs: [],
           faultSource: 'MUST off-grid inverter user manual, 5000W / MPPT 80A edition (customer-provided)',
           faultWarning: 'The manual lists the cause only - it prints no recommended action, so none is invented here. A Fault stops the inverter; a Warning lets it keep running. MUST skip several numbers (there is no 10, 12 to 20, 28 to 30 and so on) - that is the manual, not a gap in this list.',
           faultCodes: [
@@ -260,8 +254,6 @@
           id: 'haisic-pv1000-1-5k',
           name: 'PV1000 - 1.5 kVA (12 V)',
           category: 'Off-Grid Inverter',
-          specsSource: null,
-          specs: [],
           faultSource: 'Haisic PV1000-12 user manual, "Fault Reference Code" (customer-provided)',
           faultWarning: 'Fault 17 comes from the PV6000-48 user manual; every other row is from this model’s own "Fault Reference Code" table. The PV1000, PV5000 and PV6000-48 manuals number faults the same way, so a code means the same thing across those three - the voltage figures inside a row follow the model’s battery voltage. The PV12000-48 (15 kVA) has a different list altogether.',
           faultCodes: [
@@ -351,8 +343,6 @@
           id: 'haisic-pv5000-4-2k',
           name: 'PV5000 - 4.2 kVA (24 V)',
           category: 'Off-Grid Inverter',
-          specsSource: null,
-          specs: [],
           faultSource: 'Haisic PV5000 4.2 kVA user manual, "5. Fault Reference Code" (customer-provided)',
           faultWarning: 'Fault 17 comes from the PV6000-48 user manual; every other row is from this model’s own "Fault Reference Code" table. The PV1000, PV5000 and PV6000-48 manuals number faults the same way, so a code means the same thing across those three - the voltage figures inside a row follow the model’s battery voltage. The PV12000-48 (15 kVA) has a different list altogether.',
           faultCodes: [
@@ -446,51 +436,6 @@
           name: 'PV6000-48 - 6 kVA (also sold as PV9000)',
           category: 'Off-Grid Inverter',
           note: 'Geonergy call this the 6 kVA, also sold as the PV9000. The manual\'s own specification table rates the output at 5000W - the 6000W it quotes is the maximum PV input - so treat "6 kVA" as Geonergy\'s name for it. Up to nine units run in parallel, with batteries connected. This replaces the earlier 6 kVA service-manual entry; the fault and alarm numbers are the same ones the PV1000 and PV5000 manuals use, plus the parallel-system codes 19 to 25 and 64 to 69.',
-          specsSource: 'Haisic PV6000-48 hybrid solar inverter user manual V1.0, specifications',
-          specs: [
-            {
-              group: 'Line (grid) input',
-              rows: [
-                { label: 'Nominal voltage', value: '220VAC, settable 208/220/230/240Vac' },
-                { label: 'Input voltage range', value: '90-280Vac, settable' },
-                { label: 'Input low loss', value: '154Vac default, settable 90-154Vac (appliance mode); 185Vac default, settable 170-200Vac (UPS mode)' },
-                { label: 'Input high loss', value: '264Vac default, settable 264-280Vac (appliance mode); 264Vac (UPS mode)' },
-                { label: 'Comeback voltage', value: 'Low loss voltage +9V; high loss voltage -9V' },
-                { label: 'Frequency', value: '50/60Hz, range 40/70Hz' },
-                { label: 'Maximum input current', value: '40A (limited by the external breaker if that is smaller)' },
-              ],
-            },
-            {
-              group: 'Battery',
-              rows: [
-                { label: 'Battery', value: '4 pieces of 12V, nominal N x 12V at 25 C (N = number of batteries)' },
-                { label: 'Battery type', value: 'VRLA / lithium' },
-                { label: 'Battery over voltage', value: '61V' },
-                { label: 'Battery under voltage', value: '10.5V x N, settable 10 x N to 11 x N' },
-                { label: 'Battery low voltage alarm', value: '10.8V x N, settable 10.3 x N to 11.3 x N' },
-                { label: 'Over current protection', value: 'Fuse, fast acting' },
-              ],
-            },
-            {
-              group: 'Charger',
-              rows: [
-                { label: 'Charging voltage, line mode', value: 'FV mode 54V (settable 53.2-55.6V); CV mode 56.4V (settable 56-58V)' },
-                { label: 'Charging current', value: '2-80A settable, 30A default' },
-                { label: 'PV charging', value: 'MPPT, 120-450Vdc, maximum PV voltage 500Vdc, maximum PV input power 6000W, maximum PV charge current 80A (default 60A)' },
-              ],
-            },
-            {
-              group: 'Output',
-              rows: [
-                { label: 'Output power rating', value: '5000W; reduced to 90% if the output voltage is set to 208V' },
-                { label: 'Nominal voltage', value: '208/220/230/240VAC. The specification table says default 220V; program 01 on the LCD lists 230V as the default' },
-                { label: 'Overload', value: '102-110%: 1 minute, then alarm and output off; 110-130%: 10 seconds; 130-150%: 3 seconds; over 150%: 200ms' },
-                { label: 'Output short circuit protection', value: 'Battery mode current limitation; line mode breaker (40A)' },
-                { label: 'Switch time, line to battery', value: '10ms typical' },
-                { label: 'Efficiency', value: 'Line mode over 99.5% at 3-5kVA; battery mode over 93.5% at 1-3kVA and over 91.5% at 5kVA; standby under 50W' },
-              ],
-            },
-          ],
           faultSource: 'Haisic PV6000-48 hybrid solar inverter user manual V1.0, "6. Fault Reference Code" and "7. Alarm Reference Code" (customer-provided)',
           faultWarning: 'A fault turns the red LED solid and the buzzer sounds for 10 seconds. The unit then tries to restart itself, and after six failed restarts it stays in fault: power it fully off (screen dark) or wait 30 minutes. The manual has no fault 06 or 28 - those numbers are not skipped here, they are not in this manual. Voltage figures in a row follow the 48V battery of this model.',
           faultCodes: [
@@ -596,71 +541,6 @@
           name: 'PV12000-48 - 15 kVA Hybrid (48 V)',
           category: 'Off-Grid Inverter',
           note: 'Geonergy list this as the 15 kVA Hybrid. The manual\'s own specification table rates it 12000VA / 12000W, which is also the 12000W in the store listing - so 15 kVA is Geonergy\'s name for it. Up to 6 units run in parallel. This model uses its own list of fault codes, 01 to 55, which is NOT the same list as the PV1000, PV5000 and PV6000 - the same number means something different. Read the model on the label before looking a code up.',
-          specsSource: 'Haisic PV12000-48 hybrid solar charge inverter product manual, specifications',
-          specs: [
-            {
-              group: 'Parallel & AC input',
-              rows: [
-                { label: 'Parallel units permitted', value: 'Up to 6 (printed "NO / 1~6")' },
-                { label: 'Rated input voltage', value: '230Vac +/-5%' },
-                { label: 'Input voltage range', value: '170-280Vac +/-2% (narrow, UPS); 90-280Vac +/-2% (wide)' },
-                { label: 'Frequency', value: '50Hz/60Hz auto detection; 47-55Hz (50Hz), 57-65Hz (60Hz)' },
-                { label: 'Efficiency, line mode', value: 'Over 95%' },
-                { label: 'Conversion time', value: '10ms typical, bypass to inverter' },
-                { label: 'Maximum bypass overload current', value: '60A' },
-                { label: 'Bypass circuit breaker', value: '63A' },
-              ],
-            },
-            {
-              group: 'Inverter output',
-              rows: [
-                { label: 'Rated output power', value: '12000VA / 12000W, power factor 1' },
-                { label: 'Output voltage', value: '230Vac +/-5%, pure sine wave, 50Hz or 60Hz +/-0.3Hz' },
-                { label: 'Peak power', value: '24000VA' },
-                { label: 'Loaded motor capability', value: '8HP' },
-                { label: 'Maximum efficiency', value: 'Over 93%' },
-                { label: 'Overload protection', value: '102-125% (+/-10%): error and output off after 5 minutes; 125-150%: after 10 seconds; over 150%: after 5 seconds' },
-                { label: 'Power saving mode consumption', value: 'Load 50W or less' },
-              ],
-            },
-            {
-              group: 'Battery & AC charging',
-              rows: [
-                { label: 'Rated battery voltage', value: '48V (minimum starting voltage 44V)' },
-                { label: 'Battery voltage range', value: '40.0-60Vdc +/-0.6Vdc; alarm, shutdown and recovery points settable on the LCD' },
-                { label: 'Battery type', value: 'Lead-acid or lithium' },
-                { label: 'Maximum AC charge current', value: '150A, settable (+/-5Adc)' },
-                { label: 'Charge voltage range', value: '40-60Vdc' },
-                { label: 'Charging breaker', value: '63A, with blown fuse protection' },
-              ],
-            },
-            {
-              group: 'PV charging',
-              rows: [
-                { label: 'MPPT', value: '2 inputs' },
-                { label: 'Maximum PV open circuit voltage', value: '500Vdc' },
-                { label: 'PV operating voltage range', value: '120-500Vdc; MPPT range 90-450Vdc' },
-                { label: 'Maximum PV input power', value: '6000W + 6000W' },
-                { label: 'Maximum PV input current', value: '22A + 22A' },
-                { label: 'PV charging current', value: '0-150A, settable; hybrid charging (AC plus PV) also 0-150A' },
-                { label: 'Protection', value: 'Blown fuse; reverse polarity' },
-              ],
-            },
-            {
-              group: 'Certification, environment & size',
-              rows: [
-                { label: 'Certification', value: 'CE (IEC62109-1,2); EMC EN61000, C2' },
-                { label: 'Operating temperature', value: '-10 to 55 C, derating above 45 C' },
-                { label: 'Storage temperature', value: '-25 to 60 C' },
-                { label: 'Humidity', value: '5% to 95% (conformal coating protection)' },
-                { label: 'Noise', value: '60dB or less' },
-                { label: 'Cooling', value: 'Forced air, variable fan speed' },
-                { label: 'Communication', value: 'USB, RS485, optional WiFi/GPRS, dry contact control' },
-                { label: 'Size (L x W x D)', value: '545 x 365 x 120mm' },
-                { label: 'Weight', value: '19.5kg' },
-              ],
-            },
-          ],
           faultSource: 'Haisic PV12000-48 hybrid solar charge inverter product manual, "9.1 Fault code" and "9.2 Trouble Shooting" (customer-provided)',
           faultWarning: 'Haisic print one "Fault code" table with a column for whether each row affects the output, so that column is what splits the lists: rows marked Yes are here and stop the output, and the rows marked No are under Warnings. The few rows the manual marks with a dash and no description - 19, 21, 28, 29, 31 and 32 - are listed here and say so. The LCD shows the number in brackets.',
           faultCodes: [
@@ -775,8 +655,6 @@
           name: 'IPV-4K24U / IPV-6K48U hybrid',
           category: 'Hybrid Inverter',
           note: 'Geonergy report that the 12 kVA 48 V itel uses these same tables. The guide itself only names the 4 kW and 6 kW models, so that wider range is Geonergy\u2019s word and not the manufacturer\u2019s - check the code against the manual that came with your own unit before acting on it.',
-          specsSource: null,
-          specs: [],
           faultSource: 'itel IP54 Hybrid Inverter User Guide, “Fault Code Table” and “Warning Code Table”, pp. 41-43 (customer-provided). The guide covers IPV-4K24U (4 kW, 24 V) and IPV-6K48U (6 kW, 48 V).',
           faultWarning: 'A fault stops the inverter: it cuts the output, the fault LED goes solid, and the code shows with the ERROR icon. The guide prints no codes between 04 and 09, 18 and 19, 25 and 29, 37 and 39, 42, 44 to 49, or 56 to 59, so none are listed here. Two plain typographic slips in the English (\u201cfunish\u201d, \u201cconnectiotn\u201d) are corrected; nothing else is reworded.',
           faultCodes: [
@@ -841,8 +719,6 @@
           id: 'srne-hesp-48v',
           name: 'HESP series \u2014 48 V, 4\u20136 kW',
           category: 'Solar Hybrid Inverter',
-          specsSource: null,
-          specs: [],
           faultSource: 'SRNE HESP series user manual V2.3, sections 7.1 “Fault code” and 7.2 “Troubleshooting” (customer-provided). Covers HESP4840S100-H, HESP4846S100-H, HESP4850S100-H, HESP4855S100-H and HESP4860S100-H.',
           faultWarning: 'SRNE print one table headed \u201cFault code\u201d with a column for whether the code affects the output. This page splits that single table by SRNE\u2019s own column - the codes below are the ones marked Yes, which stop or disturb the output. Numbers are not renumbered. Codes 12, 16, 18, 24, 25, 27, 28, 33, 36, 46, 47, 48 and 59 are not printed in the manual, so they are not listed here.',
           faultCodes: [
@@ -914,89 +790,6 @@
           name: 'IVEM3024 / IVEM5048',
           category: 'Off-Grid Inverter',
           note: 'The 3 kVA and 5 kVA IVEM, 230V output, on a 24V (IVEM3024) or 48V (IVEM5048) battery. The 6 kVA IVEM, the 110V IVEM5048-LV and the 8-12 kVA IVEM-II each have a list of their own - the codes are close but not identical.',
-          specsSource: 'Felicity IVEM3024-IVEM5048 User Guide, Specifications pages (customer-provided)',
-          specs: [
-            {
-              group: 'Line Mode Specifications',
-              rows: [
-                { label: 'Rated Output Power', value: '3000VA/3000W (IVEM3024), 5000VA/5000W (IVEM5048)' },
-                { label: 'Nominal DC Input Voltage', value: '24V (IVEM3024), 48V (IVEM5048)' },
-                { label: 'Input Voltage Waveform', value: 'Sinusoidal (utility or generator)' },
-                { label: 'Nominal Input Voltage', value: '230Vac' },
-                { label: 'Low Line Voltage Disconnect', value: '170Vac±7V (UPS); 90Vac±7V (Appliances)' },
-                { label: 'Low Loss Voltage Re-connect', value: '180Vac±7V (UPS); 100Vac±7V (Appliances)' },
-                { label: 'High Line Voltage Disconnect', value: '280Vac±7V' },
-                { label: 'High Line Voltage Re-connect', value: '270Vac±7V' },
-                { label: 'Max AC Input Voltage', value: '280Vac' },
-                { label: 'Nominal Input Frequency', value: '50Hz / 60Hz (Auto detection)' },
-                { label: 'Low Line Frequency Disconnect', value: '40±1Hz' },
-                { label: 'Low Line Frequency Re-connect', value: '42±1Hz' },
-                { label: 'High Line Frequency Disconnect', value: '65±1Hz' },
-                { label: 'High Line Frequency Re-connect', value: '63±1Hz' },
-                { label: 'Output Voltage Waveform', value: 'Same as input waveform' },
-                { label: 'Output Short Circuit Protection', value: 'Line mode: Circuit Breaker; Battery mode: Electronic Circuits' },
-                { label: 'Efficiency (Line Mode)', value: '>95% (rated R load, battery fully charged)' },
-                { label: 'Transfer Time (Single unit)', value: '10ms typical (UPS); 20ms typical (Appliances)' },
-                { label: 'Transfer Time (Parallel)', value: '50ms typical' },
-                { label: 'Pass Through Without Battery', value: 'Yes' },
-                { label: 'Max. Bypass Overload Current', value: '30A (IVEM3024), 40A (IVEM5048)' },
-                { label: 'Max. Inverter/Rectifier Current', value: '15A/3000W (IVEM3024), 30A/5000W (IVEM5048)' },
-              ],
-            },
-            {
-              group: 'Utility Charge Mode Specifications',
-              rows: [
-                { label: 'Nominal Input Voltage', value: '230Vac' },
-                { label: 'Input Voltage Range', value: '90–280Vac' },
-                { label: 'Nominal Output Voltage', value: 'Dependent on battery type' },
-                { label: 'Max. Charge Current', value: '100A' },
-                { label: 'Charge Current Regulation', value: '10–100A (adjustable in 1A steps)' },
-                { label: 'Over Charge Protection', value: 'Yes' },
-              ],
-            },
-            {
-              group: 'Solar Charging & Grid Charging',
-              rows: [
-                { label: 'Max. PV Open Circuit Voltage', value: '500V' },
-                { label: 'PV Voltage Working Range', value: '120–500V' },
-                { label: 'Max. Input Power', value: '4000W (IVEM3024), 6000W (IVEM5048)' },
-                { label: 'Max. Solar Charging Current', value: '100A' },
-                { label: 'Max. Charging Current (PV+Grid)', value: '100A' },
-                { label: 'Max. Input Current', value: '15A (IVEM3024), 20A (IVEM5048)' },
-                { label: 'Min. Startup Voltage', value: '125V' },
-              ],
-            },
-            {
-              group: 'Inverter Mode Specifications',
-              rows: [
-                { label: 'Output Voltage Waveform', value: 'Pure sine wave' },
-                { label: 'Nominal Output Voltage', value: '230Vac ±5%' },
-                { label: 'Nominal Output Frequency', value: '50±0.3Hz / 60±0.3Hz (adjustable)' },
-                { label: 'Parallel Capability', value: 'No (IVEM3024), Yes up to 12 units (IVEM5048)' },
-                { label: 'Peak Efficiency', value: '93%' },
-                { label: 'Over-Load Protection (SMPS load)', value: '5s @ ≥150% load; 10s @ 105–150% load' },
-                { label: 'Surge Rating', value: '2× rated power for 5s' },
-                { label: 'Capable of Starting Electric', value: 'Yes' },
-                { label: 'Output Short Circuit Protection', value: 'Yes' },
-                { label: 'Cold Start Voltage', value: '23V (IVEM3024), 46V (IVEM5048)' },
-                { label: 'Low Battery Alarm (<50% / ≥50% load)', value: '22.5V / 22.0V (IVEM3024), 45.0V / 44.0V (IVEM5048)' },
-                { label: 'Low Battery Alarm Recovery (<50% / ≥50%)', value: '23.5V / 23.0V (IVEM3024), 47.0V / 46.0V (IVEM5048)' },
-                { label: 'Low DC Input Shut-down (<50% / ≥50%)', value: '21.5V / 21.0V (IVEM3024), 43.0V / 42.0V (IVEM5048)' },
-                { label: 'High DC Input Alarm & Fault', value: '31V±0.4V (IVEM3024), 62V±0.4V (IVEM5048)' },
-                { label: 'High DC Input Recovery', value: '30V±0.4V (IVEM3024), 60V±0.4V (IVEM5048)' },
-              ],
-            },
-            {
-              group: 'General Specifications',
-              rows: [
-                { label: 'Operating Temperature', value: '0°C ~ 55°C' },
-                { label: 'Storage Temperature Range', value: '-15°C ~ 60°C' },
-                { label: 'Net Weight', value: '10.8KG (IVEM3024), 13.2KG (IVEM5048)' },
-                { label: 'Product Size (D×W×H)', value: '395×295×129mm (IVEM3024), 415×320×129mm (IVEM5048)' },
-                { label: 'Package Dimension (D×W×H)', value: '472×372×202mm (IVEM3024), 494×399×202mm (IVEM5048)' },
-              ],
-            },
-          ],
           faultSource: 'Felicity IVEM Series (3KVA~5KVA) user guide, doc. 358-010045-10 (customer-provided)',
           faultWarning: 'A fault cuts the output, the fault LED goes solid on and the code shows on the LCD beside the ERROR mark. A warning only flashes the LED and the unit carries on running - those are in the warning list.',
           faultCodes: [
@@ -1092,8 +885,6 @@
           name: 'IVEM6048 (6 kVA)',
           category: 'Off-Grid Inverter',
           note: 'The 6 kVA IVEM, 230V output on a 48V battery. Up to twelve units run in parallel on one phase, or twelve across three phases. The 48V IVEM5048-LV is a different machine with its own guide - its list is the next one down, and the two do not match code for code.',
-          specsSource: null,
-          specs: [],
           faultSource: 'Felicity IVEM Series (6KVA) user guide, doc. 358-010358-00 (customer-provided)',
           faultWarning: 'A fault cuts the output, the fault LED goes solid on and the code shows on the LCD beside the ERROR mark. A warning only flashes the LED and the unit carries on running - those are in the warning list.',
           faultCodes: [
@@ -1187,8 +978,6 @@
           name: 'IVEM5048-LV',
           category: 'Off-Grid Inverter',
           note: 'The low-voltage IVEM: 110V, 120V or 127V output on a 48V battery, so not a machine for a 230V house. Its code list is close to the 6 kVA IVEM above but not the same - it has no fault 35, it adds 45 and 46, it splits the locked-fan warning into left and right, and it carries no warning 80.',
-          specsSource: null,
-          specs: [],
           faultSource: 'Felicity IVEM5048-LV user guide, doc. 358-010602-00 (customer-provided)',
           faultWarning: 'A fault cuts the output, the fault LED goes solid on and the code shows on the LCD beside the ERROR mark. A warning only flashes the LED and the unit carries on running - those are in the warning list.',
           faultCodes: [
@@ -1283,8 +1072,6 @@
           name: 'IVEM8048-II / IVEM12048-II',
           category: 'Off-Grid Inverter',
           note: 'IVEM8048-II (8 kVA) and IVEM12048-II (12 kVA), 230V output on a 48V battery. Up to six units run in parallel. The generator port doubles as a smart-load output; the guide sets it to generator input by default. This guide goes further than the 3-6 kVA IVEMs above: it adds warnings 04 to 08 for grid, generator and three-phase trouble, faults 34 and 47, and programs 30 to 37 for the smart-load output.',
-          specsSource: null,
-          specs: [],
           faultSource: 'Felicity IVEM Series (8KVA~12KVA) user guide, doc. 358-010386-01 (customer-provided)',
           faultWarning: 'A fault cuts the output, the fault LED goes solid on and the code shows on the LCD beside the ERROR mark. A warning only flashes the LED and the unit carries on running - those are in the warning list.',
           faultCodes: [
@@ -1394,21 +1181,6 @@
           id: 'ivem4024ii-series',
           name: 'IVEM4024-II / 6048-II / 8048-II / 12048-II',
           category: 'Off-Grid Inverter',
-          specsSource: 'Felicity IVEM Series (4~12KVA) Datasheet (customer-provided)',
-          specs: [
-            {
-              group: 'General Specifications',
-              rows: [
-                { label: 'Rated Output Power', value: '4000VA (4024-II) / 6000VA (6048-II) / 8000VA (8048-II) / 12000VA (12048-II)' },
-                { label: 'Nominal DC Input Voltage', value: '24V (4024-II), 48V (others)' },
-                { label: 'Max Charge Current', value: '120A / 120A / 150A / 240A' },
-                { label: 'PV Voltage Working Range', value: '60–500V (4024-II), 90–450V (others)' },
-                { label: 'Parallel Capability', value: 'No (4024-II), Yes up to 12 (6048-II), Yes up to 6 (8048-II/12048-II)' },
-                { label: 'Operating Temperature', value: '-10°C ~ 50°C' },
-                { label: 'Net Weight', value: '10.4KG / 12.5KG / 23.7KG / 26.8KG' },
-              ],
-            },
-          ],
           faultSource: 'Felicity IVEM4024-II User Guide (customer-provided, doc. 358-010644-02)',
           faultWarning: 'This manual\u2019s fault table runs 01\u201361 — only codes 34\u201361 were in the pages available to check, so lower-numbered codes aren\u2019t listed yet.',
           faultCodes: [
@@ -1442,8 +1214,6 @@
           name: 'IVPM / IVPS Series',
           category: 'Off-Grid Inverter',
           note: 'One guide covers the whole series. Ratings run 2500VA, 3500VA, 5000VA, 7500VA and 10000VA, on 12V, 24V or 48V batteries - and the programs below change with both, so read the rating and the battery voltage off the unit before setting anything.',
-          specsSource: null,
-          specs: [],
           faultSource: 'Felicity IVPS / IVPM series user guide, doc. 358-010009-02 (customer-provided)',
           faultWarning: 'A fault cuts the output and the red LED goes solid on, with the code on the LCD. That is the difference from a warning, where the LED flashes and the unit keeps running.',
           faultCodes: [
@@ -1499,43 +1269,6 @@
           name: 'SCCM-II MPPT charge controllers',
           category: 'MPPT Charge Controller',
           note: 'One guide covers all eight SCCM-II MPPT solar charge controllers, from the 20A SCCM2024-II to the 120A SCCM12048-II. A battery must be connected before the controller will operate, and connecting the solar module to the battery connector permanently damages it - confirm both polarities first. These are charge-controller codes, not inverter codes: they show on the controller\'s own LCD.',
-          specsSource: 'Felicity SCCM-II MPPT solar charge controller user guide, doc. 358-010277-03 (customer-provided)',
-          specs: [
-            {
-              group: 'Electrical',
-              rows: [
-                { label: 'Maximum Battery Current', value: '20A (SCCM2024-II), 30A (SCCM3024-II), 45A (SCCM4524-II), 45A (SCCM4548-II), 60A (SCCM6048-II), 80A (SCCM8048-II), 100A (SCCM10048-II), 120A (SCCM12048-II)' },
-                { label: 'Nominal System Voltage', value: '12V/24V DC, auto detection (SCCM2024-II, SCCM3024-II, SCCM4524-II); 12V/24V/48V DC, auto detection (SCCM4548-II and up)' },
-                { label: 'Maximum Solar Input Voltage', value: '95V (SCCM2024-II, SCCM3024-II, SCCM4524-II); 145V (SCCM4548-II, SCCM6048-II, SCCM8048-II); 195V (SCCM10048-II, SCCM12048-II)' },
-                { label: 'PV Start-up Voltage', value: '15V' },
-                { label: 'PV Array MPPT Voltage Range', value: '15-80VDC / 30-80VDC (SCCM2024-II, SCCM3024-II, SCCM4524-II); 15-130VDC / 30-130VDC and 60-130VDC (SCCM4548-II, SCCM6048-II, SCCM8048-II); 15-170VDC / 30-170VDC and 60-170VDC (SCCM10048-II, SCCM12048-II)' },
-                { label: 'Maximum Input Power, 12V', value: '280W (SCCM2024-II), 420W (3024), 625W (4524), 625W (4548), 825W (6048), 1100W (8048), 1375W (10048), 1650W (12048)' },
-                { label: 'Maximum Input Power, 24V', value: '550W (SCCM2024-II), 830W (3024), 1250W (4524), 1250W (4548), 1650W (6048), 2200W (8048), 2750W (10048), 3300W (12048)' },
-                { label: 'Maximum Input Power, 48V', value: '2500W (SCCM4548-II), 3300W (6048), 4400W (8048), 5500W (10048), 6600W (12048); not applicable to the SCCM2024-II, 3024-II and 4524-II' },
-                { label: 'Transient Surge Protection', value: '4500W per port' },
-                { label: 'Protections', value: 'Solar high voltage disconnect and reconnect; battery high voltage disconnect and reconnect; high temperature disconnect and reconnect' },
-              ],
-            },
-            {
-              group: 'Battery Charging',
-              rows: [
-                { label: 'Charging Algorithm', value: '3-step: bulk, absorption, float' },
-                { label: 'Temperature Compensation Coefficient', value: '-5mV / C / cell (25 C reference)' },
-                { label: 'Temperature Compensation Range', value: '0 C to +50 C' },
-              ],
-            },
-            {
-              group: 'Mechanical & Environment',
-              rows: [
-                { label: 'Product Size (W x H x D)', value: '240x170x102mm (SCCM2024-II), 240x170x102mm (3024), 265x188x116mm (4524), 308x212x125mm (4548), 308x212x125mm (6048), 322x238x140mm (8048), 360x250x156mm (10048), 360x250x156mm (12048)' },
-                { label: 'Product Weight', value: '0.9kg (SCCM2024-II), 1.06kg (3024), 3.36kg (4524), 2.99kg (4548), 3.2kg (6048), 3.5kg (8048), 5.1kg (10048), 5.1kg (12048)' },
-                { label: 'Ambient Temperature Range', value: '0 C to +55 C' },
-                { label: 'Storage Temperature', value: '-25 C to +75 C' },
-                { label: 'Humidity', value: '0% to 90% RH, non-condensing' },
-                { label: 'Enclosure', value: 'IP20 (indoor and vented)' },
-              ],
-            },
-          ],
           faultSource: 'Felicity SCCM-II MPPT solar charge controller user guide, doc. 358-010277-03 (customer-provided)',
           faultWarning: 'A fault shows its code under the ERROR mark on the LCD, with the red fault/warning LED solid on. A warning shows its code with no ERROR mark. The second red LED, wiring fault, means the battery polarities are not connected correctly. The guide\'s troubleshooting table repeats 06 and 07 once more, both as "Battery temperature too high"; its code list gives 06 as too low and 07 as too high, so that is what is shown here. Codes 09 and 10 and the four warnings have no fix printed in the guide.',
           faultCodes: [
@@ -1589,20 +1322,6 @@
           id: 'fla48400tg2',
           name: 'FLA48400TG2',
           category: 'LiFePO4 Battery',
-          specsSource: 'Felicity FLA48400TG2 User Manual (customer-provided)',
-          specs: [
-            {
-              group: 'General Specifications',
-              rows: [
-                { label: 'Rated Voltage / Capacity', value: '51.2V / 20kWh' },
-                { label: 'Working Temperature', value: '-20°C ~ +55°C' },
-                { label: 'Charging Temperature Range', value: '0°C ~ +55°C' },
-                { label: 'Discharging Temperature Range', value: '-20°C ~ +55°C' },
-                { label: 'Storage Temperature', value: '0°C ~ +35°C' },
-                { label: 'Max Elevation', value: '2000m' },
-              ],
-            },
-          ],
           faultSource: 'Felicity FLA48400TG2 User Manual (customer-provided)',
           faultWarning: 'This is the battery\u2019s own BMS fault table — a separate system from the IVEM inverter codes. A "C" code shows on the battery/BMS display, not the inverter.',
           faultCodes: [
@@ -1652,22 +1371,22 @@
     `).join('') + '</div>';
   }
 
-  function ecSpecList(groups) {
-    if (!groups || !groups.length) return '<div class="ec-empty">No specifications sourced yet for this model.</div>';
-    return groups.map(g => `
-      <div class="ec-spec-group">
-        <div class="ec-spec-group-label">${g.group}</div>
-        <div class="ec-spec-list">
-          ${g.rows.map(r => `<div class="ec-spec-row"><span class="ec-spec-label">${r.label}</span><span class="ec-spec-value">${r.value}</span></div>`).join('')}
-        </div>
-      </div>
-    `).join('');
+  // The three lists a model can carry, in the order a person reaches for them:
+  // a code on the screen is a fault or a warning; "how do I set it" is a program.
+  const EC_SECTIONS = [
+    { id: 'fault', label: 'Fault codes', rows: 'faultCodes', source: 'faultSource', warning: 'faultWarning' },
+    { id: 'warn', label: 'Warning codes', rows: 'warnCodes', source: 'warnSource', warning: 'warnWarning' },
+    { id: 'program', label: 'Programs', rows: 'settingsCodes', source: 'settingsSource', warning: 'settingsWarning' }
+  ];
+  let ecSection = 'fault';
+
+  function ecMatches(rows, q) {
+    return (rows || []).filter(r => !q || r.code.toLowerCase().includes(q) || r.meaning.toLowerCase().includes(q));
   }
 
-  function ecSubsection(title, source, warning, bodyHtml) {
+  function ecSubsection(source, warning, bodyHtml) {
     return `
       <div class="ec-subsection">
-        <div class="ec-subsection-title">${title}</div>
         ${source ? `<div class="ec-source">Sourced from: ${source}</div>` : ''}
         ${warning ? `<div class="ec-warning">\u26A0 ${warning}</div>` : ''}
         ${bodyHtml}
@@ -1717,21 +1436,29 @@
     let html = `<div class="ec-model-category">${model.category}</div>`;
     if (model.note) html += `<div class="ec-warning">\u26A0 ${model.note}</div>`;
 
-    html += `
-      <div class="ec-collapsible">
-        <button type="button" class="ec-collapse-toggle" data-collapse="specs">
-          <span>Specifications (optional)</span><span class="ec-collapse-icon">+</span>
-        </button>
-        <div class="ec-collapse-body collapsed" data-collapse-body="specs">
-          ${model.specsSource ? `<div class="ec-source">Sourced from: ${model.specsSource}</div>` : ''}
-          ${ecSpecList(model.specs)}
-        </div>
-      </div>
-    `;
+    // Only the lists this model really has - an empty tab is a dead end.
+    const present = EC_SECTIONS.filter(sec => (model[sec.rows] || []).length);
+    if (!present.length) {
+      viewEl.innerHTML = html + '<div class="ec-empty">Nothing is listed for this model yet.</div>';
+      return;
+    }
+    const hits = {};
+    present.forEach(sec => { hits[sec.id] = ecMatches(model[sec.rows], q).length; });
+    if (!present.some(sec => sec.id === ecSection)) ecSection = present[0].id;
+    // Searching a code that lives in another list should take you to it.
+    if (q && !hits[ecSection]) {
+      const other = present.find(sec => hits[sec.id]);
+      if (other) ecSection = other.id;
+    }
+    const sec = present.find(x => x.id === ecSection);
 
-    html += ecSubsection('Fault Codes', model.faultSource, model.faultWarning, ecCodeList(model.faultCodes, q));
-    html += ecSubsection('Warning Codes', model.warnSource, model.warnWarning, ecCodeList(model.warnCodes, q));
-    html += ecSubsection('Settings &amp; Programs', model.settingsSource, model.settingsWarning, ecCodeList(model.settingsCodes, q));
+    if (present.length > 1) {
+      html += '<div class="ec-sections" role="tablist" aria-label="What to look up">' + present.map(x =>
+        `<button type="button" role="tab" class="ec-section-tab${x.id === ecSection ? ' active' : ''}" data-section="${x.id}" aria-selected="${x.id === ecSection}">` +
+        `<span class="ec-section-name">${x.label}</span><span class="ec-section-count">${q ? hits[x.id] : (model[x.rows] || []).length}</span></button>`
+      ).join('') + '</div>';
+    }
+    html += ecSubsection(model[sec.source], model[sec.warning], ecCodeList(model[sec.rows], q));
 
     viewEl.innerHTML = html;
   }
@@ -1758,11 +1485,10 @@
     });
 
     document.getElementById('ec-model-view').addEventListener('click', (e) => {
-      const btn = e.target.closest('.ec-collapse-toggle');
+      const btn = e.target.closest('.ec-section-tab');
       if (!btn) return;
-      const body = document.querySelector(`[data-collapse-body="${btn.dataset.collapse}"]`);
-      body.classList.toggle('collapsed');
-      btn.querySelector('.ec-collapse-icon').textContent = body.classList.contains('collapsed') ? '+' : '\u2212';
+      ecSection = btn.dataset.section;
+      renderModelView();
     });
 
     document.getElementById('ec-search-input').addEventListener('input', renderModelView);

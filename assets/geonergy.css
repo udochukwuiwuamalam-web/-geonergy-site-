@@ -190,23 +190,22 @@
   .ec-model-tab.active { border-color: var(--accent-on-navy); color: var(--text-on-navy); font-weight: 600; }
   .ec-model-category { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-on-navy); margin-bottom: var(--space-3); }
 
-  .ec-collapsible { margin-bottom: var(--space-4); border: 1px solid var(--border-on-navy); border-radius: var(--radius-sm); overflow: hidden; }
-  .ec-collapse-toggle {
-    width: 100%; display: flex; justify-content: space-between; align-items: center;
-    padding: var(--space-2) var(--space-3); background: var(--navy-2); color: var(--text-on-navy);
-    font-weight: 500; font-size: 0.9375rem; cursor: pointer; border: none; font-family: var(--font-body);
+  /* Fault codes / Warning codes / Programs: one list at a time. */
+  .ec-sections { display: flex; gap: 0.4rem; margin-bottom: var(--space-3); }
+  .ec-section-tab {
+    flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 0.45rem;
+    padding: 0.7rem 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-on-navy);
+    background: var(--navy-2); color: var(--muted-on-navy); cursor: pointer;
+    font-family: var(--font-body); font-size: 0.875rem; font-weight: 500; transition: all 0.15s ease;
   }
-  .ec-collapse-icon { font-family: var(--font-mono); color: var(--accent-on-navy); }
-  .ec-collapse-body { padding: var(--space-3); }
-  .ec-collapse-body.collapsed { display: none; }
-
-  .ec-spec-group { margin-bottom: var(--space-3); }
-  .ec-spec-group:last-child { margin-bottom: 0; }
-  .ec-spec-group-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-on-navy); margin-bottom: var(--space-1); }
-  .ec-spec-list { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: var(--space-2); }
-  .ec-spec-row { display: flex; justify-content: space-between; gap: var(--space-3); padding: 0.4rem 0; border-bottom: 1px solid var(--border-on-navy); font-size: 0.875rem; }
-  .ec-spec-label { color: var(--muted-on-navy); }
-  .ec-spec-value { color: var(--text-on-navy); font-weight: 500; text-align: right; }
+  .ec-section-tab:hover { color: var(--text-on-navy); }
+  .ec-section-tab.active { background: var(--accent-on-navy); border-color: var(--accent-on-navy); color: var(--navy); font-weight: 600; }
+  .ec-section-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ec-section-count { font-family: var(--font-mono); font-size: 0.72rem; opacity: 0.75; }
+  @media (max-width: 420px) {
+    .ec-sections { gap: 0.3rem; }
+    .ec-section-tab { flex-direction: column; gap: 0.1rem; padding: 0.55rem 0.3rem; font-size: 0.8rem; }
+  }
 
   .ec-subsection { margin-bottom: var(--space-4); }
   .ec-subsection-title { font-family: var(--font-display); font-weight: 600; color: var(--text-on-navy); font-size: 1.05rem; margin-bottom: var(--space-2); }
