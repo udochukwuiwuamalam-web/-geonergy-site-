@@ -359,6 +359,18 @@
   }
 
   const codeNum = c => parseInt(String(c).replace(/[^0-9]/g, ''), 10);
+  // Some manuals file a run of codes on one line - Felicity print the BMS
+  // alarms as "54~65" rather than twelve rows. Somebody reading 58 off the
+  // screen still has to land on it, so a code written as a range matches any
+  // number inside it.
+  function codeHit(code, num) {
+    const r = String(code).match(/^\s*(\d+)\s*[~\u2013-]\s*(\d+)\s*$/);
+    if (r) {
+      const lo = parseInt(r[1], 10), hi = parseInt(r[2], 10);
+      return num >= lo && num <= hi;
+    }
+    return codeNum(code) === num;
+  }
 
   function codeQuery(t) {
     if (!/(code|fault|error|err|warning|warn|alarm|program|setting|showing|display|screen|flash)/.test(t)) return null;
@@ -395,7 +407,7 @@
             CODE_LISTS.forEach(L => {
               if (kind !== 'any' && kind !== L[0]) return;
               (m[L[1]] || []).forEach(c => {
-                if (codeNum(c.code) === cq.num) {
+                if (codeHit(c.code, cq.num)) {
                   found.push({ brand: row[1], model: m.name, label: L[4], entry: c, source: m[L[2]], caveat: m[L[3]] });
                 }
               });
