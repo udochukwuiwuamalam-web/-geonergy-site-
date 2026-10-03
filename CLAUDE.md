@@ -137,12 +137,13 @@ pages use it.
   values during a count cannot reach any calculation - check that again before
   putting it on a figure some other code reads. Counting is skipped entirely
   under `prefers-reduced-motion`.
-- The Inverter page shows one list at a time - Fault codes, Warning codes or
-  Programs, chosen with the tabs under the model - and swaps it with the same
-  `data-motion-enter` fade as everything else. Only the lists a model really
-  has get a tab, and a search that finds nothing in the current list moves to
-  the one that has it. There is no Specifications section: it was removed on
-  request, and `inverter.js` no longer carries spec data.
+- The Inverter page lists a model's Fault codes, Warning codes and Programs as
+  three sections that open and close on their own, with a count on each. Only
+  the lists a model really has appear. While you search, the sections holding
+  a match open and the rest close. The open body fades in; its height is not
+  animated, because that forces a reflow of a long list, which is exactly what
+  a cheap phone is worst at. There is no Specifications section: it was removed
+  on request, and `inverter.js` no longer carries spec data.
 
 ## Weather data
 

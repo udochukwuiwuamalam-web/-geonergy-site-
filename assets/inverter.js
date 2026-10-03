@@ -1378,7 +1378,8 @@
     { id: 'warn', label: 'Warning codes', rows: 'warnCodes', source: 'warnSource', warning: 'warnWarning' },
     { id: 'program', label: 'Programs', rows: 'settingsCodes', source: 'settingsSource', warning: 'settingsWarning' }
   ];
-  let ecSection = 'fault';
+  // Which lists are open. Each one opens and closes on its own.
+  const ecOpen = { fault: true, warn: false, program: false };
 
   function ecMatches(rows, q) {
     return (rows || []).filter(r => !q || r.code.toLowerCase().includes(q) || r.meaning.toLowerCase().includes(q));
@@ -1444,21 +1445,22 @@
     }
     const hits = {};
     present.forEach(sec => { hits[sec.id] = ecMatches(model[sec.rows], q).length; });
-    if (!present.some(sec => sec.id === ecSection)) ecSection = present[0].id;
-    // Searching a code that lives in another list should take you to it.
-    if (q && !hits[ecSection]) {
-      const other = present.find(sec => hits[sec.id]);
-      if (other) ecSection = other.id;
-    }
-    const sec = present.find(x => x.id === ecSection);
+    // A model whose first list is not open yet should not arrive all shut.
+    if (!present.some(sec => ecOpen[sec.id])) ecOpen[present[0].id] = true;
 
-    if (present.length > 1) {
-      html += '<div class="ec-sections" role="tablist" aria-label="What to look up">' + present.map(x =>
-        `<button type="button" role="tab" class="ec-section-tab${x.id === ecSection ? ' active' : ''}" data-section="${x.id}" aria-selected="${x.id === ecSection}">` +
-        `<span class="ec-section-name">${x.label}</span><span class="ec-section-count">${q ? hits[x.id] : (model[x.rows] || []).length}</span></button>`
-      ).join('') + '</div>';
-    }
-    html += ecSubsection(model[sec.source], model[sec.warning], ecCodeList(model[sec.rows], q));
+    html += '<div class="ec-acc-list">' + present.map(sec => {
+      // While searching, the lists that hold a match open and the rest close,
+      // so the answer is already on screen. Otherwise it is the reader's choice.
+      const open = q ? hits[sec.id] > 0 : (present.length === 1 || ecOpen[sec.id]);
+      const count = q ? hits[sec.id] + ' of ' + model[sec.rows].length : model[sec.rows].length;
+      return `<div class="ec-acc${open ? ' open' : ''}" data-section="${sec.id}">` +
+        `<button type="button" class="ec-acc-head" aria-expanded="${open}" aria-controls="ec-acc-${sec.id}">` +
+          `<span class="ec-acc-name">${sec.label}</span><span class="ec-acc-count">${count}</span><span class="ec-acc-icon" aria-hidden="true">${open ? '\u2212' : '+'}</span>` +
+        `</button>` +
+        `<div class="ec-acc-body" id="ec-acc-${sec.id}"${open ? '' : ' hidden'}>` +
+          ecSubsection(model[sec.source], model[sec.warning], ecCodeList(model[sec.rows], q)) +
+        `</div></div>`;
+    }).join('') + '</div>';
 
     viewEl.innerHTML = html;
   }
@@ -1485,10 +1487,16 @@
     });
 
     document.getElementById('ec-model-view').addEventListener('click', (e) => {
-      const btn = e.target.closest('.ec-section-tab');
+      const btn = e.target.closest('.ec-acc-head');
       if (!btn) return;
-      ecSection = btn.dataset.section;
-      renderModelView();
+      const box = btn.closest('.ec-acc');
+      const open = !box.classList.contains('open');
+      box.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      btn.querySelector('.ec-acc-icon').textContent = open ? '\u2212' : '+';
+      box.querySelector('.ec-acc-body').hidden = !open;
+      // Remember the choice - but not while a search is forcing the lists.
+      if (!(document.getElementById('ec-search-input').value || '').trim()) ecOpen[box.dataset.section] = open;
     });
 
     document.getElementById('ec-search-input').addEventListener('input', renderModelView);

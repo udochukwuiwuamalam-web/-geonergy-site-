@@ -238,10 +238,14 @@ dialog.sheet[open] { animation: mSheet var(--m-normal) var(--m-smooth) both; }
 dialog.sheet[open]::backdrop { animation: mBackdrop var(--m-normal) ease both; }
 @keyframes mBackdrop { from { opacity: 0; } to { opacity: 1; } }
 
+/* An opened list fades in; its height is not animated (a reflow of a long list). */
+.ec-acc.open > .ec-acc-body { animation: mFade var(--m-normal) var(--m-smooth) both; }
+
 @media (prefers-reduced-motion: reduce) {
   [data-motion-enter].m-in > *,
   [data-motion-enter="fade"].m-in,
   .page-enter > *,
   dialog.sheet[open],
-  dialog.sheet[open]::backdrop { animation: none !important; }
+  dialog.sheet[open]::backdrop,
+  .ec-acc.open > .ec-acc-body { animation: none !important; }
 }
